@@ -65,10 +65,24 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
+## While new setup run for migration and seeder
+php artisan migrate
+
 ## Install Package 22-Jan-25
 composer require laravel/sanctum
 ## Install Package 22-Jan-25
 composer require darkaonline/l5-swagger
+
+php artisan config:publish cors
+
+## create column in users 25-Jan-25
+ALTER TABLE `users` ADD `user_id` VARCHAR(100) NULL DEFAULT NULL AFTER `id`, ADD `role_id` INT NOT NULL DEFAULT '0' AFTER `user_id`;
+ALTER TABLE `users` ADD `username` VARCHAR(100) NULL DEFAULT NULL AFTER `email`;
+ALTER TABLE `users` ADD `otp_generated_at` TIMESTAMP NULL DEFAULT NULL AFTER `status`;
+ALTER TABLE `users` ADD `otp` VARCHAR(20) NULL DEFAULT NULL AFTER `status`;
+ALTER TABLE `users` ADD `pass_hint` VARCHAR(255) NULL DEFAULT NULL AFTER `password`;
+ALTER TABLE `users` ADD `image` VARCHAR(300) NULL DEFAULT NULL AFTER `status`;
+ALTER TABLE `users` ADD `state` VARCHAR(100) NULL DEFAULT NULL AFTER `is_mobile_verified`, ADD `city` VARCHAR(100) NULL DEFAULT NULL AFTER `state`, ADD `pincode` VARCHAR(100) NULL DEFAULT NULL AFTER `city`, ADD `address` VARCHAR(400) NULL DEFAULT NULL AFTER `pincode`;
 
 
 
