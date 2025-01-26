@@ -1,0 +1,40 @@
+   /* Remove any page margins */
+   body{
+    margin:0 !important;
+    padding:0 !important;
+   }
+@page {
+    size: 3in auto;
+    margin: 0;
+}
+
+/* Label container with centered content */
+.label-container {
+    width: 78mm;
+    height: 38mm; /* Exact label size */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center vertically */
+    align-items: center; /* Center horizontally */
+    page-break-inside: avoid;
+    box-sizing: border-box; /* Ensure proper sizing */
+    border: 1px solid black; /* Optional border for debugging */
+}
+
+/* Adjust product details font */
+.product-details {
+    font-size: 8pt;
+    text-align: center; /* Center text horizontally */
+}
+
+/* Center the barcode */
+.barcode {
+    text-align: center;
+}
+
+/* Adjust the barcode image */
+.barcode img {
+    max-width: 60mm;
+    height: auto;
+}
+
