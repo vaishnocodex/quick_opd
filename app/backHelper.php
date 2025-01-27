@@ -16,5 +16,9 @@ class backHelper
     {
     return DB::table("category")->where("parent",$id)->get();
     }
+    public static function get_category($id)
+    {
+        return  DB::table('category')->find($id);
+    }
 
 }

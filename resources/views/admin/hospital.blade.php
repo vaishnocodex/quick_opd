@@ -6,8 +6,8 @@
      $staff=backHelper::get_staff($staff_id);
       @endphp
     @endif
-<div class="main-container">
-    <div class="page-header">
+    <div class="main-container">
+      <div class="page-header">
         <!-- Breadcrumb start -->
         <ol class="breadcrumb">
             <li class="breadcrumb-item">Hospital</li>
@@ -21,14 +21,14 @@
                     @include('admin.message')
                      @if(!empty($staff_id))@endif
                    
-                    <form method="POST" action="{{ route('admin.store.add') }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('admin.hospital.add') }}" enctype="multipart/form-data">
                         @csrf
                         <div class="row gutters">
                             <input type="hidden"  @if(!empty($staff_id)) value="{{$staff_id}}" @else value="" @endif  name="id" id="id"/>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label for="name">Store Name <span style="color:red">*</span></label>
-                                    <input type="text" required value="{{!empty($staff)?$staff[0]->name:'' }}" class="form-control @error('name') is-invalid @enderror" name="name" id="name" placeholder="Enter Store Name" />
+                                    <label for="name">Hospital Name <span style="color:red">*</span></label>
+                                    <input type="text" required value="{{!empty($staff)?$staff[0]->name:'' }}" class="form-control @error('name') is-invalid @enderror" name="name" id="name" placeholder="Enter Hospital Name" />
                                     @error('name')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -62,13 +62,21 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label for="password">State <span style="color:red">*</span></label>
-                                    <input type="text" required class="form-control" name="state" id="state" placeholder="Enter State" />
+                                    <select  class="form-control" id="state" name="state" onchange="getCity(this.value)" required>
+                                        <option value="">Select</option>
+                                        @foreach ($state_data as $item)
+                                        <option value="{{$item->id}}">{{$item->name}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label for="city">City <span style="color:red">*</span></label>
-                                    <input type="text" required class="form-control" name="city" id="city" placeholder="Enter City" />
+                                    <select  class="form-control" id="getcity" name="city" required>
+                                        <option value="">Select</option>
+                                        
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
@@ -122,7 +130,7 @@
                                             <thead>
                                                 <tr role="row">
                                                     <th>Action</th>
-                                                    <th>Store Detail</th>
+                                                    <th>Hospital Detail</th>
                                                     <th>Login Detail</th>
                                                      <th>Address</th>
                                                     <th>Created At</th>
@@ -132,23 +140,17 @@
                                                 @php $i=0; @endphp @foreach ($All_staff as $item)
                                                 <tr>
                                                   
-                                                    <td ><span>{{ ++$i }})</span>&nbsp;&nbsp; <a href="{{ route('admin.store', ['id'=>Crypt::encrypt($item->id)]) }}" ><span class="icon-border_color" style="font-size: 20px;color:#178e94"></span> </a>
+                                                    <td ><span>{{ ++$i }})</span>&nbsp;&nbsp; <a href="{{ route('admin.hospital', ['id'=>Crypt::encrypt($item->id)]) }}" ><span class="icon-border_color" style="font-size: 20px;color:#178e94"></span> </a>
                                                         
-                                                        @if($item->dflt=='1')  
-                                                        <a  class="btn btn-success m-1 btn-sm">Default Store</a>
-
-                                                       @else 
-                                                       <a href="{{ route('admin.default.store',['id'=>Crypt::encrypt($item->id)]) }}"  class="btn btn-primary m-1 btn-sm">Set As Default Store </a>
-
-                                                        @endif
+                                                      
                                                     </td>
-                                                    <td>Store Name : <b> {{ $item->name }} </b> <br>
-                                                        Mobile : <b>{{ $item->mobile }} </b> </td>
+                                                    <td>Hospital Name : <b> {{ $item->name }} </b> <br>
+                                                        Mobile : <b>{{ $item->mobile_no }} </b> </td>
                                                     <td>Email: <b>{{ $item->email }}</b> <br>
-                                                       Password: <b>{{ $item->pw }}</b></td>
+                                                       Password: <b>{{ $item->pass_hint }}</b></td>
 
-                                                       <td>State: <b>{{ $item->state }}</b> <br>
-                                                        City: <b>{{ $item->city }}</b><br>
+                                                       <td>State: <b>{{ $item->state_name }}</b> <br>
+                                                        City: <b>{{ $item->city_name }}</b><br>
                                                         address: <b>{{ $item->address }}</b> 
                                                     </td>
                                                     <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y') }} </td> 

@@ -129,13 +129,10 @@
                             <div class="sidebar-submenu">
                                 <ul>
                                     <li>
-                                        <a href="#" class="{{ Route::currentRouteName()=="store.vendor"?"current-page":"" }}">Vendor </a>
+                                        <a href="{{ route('admin.category') }}" class="{{ Route::currentRouteName()=="admin.category"?"current-page":"" }}">Add Category </a>
                                     </li>
                                     <li>
-                                        <a href="#" class="{{ Route::currentRouteName()=="admin.worker"?"current-page":"" }}">Add Worker </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="{{ Route::currentRouteName()=="other.accounts"?"current-page":"" }}">Account Create </a>
+                                        <a href="{{ route('admin.symptom') }}" class="{{ Route::currentRouteName()=="admin.symptom"?"current-page":"" }}">Add Symptom </a>
                                     </li>
                                 </ul>
                             </div>
@@ -149,7 +146,7 @@
                                 <ul>
                                    
                                     <li>
-                                        <a href="{{ route('admin.hospital') }}" class="{{ Route::currentRouteName()=="admin.hospital"?"current-page":"" }}">Add </a>
+                                        <a href="{{ route('admin.hospital') }}" class="{{ Route::currentRouteName()=="admin.hospital"?"current-page":"" }}">Add Hospital</a>
                                     </li>
                                 </ul>
                             </div>
