@@ -134,6 +134,9 @@
                                     <li>
                                         <a href="{{ route('admin.symptom') }}" class="{{ Route::currentRouteName()=="admin.symptom"?"current-page":"" }}">Add Symptom </a>
                                     </li>
+                                    <li>
+                                        <a href="{{ route('admin.slider') }}" class="{{ Route::currentRouteName()=="admin.slider"?"current-page":"" }}">Add Slider </a>
+                                    </li>
                                 </ul>
                             </div>
                         </li>  

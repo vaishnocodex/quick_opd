@@ -7,7 +7,7 @@ use App\Http\Controllers\VendorController;
 
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 //-------------------------------------Custom Routes
@@ -44,18 +44,18 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
   Route::post('/admin/store/update', [VendorController::class, 'UpdateStore'])->name('admin.store.update');
 
   //Slider
-  Route::get('admin/all/slider/{id?}',[App\Http\Controllers\vendorController::class,'showSlider'])->name('admin.all.slider');
-  Route::post('admin/add/slider',[App\Http\Controllers\vendorController::class,'AddSlider'])->name('admin.add.slider');
-  Route::get('/admin/delete/slider/{id?}',[App\Http\Controllers\vendorController::class,'DeleteSlider'])->name('admin.delete.slider');
+  Route::get('admin/slider/{id?}',[VendorController::class,'showSlider'])->name('admin.slider');
+  Route::post('admin/add/slider',[VendorController::class,'AddSlider'])->name('admin.add.slider');
+  Route::get('/admin/delete/slider/{id?}',[VendorController::class,'DeleteSlider'])->name('admin.delete.slider');
 /*category*/
-  Route::get('/admin/symptom/{id?}',[App\Http\Controllers\vendorController::class,'showSymptom'])->name('admin.symptom');
+  Route::get('/admin/symptom/{id?}',[VendorController::class,'showSymptom'])->name('admin.symptom');
   
-  Route::get('/admin/category/{id?}',[App\Http\Controllers\vendorController::class,'showCategory'])->name('admin.category');
-  Route::post('/admin/category/add',[App\Http\Controllers\vendorController::class,'insertCategory'])->name('admin.category.add');
-  Route::post('/admin/category/edit/',[App\Http\Controllers\vendorController::class,'editCategoryFinal'])->name('admin.category.edit');
-  Route::get('/admin/category/delete/{id}',[App\Http\Controllers\vendorController::class,'deleteCategory'])->name('admin.category.delete');
-  Route::get('/admin/category/status/{id}',[App\Http\Controllers\vendorController::class,'categoryChangeStatus'])->name('admin.category.status');
-  Route::get('/admin/all/category/{keyword?}',[App\Http\Controllers\vendorController::class,'categorySearch'])->name('admin.category.all');
+  Route::get('/admin/category/{id?}',[VendorController::class,'showCategory'])->name('admin.category');
+  Route::post('/admin/category/add',[VendorController::class,'insertCategory'])->name('admin.category.add');
+  Route::post('/admin/category/edit/',[VendorController::class,'editCategoryFinal'])->name('admin.category.edit');
+  Route::get('/admin/category/delete/{id}',[VendorController::class,'deleteCategory'])->name('admin.category.delete');
+  Route::get('/admin/category/status/{id}',[VendorController::class,'categoryChangeStatus'])->name('admin.category.status');
+  Route::get('/admin/all/category/{keyword?}',[VendorController::class,'categorySearch'])->name('admin.category.all');
 
 });
   
