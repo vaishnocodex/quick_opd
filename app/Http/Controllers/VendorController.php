@@ -392,4 +392,70 @@ class VendorController extends Controller
             return redirect()->route('admin.category.edit', ['id' => $id]);
         }
     }
+
+  //========================================================================= Slider 
+           
+  function showSlider()
+  {
+
+
+      $arr['slider']=DB::table('slider')->get();
+      
+      return view('admin.slider',$arr);
+  }     
+         
+  function AddSlider(Request $request)
+  {
+
+  
+
+      if ($request->img) {
+        $firmImage = time() . rand(1000000, 9999999) . '.' . $request->img->extension();
+        $request->img->move(public_path('storage/slider'), $firmImage);
+        $arr['image'] = $firmImage;
+
+   }
+        $arr['type']=$request->type_slider;
+        $arr['title']=$request->heading;
+        $ins=DB::table('slider')->insert($arr);
+      if($ins){
+      session()->flash('msgVendor', 'Slider added successfully.');
+      }else{
+      session()->flash('errorVendor', 'Unable to Add Please try after some time.');
+          
+      }
+      return redirect()->back();
+  }
+  
+      function DeleteSlider(Request $request)
+  {
+      try
+      {
+           $decrypted = Crypt::decrypt($request->id);
+      $del=DB::table("slider")->where('id',$decrypted)->delete();
+
+      if($del)
+      {
+         
+           Session()->flash('msgVendor', 'Slider deleted successfully.');
+      }
+      else
+      {
+           Session()->flash('msgVendor', 'Unable to delete slider.');
+      }
+      }
+      catch(Exception $ex)
+      {
+          Session()->flash('msgVendor', 'Unable to delete Slider Please try after some time');
+      }
+      return redirect()->back();
+  }
+
+
+  
+
+
+
+
+    //---End
 }
