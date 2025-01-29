@@ -12,6 +12,11 @@ use App\Http\Controllers\API\DoctorApiController;
 Route::get('/user/all_sliders', [UserApiController::class, 'getSliders']);
 Route::post('/user/send-otp', [UserApiController::class, 'sendOtp']);
 Route::post('/user/verify-otp', [UserApiController::class, 'verifyOtp']);
+Route::get('/user/all_districts/', [UserApiController::class, 'districts_all']);
+Route::get('/user/all_states/', [UserApiController::class, 'states_all']);
+Route::get('/user/top_category', [UserApiController::class, 'getTopCategories']);
+Route::get('/user/all_category/{type}', [UserApiController::class, 'getAllCategories']);
+Route::get('/user/child_category/{parent_id}', [UserApiController::class, 'getChildCategories']);
 
 //forget password
 Route::post('/user/forgot-password', [UserApiController::class, 'forgotPassword']);

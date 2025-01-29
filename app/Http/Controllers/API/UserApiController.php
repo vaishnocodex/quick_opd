@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 //----model namespace
 use App\Models\User;
 use App\Models\PartnerRegOtp;
+use App\Models\Category;
+use App\Models\State; 
+use App\Models\City;
 
 
 use Illuminate\Support\Facades\Storage;
@@ -684,6 +687,8 @@ public function current_user(Request $request)
                     'address' => $user->address,
                     'image' => $user->image,
                     'pass_hint' => $user->pass_hint,
+                    'role' => $user->role->name ?? null, // If role exists
+                    'category' => $user->category->name ?? null, // If category exists
                    
                 ],
             ],
@@ -697,8 +702,396 @@ public function current_user(Request $request)
         ], 401); // Return a 401 status code for unauthenticated requests
     }
 }
+    /**
+     * @OA\Get(
+     *     path="/api/user/top_category",
+     *     summary="Get Top Categories",
+     *     description="Fetches the top categories that are active and marked as top.",
+     *     tags={"Categories"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="top_categories_image_path", type="string", example="upload/categories/"),
+     *                 @OA\Property(property="top_categories", type="array",
+     *                     @OA\Items(
+     *                         type="object",
+     *                         @OA\Property(property="id", type="integer", example=1),
+     *                         @OA\Property(property="name", type="string", example="Electronics"),
+     *                         @OA\Property(property="status", type="string", example="1"),
+     *                         @OA\Property(property="parent", type="string", example="0"),
+     *                         @OA\Property(property="type", type="string", example="category"),
+     *                         @OA\Property(property="is_top", type="string", example="1")
+     *                     )
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="An error occurred while processing the request."),
+     *             @OA\Property(property="error", type="string", example="Exception message")
+     *         )
+     *     )
+     * )
+     */
 
+public function getTopCategories(Request $request)  
+{  
+    try {
+          
+         $top_categories = Category::where('status', '1')  
+                ->where('parent', '0')
+                ->where('type', 'category')  
+                ->where('is_top', '1')  
+                ->orderBy('id', 'desc') 
+                ->take(10)  
+                ->get();  
+         
 
+        return response()->json([  
+            'status' => true,  
+            'data' => [  
+                'top_categories_image_path' => 'upload/categories/',  
+                'top_categories' => $top_categories,  
+                
+            ],  
+        ], 200); // Status code 200 for success  
+
+    } catch (\Exception $e) {  
+        return response()->json([  
+            'status' => false,  
+            'message' => 'An error occurred while processing the request.',  
+            'error' => $e->getMessage(),  
+        ], 500); // Status code 500 for server error  
+    }  
+}
+
+        /**
+     * @OA\Get(
+     *     path="/api/user/all_category/{type}",
+     *     summary="Get All Categories",
+     *     description="Fetches all categories based on the provided type.",
+     *     tags={"Categories"},
+     *     @OA\Parameter(
+     *         name="type",
+     *         in="path",
+     *         required=true,
+     *         description="Type of category (e.g., category, symptom)",
+     *         @OA\Schema(type="string", example="category")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="categories_image_path", type="string", example="storage/categories/"),
+     *                 @OA\Property(property="categories", type="array",
+     *                     @OA\Items(
+     *                         type="object",
+     *                         @OA\Property(property="id", type="integer", example=1),
+     *                         @OA\Property(property="name", type="string", example="Health"),
+     *                         @OA\Property(property="status", type="string", example="1"),
+     *                         @OA\Property(property="parent", type="string", example="0"),
+     *                         @OA\Property(property="type", type="string", example="category")
+     *                     )
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="An error occurred while processing the request.")
+     *         )
+     *     )
+     * )
+     */
+
+public function getAllCategories($type)
+{
+    try {
+        if($type=="category" || $type=="symptom"){
+            $categories = Category::where('status', '1')->where('parent', '0')->where('type', $type)->get();
+
+        }else{
+            $categories = Category::where('status', '1')->where('parent', '0')->where('type', $type)->get();
+
+        }
+
+        return response()->json([
+            'status' => true,
+            'data' => [
+                'categories_image_path' => 'storage/categories/',
+                'categories' => $categories,
+            ],
+        ], 200); // Status code 200 for success
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => false,
+            'message' => 'An error occurred while processing the request.',
+        ], 500); // Status code 500 for server error
+    }
+}
+    /**
+     * @OA\Get(
+     *     path="/api/user/child_category/{parent_id}",
+     *     summary="Get Child Categories",
+     *     description="Fetches child categories based on the provided parent category ID.",
+     *     tags={"Categories"},
+     *     @OA\Parameter(
+     *         name="parent_id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the parent category",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="categories_image_path", type="string", example="upload/categories/"),
+     *                 @OA\Property(property="categories", type="array",
+     *                     @OA\Items(
+     *                         type="object",
+     *                         @OA\Property(property="id", type="integer", example=2),
+     *                         @OA\Property(property="name", type="string", example="Laptops"),
+     *                         @OA\Property(property="status", type="string", example="1"),
+     *                         @OA\Property(property="parent", type="integer", example=1)
+     *                     )
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="An error occurred while processing the request.")
+     *         )
+     *     )
+     * )
+     */
+public function getChildCategories($parent_id)
+{
+    try {
+        $categories = Category::where('status', '1')
+                              ->where('parent', $parent_id)
+                              ->get();
+
+        return response()->json([
+            'status' => true,
+            'data' => [
+                'categories_image_path' => 'upload/categories/',
+                'categories' => $categories,
+            ],
+        ], 200); // Status code 200 for success
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => false,
+            'message' => 'An error occurred while processing the request.',
+        ], 500); // Status code 500 for server error
+    }
+}
+    /**
+     * @OA\Get(
+     *     path="/api/user/all_states",
+     *     summary="Get All States",
+     *     description="Fetches all states for the specified country.",
+     *     tags={"Locations"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="states", type="array",
+     *                     @OA\Items(
+     *                         type="object",
+     *                         @OA\Property(property="id", type="integer", example=1),
+     *                         @OA\Property(property="name", type="string", example="California")
+     *                     )
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="message", type="string", example="An unexpected error occurred"),
+     *                 @OA\Property(property="error", type="string", example="Exception message")
+     *             )
+     *         )
+     *     )
+     * )
+     */
+
+   public function states_all(){
+        try {
+            // Fetch all states, selecting only the id and state_name columns
+            $states = State::select('id', 'name')->where('fcountryid',101)->get();
+
+            return response()->json([
+                'status' => true,
+                'data' => [
+                    'states' => $states,
+                ],
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'data' => [
+                    'message' => 'An unexpected error occurred',
+                    'error' => $e->getMessage(),
+                ],
+            ], 500);
+        }
+    }
+   /**
+ * @OA\Get(
+ *     path="/api/user/all_districts",
+ *     summary="Get All Districts",
+ *     description="Fetches all districts based on the provided state ID.",
+ *     tags={"Locations"},
+ *     @OA\Parameter(
+ *         name="fk_state_id",
+ *         in="query",
+ *         required=true,
+ *         description="ID of the state to fetch districts for",
+ *         @OA\Schema(type="integer", example=1)
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Successful response",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="data", type="object",
+ *                 @OA\Property(property="districts", type="array",
+ *                     @OA\Items(
+ *                         type="object",
+ *                         @OA\Property(property="id", type="integer", example=101),
+ *                         @OA\Property(property="name", type="string", example="Los Angeles")
+ *                     )
+ *                 )
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Bad request - Validation error",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="data", type="object",
+ *                 @OA\Property(property="message", type="string", example="The fk_state_id field is required.")
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="No districts found",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="data", type="object",
+ *                 @OA\Property(property="message", type="string", example="No districts found for the given state ID"),
+ *                 @OA\Property(property="districts", type="array",
+ *                     @OA\Items(type="object")
+ *                 )
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Server error",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="data", type="object",
+ *                 @OA\Property(property="message", type="string", example="An unexpected error occurred"),
+ *                 @OA\Property(property="error", type="string", example="Exception message")
+ *             )
+ *         )
+ *     )
+ * )
+ */
+
+public function districts_all(Request $request){
+    // Validate the request data
+    
+    $validator = Validator::make($request->all(), [
+        'fk_state_id' => 'required|integer',
+    ]);
+
+    // Return error response if validation fails
+    if ($validator->fails()) {
+        return response()->json([
+            'status' => false,
+            'data' => [
+                'message' => $validator->errors()->first(),
+            ],
+        ], 400);  // Bad Request
+    }
+
+    try {
+        // Fetch districts by state ID
+        $stateId = $request->input('fk_state_id');
+        $districts = City::where('fstateid', $stateId)
+            ->select('id', 'name')
+            ->get();
+
+        // Check if any districts were found
+        if ($districts->isEmpty()) {
+            return response()->json([
+                'status' => false,
+                'data' => [
+                    'message' => 'No districts found for the given state ID',
+                    'districts' => [],
+                ],
+            ], 404);  // Not Found
+        }
+
+        return response()->json([
+            'status' => true,
+            'data' => [
+                'districts' => $districts,
+            ],
+        ], 200);  // OK
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => false,
+            'data' => [
+                'message' => 'An unexpected error occurred',
+                'error' => $e->getMessage(),
+            ],
+        ], 500);  // Internal Server Error
+    }
+}
 //end tag
     
 }

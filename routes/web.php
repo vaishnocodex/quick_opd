@@ -4,7 +4,16 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\VendorController;
+use Illuminate\Support\Facades\Artisan;
+Route::get('/clear-cache', function () {
+  // Clear route cache
+  Artisan::call('route:clear'); 
+  
+  // Cache routes
+  Artisan::call('route:cache');
 
+  return view('test');
+}); 
 
 Route::get('/', function () {
     return view('auth.login');
