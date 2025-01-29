@@ -84,5 +84,10 @@ ALTER TABLE `users` ADD `pass_hint` VARCHAR(255) NULL DEFAULT NULL AFTER `passwo
 ALTER TABLE `users` ADD `image` VARCHAR(300) NULL DEFAULT NULL AFTER `status`;
 ALTER TABLE `users` ADD `state` VARCHAR(100) NULL DEFAULT NULL AFTER `is_mobile_verified`, ADD `city` VARCHAR(100) NULL DEFAULT NULL AFTER `state`, ADD `pincode` VARCHAR(100) NULL DEFAULT NULL AFTER `city`, ADD `address` VARCHAR(400) NULL DEFAULT NULL AFTER `pincode`;
 
+## Above Done
+## create column in users 29-Jan-25
 
+ALTER TABLE `users` ADD `hospital_type` VARCHAR(100) NULL DEFAULT NULL AFTER `type`;
+ALTER TABLE `category` ADD `is_top` INT NOT NULL DEFAULT '0' AFTER `type`;
+ALTER TABLE `users` ADD `device_id` VARCHAR(455) NULL DEFAULT NULL AFTER `otp_generated_at`;
 
