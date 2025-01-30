@@ -39,6 +39,13 @@
 
     <div class="row gutters">
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <select class="selectpicker form-control" multiple data-live-search="true">
+                <option value="1">Option 1</option>
+                <option value="2">Option 2</option>
+                <option value="3">Option 3</option>
+            </select>
+        </div>
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
             <div class="card">
                 <div class="card-body">
 
@@ -59,6 +66,8 @@
                                 @enderror
                             </div>
                         </div>
+                        
+                        
                         @if($cat_type!="symptom")
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                             <div class="form-group">
@@ -300,6 +309,17 @@
 
 </div>
 <script>
+    $(document).ready(function() {
+        $('.selectpicker').selectpicker();
+    });
+</script>
+<!-- Bootstrap Select CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.min.css">
+<!-- Bootstrap Select JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+
+<script>
+    
     function showPrompt(url)
     {
         var choice=confirm('Are you sure to delete this category ?');

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\VendorController;
+use App\Http\Controllers\WebController;
 use Illuminate\Support\Facades\Artisan;
 Route::get('/clear-cache', function () {
   // Clear route cache
@@ -23,6 +24,13 @@ Route::get('/', function () {
 Route::post('/getStateCity',[AjaxController::class,'getStateCity'])->name("getStateCity");
 Route::post('/logout',[AjaxController::class,'Logout'])->name("logout"); 
 Route::post('/login/',[AjaxController::class,'login'])->name("login"); 
+
+
+//==================================>Website Routes
+Route::get('/',[WebController::class,'Home_View'])->name("welcome"); 
+
+
+
 Auth::routes();
 
 /*------------------------------------------
@@ -68,6 +76,8 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
 
 });
   
+
+
 /*------------------------------------------
 --------------------------------------------
 All Admin Routes List
