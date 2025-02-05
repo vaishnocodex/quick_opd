@@ -34,6 +34,7 @@
                                             <thead>
                                                 <tr role="row">
                                                     <th>Action</th>
+                                                    <th>Image</th>
                                                     <th>Doctor Detail</th>
                                                     <th>Hospital Detail</th>
                                                     <th>Login Detail</th>
@@ -45,10 +46,11 @@
                                                 @php $i=0; @endphp @foreach ($All_staff as $item)
                                                 <tr>
                                                   
-                                                    <td ><span>{{ ++$i }})</span>&nbsp;&nbsp; <a href="{{ route('admin.hospital', ['id'=>Crypt::encrypt($item->id)]) }}" ><span class="icon-border_color" style="font-size: 20px;color:#178e94"></span> </a>
+                                                    <td ><span>{{ ++$i }})</span>&nbsp;&nbsp; <a href="{{ route('admin.edit.doctor', ['id'=>Crypt::encrypt($item->id)]) }}" ><span class="icon-border_color" style="font-size: 20px;color:#178e94"></span> </a>
                                                         
                                                       
                                                     </td>
+                                                    <td> @if($item->image) <img src="{{ asset('storage/doctor/').'/'.$item->image}}" style="height: 70px;width:70px;"> @endif</td>
                                                     <td>Doctor Name : <b> {{ $item->name }} </b> <br>
                                                         Mobile : <b>{{ $item->mobile_no }} </b> </td>
                                                         <td>Hospital Name : <b> {{ $item->hospital_name }} </b> <br>

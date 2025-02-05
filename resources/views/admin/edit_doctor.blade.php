@@ -1,13 +1,14 @@
 @extends('admin.master') 
 @section('content')
 
+<!-- Bootstrap Select CSS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.14/css/bootstrap-select.min.css">
 
     <div class="main-container">
       <div class="page-header">
         <!-- Breadcrumb start -->
         <ol class="breadcrumb">
-            <li class="breadcrumb-item">Edit Hospital Detail</li>
+            <li class="breadcrumb-item">Add Doctor</li>
         </ol>
         <!-- Breadcrumb end -->
     </div>
@@ -16,23 +17,28 @@
             <div class="card">
                 <div class="card-body">
                     @include('admin.message')
+                     @if(!empty($staff_id))@endif
                    
-                    <form method="POST" action="{{ route('admin.hospital.update') }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('admin.doctor.update') }}" enctype="multipart/form-data">
                         @csrf
+                        <input type="hidden" value="{{$data->id}}" name="update_id" id="update_id"/>
                         <div class="row gutters">
-                            <input type="hidden" value="{{$data->id}}" name="update_id" id="update_id"/>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label for="name">Hospital Name <span style="color:red">*</span></label>
-                                    <input type="text" required value="{{$data->name}}" class="form-control" name="name" id="name" placeholder="Enter Hospital Name" />
-                                    
+                                    <label for="name">Hospital <span style="color:red">*</span></label>
+                                    <select  class="form-control" id="hospital" name="hospital" required>
+                                        <option value="">Select</option>
+                                        @foreach ($hospital_data as $item)
+                                        <option value="{{$item->id}}" @if($data->user_id==$item->id) selected @endif>{{$item->name}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
-                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label for="image">Image<span style="color: red">*</span></label>
-                                     <input type="file" class="form-control" name="image" id="image" placeholder="Enter" @if(!$data->image) required @endif />
-                                     @if($data->image) <img src="{{ asset('storage/hospital/').'/'.$data->image}}" style="height: 70px;width:70px;"> @endif
+                                    <label for="name">Doctor Name <span style="color:red">*</span></label>
+                                    <input type="text" required  class="form-control" value="{{$data->name}}" name="name" id="name" placeholder="Enter Hospital Name" />
+                                   
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
@@ -42,6 +48,14 @@
                                     
                                 </div>
                             </div>
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label for="image">Image<span style="color: red">*</span></label>
+                                     <input type="file" class="form-control" name="image" id="image" placeholder="Enter" @if(!$data->image) required @endif />
+                                     @if($data->image) <img src="{{ asset('storage/doctor/').'/'.$data->image}}" style="height: 70px;width:70px;"> @endif
+                                </div>
+                            </div>
+                           
 
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
                                 <div class="form-group">
@@ -91,12 +105,24 @@
                                         </select>
                                 </div>
                             </div>
-                            
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <label for="city">Symptom <span style="color:red">*</span></label>
+                                        <select class="selectpicker11 form-control" name="symptom_id[]" multiple data-live-search="true">
+                                           
+                                            @foreach ($symptom_data as $item)
+                                            <option value="{{ $item->id }}" @if(in_array($item->id, explode(',', $data->symptom_id))) selected @endif>
+                                                {{ $item->name }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                </div>
+                            </div>
                             <div class="col-xl-8 col-lg-8 col-md-8 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label for="address">Address <span style="color:red">*</span></label>
-                                    <textarea class="form-control" name="address" id="address" placeholder="Enter Address">{{$data->address}}</textarea>
-                                    
+                                    <textarea class="form-control @error('address') is-invalid @enderror" name="address" id="address" placeholder="Enter Address">{{$data->address}}</textarea>
+                                   
                                 </div>
                             </div>
                             <div class="col-xl-8 col-lg-8 col-md-8 col-sm-6 col-12">
@@ -110,11 +136,11 @@
                             </div>
 
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                <button type="submit" class="btn btn-primary"> Edit Hospital</button>
+                                <button type="submit" class="btn btn-primary"> Add Doctor  </button>
                             </div>
                         </div>
                     </form>
-                    
+                 
                 </div>
             </div>
         </div>
@@ -122,6 +148,9 @@
     </div>
 </div>
 <script>
+  
+
+
 function getCity($classid) {
    $.ajax({
     url     : '{{ route('getStateCity') }}',

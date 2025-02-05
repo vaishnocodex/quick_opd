@@ -27,38 +27,26 @@
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                             <div class="form-group">
                                 <label for="name">Image</label>
-                                <input type="file" class="form-control  @error('image') is-invalid @enderror" name="img" id="image" placeholder="Enter" required />
-                                @error('image')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
+                                <input type="file" class="form-control" name="img" id="image" placeholder="Enter" required />
+                               
                             </div>
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 d-none">
                             <div class="form-group">
                                 <label for="name">Type</label>
-                                <select  onchange="setbanner_Categories(this.value)" required class="form-control form-control-lg  @error('type') is-invalid @enderror" id="type_slider" name="type_slider">
+                                <select onchange="setbanner_Categories(this.value)" required class="form-control form-control-lg" id="type_slider" name="type_slider">
                                       <option value="home">Home</option>
                                 </select>
-                                @error('image')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
+                               
                             </div>
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                             <div class="form-group">
                                 <label for="name">Heading</label>
-                                 <input type="text" class="form-control  @error('image') is-invalid @enderror" name="heading" id="heading" placeholder="Enter Heading IF" />
-                                @error('heading')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                            </div>
+                                 <input type="text" class="form-control" name="heading" id="heading" placeholder="Enter Heading IF" />
+                           </div>
                         </div>
+                        
 
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-4">
                             <button type="submit" class="btn btn-primary">Add Slider</button>

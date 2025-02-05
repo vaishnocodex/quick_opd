@@ -32,7 +32,12 @@ class VendorController extends Controller
         if($rest->id){
             $arr["staff_id"]=$rest->id;
             $decrypted = Crypt::decrypt($rest->id);
-            $arr['data'] = DB::table('users')->where('id',$decrypted)->where('role_id','2')->first();
+            $user= DB::table('users')->where('id',$decrypted)->where('role_id','2')->first();
+            $arr['data'] =$user;
+            $arr['state_data'] = DB::table('state')->where('fcountryid', 101)->get();
+            $arr['city_data'] = DB::table('city')->where('fstateid', $user->state)->get();
+            $arr['category_data'] = DB::table('category')->where('type','category')->get();
+            $arr['symptom_data'] = DB::table('category')->where('type','symptom')->get();
             return view('admin.edit_hospital')->with($arr);
         }
         else{
@@ -170,7 +175,6 @@ class VendorController extends Controller
                 $array['pincode'] =$rest->pincode;
                 $array['address'] =$rest->address;
                 $array['status'] =1;
-                 $array['created_at'] = Carbon::now();
                  $array['updated_at'] = Carbon::now();
                
                  $ins = DB::table('users')->where('id', $update_id)->update($array);
@@ -284,8 +288,14 @@ class VendorController extends Controller
         if($rest->id){
             $arr["staff_id"]=$rest->id;
             $decrypted = Crypt::decrypt($rest->id);
-            $arr['data'] = DB::table('users')->where('id',$decrypted)->where('role_id','3')->first();
-            return view('admin.edit_hospital')->with($arr);
+            $user= DB::table('users')->where('id',$decrypted)->where('role_id','3')->first();
+            $arr['data'] =$user;
+            $arr['hospital_data'] = DB::table('users')->where('type', 2)->get();
+            $arr['state_data'] = DB::table('state')->where('fcountryid', 101)->get();
+            $arr['city_data'] = DB::table('city')->where('fstateid', $user->state)->get();
+            $arr['category_data'] = DB::table('category')->where('type','category')->get();
+            $arr['symptom_data'] = DB::table('category')->where('type','symptom')->get();
+            return view('admin.edit_doctor')->with($arr);
         }
         else{
             $arr["staff_id"]=null;
@@ -382,6 +392,72 @@ class VendorController extends Controller
 
 
 
+
+    }
+    public function UpdateDoctor(Request $rest)
+    {
+
+        $this->validate($rest, [
+            // 'name' => 'required|string|unique:category,name',
+            'name' => 'required|string',
+            'mobile' => 'required|string',
+            'password' => 'required',
+            'email' => 'required|string',
+           
+
+        ]);
+        
+        $update_id=$rest->update_id;
+        $checkemail = DB::table('users')->where('id','!=', $update_id)->where('email', $rest->email)->where('type','3')->count();
+       if ($checkemail > 0) {
+            session()->flash('msgVendor', 'Email Address already exist.');
+            return redirect()->back();
+        }
+
+        $chkm = DB::table('users')->where('id','!=', $update_id)->where('mobile_no', $rest->mobile)->where('type','3')->count();
+       if ($chkm > 0) {
+            session()->flash('msgVendor', 'This Mobile No. already exist.');
+            return redirect()->back();
+        }else{
+               
+            if ($rest->image) {
+                $firmImage = time() . rand(1000000, 9999999) . '.' . $rest->image->extension();
+                $rest->image->move(public_path('storage/doctor'), $firmImage);
+                $array['image'] = $firmImage;
+   
+           }
+            $array['user_id'] = $rest->hospital;
+            $array['category_id'] = implode(',', $rest->category_id); 
+            $array['symptom_id'] = implode(',', $rest->symptom_id); 
+            $array['name'] =$rest->name;
+                $array['mobile_no'] =$rest->mobile;
+                $array['password'] = Hash::make($rest->password);
+                $array['pass_hint'] =$rest->password;
+                $array['email'] =$rest->email;
+                $array['state'] =$rest->state;
+                $array['city'] =$rest->city;
+                $array['pincode'] =$rest->pincode;
+                $array['address'] =$rest->address;
+                $array['status'] =1;
+                $array['updated_at'] = Carbon::now();
+                  
+                    $ins = DB::table('users')->where('id', $update_id)->update($array);
+
+                if ($ins) {
+
+                    session()->flash('msgVendor', 'doctor detail update Successfully.');
+                      
+                    return redirect()->route('admin.doctor');
+                } else {
+
+                session()->flash('errorVendor', 'Unable to update try after some time .');
+                       
+                return redirect()->route('admin.doctor');
+                }
+
+         
+
+        }
 
     }
        /*category section */
