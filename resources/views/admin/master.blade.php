@@ -147,9 +147,38 @@
                             </a>
                             <div class="sidebar-submenu">
                                 <ul>
-                                   
                                     <li>
                                         <a href="{{ route('admin.hospital') }}" class="{{ Route::currentRouteName()=="admin.hospital"?"current-page":"" }}">Add Hospital</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>   
+                        <li class="sidebar-dropdown{{ Route::currentRouteName()=="javascript:void(0)"?"active":"" }}">
+                            <a href="javascript:void(0)">
+                                <i class="icon-users"></i>
+                                <span class="menu-text">Manage Doctor </span>
+                            </a>
+                            <div class="sidebar-submenu">
+                                <ul>
+                                    <li>
+                                        <a href="{{ route('admin.doctor') }}" class="{{ Route::currentRouteName()=="admin.doctor"?"current-page":"" }}">All doctor</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('admin.new.doctor') }}" class="{{ Route::currentRouteName()=="admin.new.doctor"?"current-page":"" }}">Add doctor</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>   
+
+                        <li class="sidebar-dropdown{{ Route::currentRouteName()=="javascript:void(0)"?"active":"" }}">
+                            <a href="javascript:void(0)">
+                                <i class="icon-users"></i>
+                                <span class="menu-text">Ledger </span>
+                            </a>
+                             <div class="sidebar-submenu">
+                                <ul>
+                                    <li>
+                                        <a href="#" class="{{ Route::currentRouteName()=="admin.doctor"?"current-page":"" }}">Balance Sheet</a>
                                     </li>
                                 </ul>
                             </div>
@@ -267,8 +296,17 @@
     <script src="{{ asset('backend') }}/vendor/datatables/jszip.min.js"></script>
     <script src="{{ asset('backend') }}/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
     <script src="{{ asset('backend') }}/vendor/datatables/html5.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 
+    {{-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script> --}}
+
+<!-- Bootstrap Select JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.14/js/bootstrap-select.min.js"></script>
+
+<script>
+    $(document).ready(function(){
+      $('.selectpicker11').selectpicker();
+    });
+  </script>
     <script src="{{ asset('backend') }}/vendor/datatables/buttons.print.min.js"></script>
 
 

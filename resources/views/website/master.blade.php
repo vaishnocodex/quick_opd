@@ -130,32 +130,16 @@
 
 <body class="common-home res layout-2" id="body" >
 
-
-
 <div id="cd-shadow-layer"></div>   
 
 <div id="cd-cart">
   <a class="btn" style="background:#009E7F; width:100%; border-radius:20px; color:#fff;" href="Checkout">Checkout</a>
  
-<div id="header_cart">
-    
-</div>  
-
-
-
-
-
-
-
- 
-</div> <!-- cd-cart -->
-
-    
+<div id="header_cart"></div>  
+</div> <!-- cd-cart -->   
 <div style="display:none; position:fixed; right:0px; top:10%; width:200px; z-index:1000;" id="cart_alert" class="alert alert-success">
   <strong>Product </strong>Added to Cart
-</div> 
-    
-    
+</div>  
 <div style="display:none; position:fixed; right:0px; top:10%; width:200px; z-index:1000;" id="out_alert" class="alert alert-danger">
   <strong>Product </strong>is out of Delivery Area
 </div>
@@ -163,15 +147,13 @@
 <div style="display:none; position:fixed; right:0px; top:10%; width:350px; z-index:1000;" id="shop_alert" class="alert alert-danger">
   <strong>You have already Products from another Shop in your cart </strong>
 </div>
-
 <div style="display:none; position:fixed; right:0px; top:10%; width:200px; z-index:1000;" id="pack_alert" class="alert alert-danger">
   <strong>Please</strong> Select package first
 </div>
-
 <div style="display:none; position:fixed; right:0px; top:10%; width:200px; z-index:1000;" id="qty_alert" class="alert alert-danger">
   <strong>Please</strong> Check Quantity
 </div>
-    
+
     <div id="wrapper" class="wrapper-fluid banners-effect-7">
     
 
@@ -218,9 +200,10 @@
             <div class="row">
                 <!-- Logo -->
                 <div class="navbar-logo col-lg-2 col-md-3 col-sm-12 col-xs-12">
-                    <div class="logo"><a href="Home">
+                    <div class="logo">
+                        <a href="Home">
                         <img style="height: 52px;width:130px;" src="{{ asset('website') }}/logo/logo.svg" title="MyDoctors24" alt="MyDoctors24" /></a></div>
-                  <center>
+                          <center>
                                 <ul style="margin-top:25px;" class="demo_btn">
 
 
@@ -305,22 +288,8 @@
                        
                           <!--cart-->
                     <div id="cartmobile"  class="shopping_cart">
-                        <a href="Cart" > 
-                        <div id="cart_mobile" class="btn-shopping-cart">
-
-                            
-
-                           
-                        </div>
-                        </a>
-                        </div>
+                        <a href="Cart" ><div id="cart_mobile" class="btn-shopping-cart"> </div> </a> </div>
                         
-                        
-               
-                     
-                    
-                    
-                
                     <!--//cart-->
                     
 
@@ -345,7 +314,7 @@
             <div class="row">
                
                 
-                  <nav class="navbar  navbar-fixed-bottom" style="background-color:whitesmoke">
+                  <nav class="navbar mobile_menu_opd navbar-fixed-bottom" style="background-color:whitesmoke">
                         <div class="container-fluid">
                             <center>
                             <ul class="nav navbar-nav " style="display: flex; width:100%" >
@@ -403,22 +372,19 @@
                                                         <li class="">
                                                             <p class="close-menu"></p>
                                                             <a href="Home" class="clearfix">
-                                                                <i class="fa fa-home"></i>
-
-                                                            </a>
-
+                                                              Home</a>
                                                         </li>
                                                         <li class="">
                                                             <p class="close-menu"></p>
                                                             <a href="ALL-Hospital" class="clearfix">
-                                                                <img src="{{asset('website')}}/hospital.svg" />&nbsp;<strong>All Hospital</strong>
+                                                                <strong>All Hospital</strong>
                                                                 <span class="label"></span>
                                                             </a>
                                                         </li>
                                                         <li class="">
                                                             <p class="close-menu"></p>
                                                             <a href="ALL-Doctor" class="clearfix">
-                                                                <img src="{{asset('website')}}/doctor.svg" />&nbsp; <strong>All Doctors</strong>
+                                                                 <strong>All Doctors</strong>
                                                                 <span class="label"></span>
                                                             </a>
                                                         </li>
@@ -426,21 +392,11 @@
                                                         <li class="">
                                                             <p class="close-menu"></p>
                                                             <a href="Medical" class="clearfix">
-                                                                <img src="{{asset('website')}}/medical.svg" />&nbsp;<strong>Medical Store</strong>
+                                                                <strong>Medical Store</strong>
                                                                 <span class="label"></span>
                                                             </a>
                                                         </li>
 
-
-
-
-                                                        <li class="">
-                                                            <p class="close-menu"></p>
-                                                            <a href="#" class="clearfix">
-                                                                <img src="{{asset('website')}}/online medical.svg" />&nbsp; <strong>Online Medical</strong>
-                                                                <span class="label"></span>
-                                                            </a>
-                                                        </li>
                                                         <li class="">
                                                             <p class="close-menu"></p>
                                                             <a href="#" class="clearfix">
@@ -451,11 +407,8 @@
 
                                                         <li class="">
                                                             <a href="#" class="">
-                                                                <img src="{{asset('website')}}/emergency.svg">
-                                                                <strong>Emergency</strong>
-                                                                <span class="label"></span>
-
-                                                            </a>
+                                                              <strong>Emergency</strong>
+                                                                <span class="label"></span> </a>
 
 
                                                         </li>

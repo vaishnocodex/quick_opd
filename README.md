@@ -91,3 +91,7 @@ ALTER TABLE `users` ADD `hospital_type` VARCHAR(100) NULL DEFAULT NULL AFTER `ty
 ALTER TABLE `category` ADD `is_top` INT NOT NULL DEFAULT '0' AFTER `type`;
 ALTER TABLE `users` ADD `device_id` VARCHAR(455) NULL DEFAULT NULL AFTER `otp_generated_at`;
 
+
+## create column in users 04-Feb-25
+ALTER TABLE `users` ADD `symptom_id` VARCHAR(300) NULL DEFAULT NULL AFTER `category_id`;
+
