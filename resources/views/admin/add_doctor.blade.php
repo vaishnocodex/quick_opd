@@ -6,9 +6,7 @@
      $staff=backHelper::get_staff($staff_id);
       @endphp
     @endif
-    <!-- Bootstrap Select CSS -->
-<!-- Bootstrap 4.5 CSS -->
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+
 <!-- Bootstrap Select CSS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.14/css/bootstrap-select.min.css">
 
@@ -16,7 +14,7 @@
       <div class="page-header">
         <!-- Breadcrumb start -->
         <ol class="breadcrumb">
-            <li class="breadcrumb-item">Hospital</li>
+            <li class="breadcrumb-item">Add Doctor</li>
         </ol>
         <!-- Breadcrumb end -->
     </div>
@@ -27,50 +25,46 @@
                     @include('admin.message')
                      @if(!empty($staff_id))@endif
                    
-                    <form method="POST" action="{{ route('admin.hospital.add') }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('admin.doctor.add') }}" enctype="multipart/form-data">
                         @csrf
                         <div class="row gutters">
-                            <input type="hidden"  @if(!empty($staff_id)) value="{{$staff_id}}" @else value="" @endif  name="id" id="id"/>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label for="name">Hospital Name <span style="color:red">*</span></label>
-                                    <input type="text" required value="{{!empty($staff)?$staff[0]->name:'' }}" class="form-control @error('name') is-invalid @enderror" name="name" id="name" placeholder="Enter Hospital Name" />
-                                    @error('name')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
+                                    <label for="name">Hospital <span style="color:red">*</span></label>
+                                    <select  class="form-control" id="hospital" name="hospital" required>
+                                        <option value="">Select</option>
+                                        @foreach ($hospital_data as $item)
+                                        <option value="{{$item->id}}">{{$item->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label for="name">Doctor Name <span style="color:red">*</span></label>
+                                    <input type="text" required  class="form-control" name="name" id="name" placeholder="Enter Hospital Name" />
+                                   
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label for="image">Image<span style="color: red">*</span></label>
-                                                                    
+                                    <label for="image">Image<span style="color: red">*</span></label>                      
                                      <input type="file" class="form-control" name="image" id="image" placeholder="Enter" required/>
-                                    
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label for="mobile">Mobile <span style="color:red">*</span></label>
-                                    <input type="text " required value="{{!empty($staff)?$staff[0]->mobile:'' }}" pattern="[0-9]{10}" maxlength="11" class="idm form-control @error('mobile') is-invalid @enderror" name="mobile" id="mobile" placeholder="Enter Mobile" />
-                                    @error('mobile')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
+                                    <input type="text " required pattern="[0-9]{10}" maxlength="11" class="idm form-control" name="mobile" id="mobile" placeholder="Enter Mobile" />
+                                   
                                 </div>
                             </div>
 
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label for="email">Email <span style="color:red">*</span></label>
-                                    <input type="email" required value="{{!empty($staff)?$staff[0]->email:'' }}" class="form-control @error('email') is-invalid @enderror" name="email" id="email" placeholder="Enter Email" autocomplete="off" />
-                                    @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
+                                    <input type="email" required class="form-control @error('email') is-invalid @enderror" name="email" id="email" placeholder="Enter Email" autocomplete="off" />
+                                    
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
@@ -97,33 +91,36 @@
                                 <div class="form-group">
                                     <label for="password">Password <span style="color:red">*</span></label>
                                     <input type="text" required value="{{!empty($staff)?$staff[0]->password:'' }}" class="form-control @error('password') is-invalid @enderror" name="password" id="password" placeholder="Enter Password" />
-                                    @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
+                                   
                                 </div>
                             </div>
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                 <div class="form-group">
                                     <label for="city">Category <span style="color:red">*</span></label>
                                         <select class="selectpicker11 form-control" name="category_id[]" multiple data-live-search="true">
-                                          @foreach ($category_data as $item)
+                                          
+                                            @foreach ($category_data as $item)
                                             <option value="{{$item->id}}">{{$item->name}}</option>
                                             @endforeach 
                                         </select>
                                 </div>
                             </div>
-                            
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <label for="city">Symptom <span style="color:red">*</span></label>
+                                        <select class="selectpicker11 form-control" name="symptom_id[]" multiple data-live-search="true">
+                                           
+                                            @foreach ($symptom_data as $item)
+                                            <option value="{{$item->id}}">{{$item->name}}</option>
+                                            @endforeach
+                                        </select>
+                                </div>
+                            </div>
                             <div class="col-xl-8 col-lg-8 col-md-8 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label for="address">Address <span style="color:red">*</span></label>
                                     <textarea class="form-control @error('address') is-invalid @enderror" name="address" id="address" placeholder="Enter Address"></textarea>
-                                    @error('address')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
+                                   
                                 </div>
                             </div>
                             <div class="col-xl-8 col-lg-8 col-md-8 col-sm-6 col-12">
@@ -137,65 +134,11 @@
                             </div>
 
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                <button type="submit" class="btn btn-primary">
-                                    @if(!empty($staff_id))
-                                        Edit Hospital
-                                    @else
-                                    Add Hospital
-                                    @endif
-                                </button>
+                                <button type="submit" class="btn btn-primary"> Add Doctor  </button>
                             </div>
                         </div>
                     </form>
-                    @if(!empty($staff_id))
-                    @else
-                    <hr>
-                    <div class="row gutters mt-4">
-                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                            <div class="table-container">
-                                <div class="t-header" style="text-align: center; font-size: 18px;">All Hospital</div>
-
-                                <div class="table-responsive">
-                                    <div id="copy-print-csv_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
-                                        <table id="copy-print-csv" class="table custom-table dataTable no-footer" role="grid" aria-describedby="copy-print-csv_info">
-                                            <thead>
-                                                <tr role="row">
-                                                    <th>Action</th>
-                                                    <th>Hospital Detail</th>
-                                                    <th>Login Detail</th>
-                                                     <th>Address</th>
-                                                    <th>Created At</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @php $i=0; @endphp @foreach ($All_staff as $item)
-                                                <tr>
-                                                  
-                                                    <td ><span>{{ ++$i }})</span>&nbsp;&nbsp; <a href="{{ route('admin.hospital', ['id'=>Crypt::encrypt($item->id)]) }}" ><span class="icon-border_color" style="font-size: 20px;color:#178e94"></span> </a>
-                                                        
-                                                      
-                                                    </td>
-                                                    <td>Hospital Name : <b> {{ $item->name }} </b> <br>
-                                                        Mobile : <b>{{ $item->mobile_no }} </b> </td>
-                                                    <td>Email: <b>{{ $item->email }}</b> <br>
-                                                       Password: <b>{{ $item->pass_hint }}</b></td>
-
-                                                       <td>State: <b>{{ $item->state_name }}</b> <br>
-                                                        City: <b>{{ $item->city_name }}</b><br>
-                                                        address: <b>{{ $item->address }}</b> 
-                                                    </td>
-                                                    <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y') }} </td> 
-                                                </tr>
-                                              
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        </div>
-                    @endif
+                 
                 </div>
             </div>
         </div>
@@ -203,14 +146,7 @@
     </div>
 </div>
 <script>
-    function deleteConfirm(link)
-    {
-       var cs=confirm("Do you want to delete this Staff ?");
-       if(cs==true)
-       {
-        document.location.href=link;
-       }
-    }
+  
 
 
 function getCity($classid) {

@@ -39,20 +39,13 @@
 
     <div class="row gutters">
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-            <select class="selectpicker form-control" multiple data-live-search="true">
-                <option value="1">Option 1</option>
-                <option value="2">Option 2</option>
-                <option value="3">Option 3</option>
-            </select>
-        </div>
-        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
             <div class="card">
                 <div class="card-body">
 
                     @include('admin.message')
                     <form method="POST" action="{{ route('admin.category.add') }}" enctype="multipart/form-data">
                       @csrf
-                       <input type="hidden" name="type" value="{{$cat_type}}">
+                      
                        <div class="row gutters">
                         <input type="hidden" class="getodr" @if(!empty($category_id)) value="{{$category_id}}" @else value="" @endif  name="id" id="id"/>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
@@ -75,20 +68,27 @@
                                 <select name="parent"  class="form-control selUser @error('parent') is-invalid @enderror"  id="parent" >
                                     <option value="">Select Parent Category</option>
                                     @foreach ($categories as $item)
-                                <option value="{{ $item->id }}"
-                                    @if (!empty($Cate) && $Cate->parent==$item->id)
-                                        selected
-                                    @endif
-                                    >{{  $item->name  }}</option>
+                                    <option value="{{ $item->id }}" @if (!empty($Cate) && $Cate->parent==$item->id) selected @endif >{{  $item->name  }}</option>
                                     @endforeach
                                 </select>
-                                @error('parent')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
                             </div>
-                        </div> @endif
+                        </div> 
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="parent">Type</label>
+                                <select name="type"  class="form-control selUser"  id="type" required>
+                                    <option value="">Select</option>
+                                    <option value="radiology" @if (!empty($Cate) && $Cate->type=='category') selected @endif >radiology</option>
+                                    <option value="category" @if (!empty($Cate) && $Cate->type=='category') selected @endif >category</option>
+                                    
+                                </select>
+                            </div>
+                        </div> 
+
+                        @else
+
+                        <input type="hidden" name="type" value="{{$cat_type}}">
+                        @endif
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                             <div class="form-group">
                                 <label for="image">Image<span style="color: red">*</span></label>
@@ -97,15 +97,7 @@
                                 <input type="file" class="form-control  @error('image') is-invalid @enderror" name="image" id="image" placeholder="Enter" />
                                  @else                                
                                  <input type="file" class="form-control  @error('image') is-invalid @enderror" name="image" id="image" placeholder="Enter" required/>
-
-                                
                                 @endif
-                                @error('image')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                               @enderror
-
                             </div>
                         </div>
 

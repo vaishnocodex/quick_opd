@@ -187,4 +187,17 @@ z-index: 100;
 			background:url('loader.gif') no-repeat center;
 			height:150px;
 		}
+
+    /* Hide navbar by default */
+.navbar.mobile_menu_opd {
+    display: none;
+}
+
+/* Show navbar only on screens smaller than 1024px (mobile + tablet) */
+@media screen and (max-width: 1024px) {
+    .navbar.mobile_menu_opd {
+        display: block;
+    }
+}
+
     </style>

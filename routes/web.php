@@ -16,10 +16,13 @@ Route::get('/clear-cache', function () {
   return view('test');
 }); 
 
-Route::get('/', function () {
+Route::get('admin/', function () {
     return view('auth.login');
 });
 
+Route::get('abt/', function () {
+  return view('website.home2');
+});
 //-------------------------------------Custom Routes
 Route::post('/getStateCity',[AjaxController::class,'getStateCity'])->name("getStateCity");
 Route::post('/logout',[AjaxController::class,'Logout'])->name("logout"); 
@@ -56,9 +59,15 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
         
 //==Store CRUD Operation
 //Route::get('/admin/default/store/{id?}', [VendorController::class, 'SetDefaultStore'])->name('admin.default.store');
-  Route::get('/admin/hospital/{id?}', [VendorController::class, 'ShowStore'])->name('admin.hospital');
+  Route::get('/admin/hospital/{id?}', [VendorController::class, 'ShowHospital'])->name('admin.hospital');
   Route::post('/admin/hospital/add', [VendorController::class, 'AddHospital'])->name('admin.hospital.add');
-  Route::post('/admin/store/update', [VendorController::class, 'UpdateStore'])->name('admin.store.update');
+  Route::post('/admin/hospital/update', [VendorController::class, 'UpdateHospital'])->name('admin.hospital.update');
+
+  //=======Doctor Module  admin.doctor
+  Route::get('/admin/doctor/{id?}', [VendorController::class, 'ShowDoctor'])->name('admin.doctor');
+  Route::get('/admin/new/doctor/{id?}', [VendorController::class, 'NewDoctor'])->name('admin.new.doctor');
+  Route::post('/admin/doctor/add', [VendorController::class, 'AddDoctor'])->name('admin.doctor.add');
+  Route::post('/admin/doctor/update', [VendorController::class, 'UpdateStore'])->name('admin.doctor.update');
 
   //Slider
   Route::get('admin/slider/{id?}',[VendorController::class,'showSlider'])->name('admin.slider');
