@@ -1,15 +1,6 @@
 @extends('admin.master') 
 @section('content')
 
-@if(!empty($staff_id))
-    @php
-     $staff=backHelper::get_staff($staff_id);
-      @endphp
-    @endif
-    <!-- Bootstrap Select CSS -->
-<!-- Bootstrap 4.5 CSS -->
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-<!-- Bootstrap Select CSS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.14/css/bootstrap-select.min.css">
 
     <div class="main-container">
@@ -30,11 +21,11 @@
                     <form method="POST" action="{{ route('admin.hospital.add') }}" enctype="multipart/form-data">
                         @csrf
                         <div class="row gutters">
-                            <input type="hidden"  @if(!empty($staff_id)) value="{{$staff_id}}" @else value="" @endif  name="id" id="id"/>
+                            
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label for="name">Hospital Name <span style="color:red">*</span></label>
-                                    <input type="text" required value="{{!empty($staff)?$staff[0]->name:'' }}" class="form-control @error('name') is-invalid @enderror" name="name" id="name" placeholder="Enter Hospital Name" />
+                                    <input type="text" required class="form-control" name="name" id="name" placeholder="Enter Hospital Name" />
                                     @error('name')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -53,7 +44,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label for="mobile">Mobile <span style="color:red">*</span></label>
-                                    <input type="text " required value="{{!empty($staff)?$staff[0]->mobile:'' }}" pattern="[0-9]{10}" maxlength="11" class="idm form-control @error('mobile') is-invalid @enderror" name="mobile" id="mobile" placeholder="Enter Mobile" />
+                                    <input type="text" required pattern="[0-9]{10}" maxlength="11" class="idm form-control @error('mobile') is-invalid @enderror" name="mobile" id="mobile" placeholder="Enter Mobile" />
                                     @error('mobile')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -96,7 +87,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label for="password">Password <span style="color:red">*</span></label>
-                                    <input type="text" required value="{{!empty($staff)?$staff[0]->password:'' }}" class="form-control @error('password') is-invalid @enderror" name="password" id="password" placeholder="Enter Password" />
+                                    <input type="text" required class="form-control @error('password') is-invalid @enderror" name="password" id="password" placeholder="Enter Password" />
                                     @error('password')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -118,7 +109,7 @@
                             <div class="col-xl-8 col-lg-8 col-md-8 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label for="address">Address <span style="color:red">*</span></label>
-                                    <textarea class="form-control @error('address') is-invalid @enderror" name="address" id="address" placeholder="Enter Address"></textarea>
+                                    <textarea class="form-control" name="address" id="address" placeholder="Enter Address"></textarea>
                                     @error('address')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -137,18 +128,10 @@
                             </div>
 
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                <button type="submit" class="btn btn-primary">
-                                    @if(!empty($staff_id))
-                                        Edit Hospital
-                                    @else
-                                    Add Hospital
-                                    @endif
-                                </button>
+                                <button type="submit" class="btn btn-primary">  Add Hospital</button>
                             </div>
                         </div>
                     </form>
-                    @if(!empty($staff_id))
-                    @else
                     <hr>
                     <div class="row gutters mt-4">
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
@@ -195,7 +178,7 @@
                             </div>
                         </div>
                         </div>
-                    @endif
+                   
                 </div>
             </div>
         </div>

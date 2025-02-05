@@ -66,8 +66,9 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
   //=======Doctor Module  admin.doctor
   Route::get('/admin/doctor/{id?}', [VendorController::class, 'ShowDoctor'])->name('admin.doctor');
   Route::get('/admin/new/doctor/{id?}', [VendorController::class, 'NewDoctor'])->name('admin.new.doctor');
+  Route::get('/admin/edit/doctor/{id?}', [VendorController::class, 'NewDoctor'])->name('admin.edit.doctor');
   Route::post('/admin/doctor/add', [VendorController::class, 'AddDoctor'])->name('admin.doctor.add');
-  Route::post('/admin/doctor/update', [VendorController::class, 'UpdateStore'])->name('admin.doctor.update');
+  Route::post('/admin/doctor/update', [VendorController::class, 'UpdateDoctor'])->name('admin.doctor.update');
 
   //Slider
   Route::get('admin/slider/{id?}',[VendorController::class,'showSlider'])->name('admin.slider');

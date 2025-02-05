@@ -1,12 +1,6 @@
 @extends('admin.master') 
 @section('content')
 
-@if(!empty($staff_id))
-    @php
-     $staff=backHelper::get_staff($staff_id);
-      @endphp
-    @endif
-
 <!-- Bootstrap Select CSS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.14/css/bootstrap-select.min.css">
 
@@ -63,7 +57,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label for="email">Email <span style="color:red">*</span></label>
-                                    <input type="email" required class="form-control @error('email') is-invalid @enderror" name="email" id="email" placeholder="Enter Email" autocomplete="off" />
+                                    <input type="email" required class="form-control" name="email" id="email" placeholder="Enter Email" autocomplete="off" />
                                     
                                 </div>
                             </div>
@@ -90,7 +84,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label for="password">Password <span style="color:red">*</span></label>
-                                    <input type="text" required value="{{!empty($staff)?$staff[0]->password:'' }}" class="form-control @error('password') is-invalid @enderror" name="password" id="password" placeholder="Enter Password" />
+                                    <input type="text" required  class="form-control" name="password" id="password" placeholder="Enter Password" />
                                    
                                 </div>
                             </div>
@@ -119,7 +113,7 @@
                             <div class="col-xl-8 col-lg-8 col-md-8 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label for="address">Address <span style="color:red">*</span></label>
-                                    <textarea class="form-control @error('address') is-invalid @enderror" name="address" id="address" placeholder="Enter Address"></textarea>
+                                    <textarea class="form-control" name="address" id="address" placeholder="Enter Address"></textarea>
                                    
                                 </div>
                             </div>
