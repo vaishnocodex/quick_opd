@@ -78,10 +78,7 @@
                                     </a>
                                 </div>
                               <div class="cat-title"> 
-                                  <a style="font-size:11px;" href="#" title="{{$item->name}}" target="_self">{{$item->name}}
-                                  <br>
-                                  {{$item->name}}
-                                  </a>
+                                  <a style="font-size:11px;" href="#" title="{{$item->name}}" target="_self">{{$item->name}} </a>
                                 </div>
                             </div>
                             @endforeach
@@ -114,10 +111,7 @@
                                     </a>
                                </div>
                               <div class="cat-title"> 
-                                  <a style="font-size:11px;" href="#" title="{{$item->name}}" target="_self">{{$item->name}}
-                                  <br>
-                                  {{$item->name}}
-                                  </a>
+                                  <a style="font-size:11px;" href="#" title="{{$item->name}}" target="_self">{{$item->name}}</a>
                                 </div>
                           </div>
                           @endforeach
@@ -158,10 +152,7 @@
                                     </a>
                                 </div>
                               <div class="cat-title"> 
-                                  <a style="font-size:11px;" href="#" title="{{$item->name}}" target="_self">{{$item->name}}
-                                  <br>
-                                  {{$item->name}}
-                                  </a>
+                                  <a style="font-size:11px;" href="#" title="{{$item->name}}" target="_self">{{$item->name}}</a>
                                 </div>
                             </div>
                             @endforeach
