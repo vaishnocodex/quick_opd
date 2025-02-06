@@ -211,7 +211,7 @@
                                             <img class="btn-img" src="image/btn02.png" alt="">
                                             <span class="btn-text">DOCTORS</span></a></li>
 
-                                    <li class="btn-li"> <a href="ALL-Hospital">
+                                    <li class="btn-li"> <a href="{{route('all.hospital')}}">
                                             <img class="btn-img" src="image/btn01.png" alt="">
                                             <span class="btn-text">HOSPITALS</span> </a></li>
 
@@ -371,32 +371,23 @@
 
                                                         <li class="">
                                                             <p class="close-menu"></p>
-                                                            <a href="Home" class="clearfix">
+                                                            <a href="{{route('welcome')}}" class="clearfix">
                                                               Home</a>
                                                         </li>
                                                         <li class="">
                                                             <p class="close-menu"></p>
-                                                            <a href="ALL-Hospital" class="clearfix">
+                                                            <a href="{{route('all.hospital')}}" class="clearfix">
                                                                 <strong>All Hospital</strong>
                                                                 <span class="label"></span>
                                                             </a>
                                                         </li>
                                                         <li class="">
                                                             <p class="close-menu"></p>
-                                                            <a href="ALL-Doctor" class="clearfix">
+                                                            <a href="{{route('all.doctor')}}" class="clearfix">
                                                                  <strong>All Doctors</strong>
                                                                 <span class="label"></span>
                                                             </a>
                                                         </li>
-
-                                                        <li class="">
-                                                            <p class="close-menu"></p>
-                                                            <a href="Medical" class="clearfix">
-                                                                <strong>Medical Store</strong>
-                                                                <span class="label"></span>
-                                                            </a>
-                                                        </li>
-
                                                         <li class="">
                                                             <p class="close-menu"></p>
                                                             <a href="#" class="clearfix">
@@ -549,8 +540,8 @@
                                      <!---  <li class="mail">
                                       <a href="mailto:admin@mydoctors24.com">admin@mydoctors24.com</a>
                                   </li>  ---->
-                                       <li><a href="Contact-Us">Contact Us</a></li>
-                                      <li><a href="About-Us">About-Us</a></li>
+                                       <li><a href="{{route('contact.us')}}">Contact Us</a></li>
+                                      <li><a href="{{route('about.us')}}">About-Us</a></li>
                                       <li><a href="Terms-and-Conditions">Terms & Conditions</a></li>
                                       <li><a href="Privacy-Policy-For-Devops">Privacy Policy For Devops</a></li>
                                       <li><a href="Privacy-Policy">Privacy Policy</a></li>

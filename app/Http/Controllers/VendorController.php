@@ -460,7 +460,24 @@ class VendorController extends Controller
         }
 
     }
-       /*category section */
+       /*category section */ 
+       public function showRadiologyCat(Request $rest)
+       {
+           if($rest->id)
+           {
+               $arr["category_id"]=$rest->id;
+           }
+           else{
+               $arr["category_id"]=null;
+           }
+           $arr['categories'] = DB::table('category')->where('type','symptom')->get();
+           $cats = DB::table('category')->where(['parent'=>0])->where('type','symptom')->get();
+           $arr['catall'] = $cats;
+           $arr['heading_title'] = 'Symptom';
+           $arr['cat_type'] = 'symptom';
+   
+           return view('admin.category')->with($arr);
+       }
        public function showSymptom(Request $rest)
        {
            if($rest->id)

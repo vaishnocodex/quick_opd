@@ -20,6 +20,12 @@ Route::get('admin/', function () {
     return view('auth.login');
 });
 
+Route::get('about-us/', function () {
+  return view('website.about');
+})->name("about.us");
+Route::get('contact-us/', function () {
+  return view('website.contact');
+})->name("contact.us");
 Route::get('abt/', function () {
   return view('website.home2');
 });
@@ -30,7 +36,9 @@ Route::post('/login/',[AjaxController::class,'login'])->name("login");
 
 
 //==================================>Website Routes
-Route::get('/',[WebController::class,'Home_View'])->name("welcome"); 
+Route::get('/',[WebController::class,'Home_View'])->name('welcome'); 
+Route::get('all-hospital/',[WebController::class,'All_Hospital'])->name('all.hospital'); 
+Route::get('all-doctor/',[WebController::class,'All_Doctor'])->name('all.doctor'); 
 
 
 
@@ -48,7 +56,7 @@ Route::middleware(['auth', 'user-access:user'])->group(function () {
   
 /*------------------------------------------
 --------------------------------------------
-All Admin Routes List
+All Admin Routes List  
 --------------------------------------------
 --------------------------------------------*/
 Route::middleware(['auth', 'user-access:admin'])->group(function () {
@@ -76,6 +84,7 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
   Route::get('/admin/delete/slider/{id?}',[VendorController::class,'DeleteSlider'])->name('admin.delete.slider');
 /*category*/
   Route::get('/admin/symptom/{id?}',[VendorController::class,'showSymptom'])->name('admin.symptom');
+  Route::get('/admin/radiology/category/{id?}',[VendorController::class,'showRadiologyCat'])->name('admin.radiology.category');
   
   Route::get('/admin/category/{id?}',[VendorController::class,'showCategory'])->name('admin.category');
   Route::post('/admin/category/add',[VendorController::class,'insertCategory'])->name('admin.category.add');
