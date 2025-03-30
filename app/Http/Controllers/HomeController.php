@@ -1,7 +1,8 @@
 <?php
   
 namespace App\Http\Controllers;
-  
+
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -45,5 +46,15 @@ class HomeController extends Controller
     public function managerHome(): View
     {
         return view('managerHome');
+    }
+
+
+    public function hospital()
+    {
+        $doctors = User::where([
+            ['type',3],
+            ['user_id',auth()->user()->id],
+            ])->get();
+        return view('hospital.home',compact('doctors'));
     }
 }

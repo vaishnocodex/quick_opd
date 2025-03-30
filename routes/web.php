@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AjaxController;
+use App\Http\Controllers\HospitalController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\WebController;
 use Illuminate\Support\Facades\Artisan;
@@ -18,6 +19,10 @@ Route::get('/clear-cache', function () {
 
 Route::get('admin/', function () {
     return view('auth.login');
+});
+
+Route::get('hospital/', function () {
+  return view('auth.login');
 });
 
 Route::get('about-us/', function () {
@@ -105,5 +110,17 @@ All Admin Routes List
 Route::middleware(['auth', 'user-access:manager'])->group(function () {
   
     Route::get('/manager/home', [HomeController::class, 'managerHome'])->name('manager.home');
+});
+
+
+
+Route::middleware(['auth', 'hospital'])->prefix('hospital')->name('hospital.')->group(function () {
+
+  Route::get('/', [HomeController::class, 'hospital'])->name('dashboard');
+  Route::get('doctor-index', [HospitalController::class, 'index'])->name('doctor.index');
+  Route::get('doctor-create', [HospitalController::class, 'create'])->name('doctor.create');
+
+  Route::post('doctor-store', [HospitalController::class, 'store'])->name('doctor.store');
+
 });
 
