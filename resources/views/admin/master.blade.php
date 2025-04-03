@@ -132,6 +132,9 @@
                                         <a href="{{ route('admin.category') }}" class="{{ Route::currentRouteName()=="admin.category"?"current-page":"" }}">Add Category </a>
                                     </li>
                                     <li>
+                                        <a href="{{ route('admin.radiology.category') }}" class="{{ Route::currentRouteName()=="admin.radiology.category"?"current-page":"" }}">Radiology Category </a>
+                                    </li>
+                                    <li>
                                         <a href="{{ route('admin.symptom') }}" class="{{ Route::currentRouteName()=="admin.symptom"?"current-page":"" }}">Add Symptom </a>
                                     </li>
                                     <li>
@@ -156,6 +159,19 @@
                         <li class="sidebar-dropdown{{ Route::currentRouteName()=="javascript:void(0)"?"active":"" }}">
                             <a href="javascript:void(0)">
                                 <i class="icon-users"></i>
+                                <span class="menu-text">Manage Radiology </span>
+                            </a>
+                            <div class="sidebar-submenu">
+                                <ul>
+                                    <li>
+                                        <a href="#" class="{{ Route::currentRouteName()=="admin.hospital"?"current-page":"" }}">Add Radiology</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li> 
+                        <li class="sidebar-dropdown{{ Route::currentRouteName()=="javascript:void(0)"?"active":"" }}">
+                            <a href="javascript:void(0)">
+                                <i class="icon-users"></i>
                                 <span class="menu-text">Manage Doctor </span>
                             </a>
                             <div class="sidebar-submenu">
@@ -165,6 +181,12 @@
                                     </li>
                                     <li>
                                         <a href="{{ route('admin.new.doctor') }}" class="{{ Route::currentRouteName()=="admin.new.doctor"?"current-page":"" }}">Add doctor</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('admin.doctor.slot') }}" class="{{ Route::currentRouteName()=="admin.doctor.slot"?"current-page":"" }}">Add doctor Slot</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('admin.doctor-slot-display') }}" class="{{ Route::currentRouteName()=="admin.doctor-slot-display"?"current-page":"" }}">Doctor View</a>
                                     </li>
                                 </ul>
                             </div>

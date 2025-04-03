@@ -1,70 +1,208 @@
-@extends('website.master')
+@extends('website.master3') 
 @section('content')
-      
-	<!-- Main Container  -->
-	<div style="padding:20px;" class="main-container container">
-		<ul class="breadcrumb">
-			<li><a href="{{route('welcome')}}"><i class="fa fa-home"></i></a></li>
-		
-				<li>All Doctors </li>
-				
-		</ul>
-			
-		<div class="row" style="margin-top: 11px;">
-			
-			<!--Middle Part Start-->
-            <div id="content" class="col-md-12 col-sm-12 ">
-                <div class="products-category">
-                  
-                    <div class="col-md-12"> <!-- Filters -->
-                   
-                    
-                    <!-- //end Filters -->
-                         <!--changed listings-->
-                         <div class="row">
-                              
-						 <div class="col-md-12">
-						 </br>
-                           <div class="row" style="padding:20px;"> 
-                            @foreach ($doctor as $item)
-                           <!------------------------------------Doctor-------------------------------------->
-						      <div style=" border-radius:10px; padding:5px; margin:5px;  box-shadow:0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" class="col-md-6 col-sm-12 col-xs-12">
-                               <div class="row">
-                                <div  class="col-md-6 col-lg-6 col-xs-6 col-sm-6 para02">
-                                  <a href="#">
-                             
-                                        <img class="img-responsive imagee" style="width:150px; height:150px; border-radius:20px;" src="{{ asset('storage/doctor').'/'.$item->image }}"  alt="{{$item->name}}">
-                                     
-                                     <center><h4 class="name01" style="font-weight:600"> {{$item->name}}</h4> </center>
-                                    </a>
-                            </div>
-                             
-                               <div  class="col-md-6 col-lg-6 col-xs-6 col-sm-6 doctor-id">
-                                    <h4><a href="#" title="{{$item->name}}" target="_self" style="font-size: 20px; font-weight: 800;">{{$item->name}}</a></h4>
-                                       <div class="price"><span style="color:black;">Exp. </span> 5 years </div>   
-                                          <div class="price"> MBBS</div>
-                                            <div class="price"><span style="color:black;">Specialist</span> {{$item->name}}</div> 
-                                          
-                                             
-                                             <div class="price"><span style="color:black;">Fee </span><i class="fa fa-rupee"></i>200 </div>
-                                               <div style="margin-top:5px;" >
-                                                <a href="#" type="button" class="btn btn-success" title="Book Now"> 
-                                                 <i class="fa fa-shopping-basket"></i> <span>Visit A Book</span> </a> 
-                                            </div>
+<main class="main" id="main-section">
+    <div class="page-header breadcrumb-wrap">
+        <div class="container">
+            <div class="breadcrumb">
+                <div class="breadcrumb-item d-inline-block">
+                    <a href="{{route('welcome')}}"title="Home">
+                        Home
+                    </a>
+                </div>
+                {{-- <span></span>
+                <div class="breadcrumb-item d-inline-block">
+                    <a href="#"title="Products">
+                        Test
+                    </a>
+                </div>
+                <span></span>
+                <div class="breadcrumb-item d-inline-block active">
+                    <div itemprop="item">
+                       Test
+                    </div>
+                </div> --}}
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container mb-30">
+        <div class="row">
+          
+
+            <div class="mt-4">
+                <div class="products-listing position-relative">
+                    {{-- <div class="ps-block__header">
+                        <h1 class="h3">Clothing &amp; beauty</h1>
+                    </div>
+
+
+                    <div class="list-content-loading">
+                        <div class="half-circle-spinner">
+                            <div class="circle circle-1"></div>
+                            <div class="circle circle-2"></div>
+                        </div>
+                    </div> --}}
+
+                    <input type="hidden" name="page" data-value="1">
+                    <input type="hidden" name="sort-by" value="">
+                    <input type="hidden" name="num" value="">
+                    <input type="hidden" name="q" value="">
+
+                    <div class="shop-product-filter">
+                        {{-- <div class="total-product">
+                            <p>We found <strong class="text-brand">7</strong> items for you!</p>
+                        </div> --}}
+
+                        <div class="sort-by-product-area">
+                            <div class="sort-by-cover mr-10 products_sortby">
+                                <div class="sort-by-product-wrap">
+                                    <div class="sort-by">
+                                        <span><i class="fi-rs-apps"></i>Show:</span>
                                     </div>
-                                    </div>   <!------------------------------------Doctor-------------------------------------->
+                                    <div class="sort-by-dropdown-wrap">
+                                        <span> 12 <i class="fi-rs-angle-small-down"></i></span>
+                                    </div>
+                                </div>
+                                <div class="sort-by-dropdown products_ajaxsortby" data-name="num">
+                                    <ul>
+                                        <li>
+                                            <a data-label="12" class="active"
+                                                href="clothing-beauty7765.html?categories%5B0%5D=2&amp;num=12">12</a>
+                                        </li>
+                                        <li>
+                                            <a data-label="24" class=""
+                                                href="clothing-beautyfb9a.html?categories%5B0%5D=2&amp;num=24">24</a>
+                                        </li>
+                                        <li>
+                                            <a data-label="36" class=""
+                                                href="clothing-beautyb601.html?categories%5B0%5D=2&amp;num=36">36</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="sort-by-cover products_sortby">
+                                <div class="sort-by-product-wrap">
+                                    <div class="sort-by">
+                                        <span><i class="fi-rs-apps-sort"></i>Sort by:</span>
+                                    </div>
+                                    <div class="sort-by-dropdown-wrap">
+                                        <span><span>Default</span> <i class="fi-rs-angle-small-down"></i></span>
+                                    </div>
+                                </div>
+                                <div class="sort-by-dropdown products_ajaxsortby" data-name="sort-by">
+                                    <ul>
+                                        <li>
+                                            <a data-label="Default" class="active"
+                                                href="clothing-beauty15b3.html?categories%5B0%5D=2&amp;sort-by=default_sorting">Default</a>
+                                        </li>
+                                        <li>
+                                            <a data-label="Oldest" class=""
+                                                href="clothing-beauty991a.html?categories%5B0%5D=2&amp;sort-by=date_asc">Oldest</a>
+                                        </li>
+                                        <li>
+                                            <a data-label="Newest" class=""
+                                                href="clothing-beauty6bdf.html?categories%5B0%5D=2&amp;sort-by=date_desc">Newest</a>
+                                        </li>
+                                        <li>
+                                            <a data-label="Price: low to high" class=""
+                                                href="clothing-beautyb34f.html?categories%5B0%5D=2&amp;sort-by=price_asc">Price:
+                                                low to high</a>
+                                        </li>
+                                        <li>
+                                            <a data-label="Price: high to low" class=""
+                                                href="clothing-beauty76b6.html?categories%5B0%5D=2&amp;sort-by=price_desc">Price:
+                                                high to low</a>
+                                        </li>
+                                        <li>
+                                            <a data-label="Name: A-Z" class=""
+                                                href="clothing-beauty0136.html?categories%5B0%5D=2&amp;sort-by=name_asc">Name:
+                                                A-Z</a>
+                                        </li>
+                                        <li>
+                                            <a data-label="Name: Z-A" class=""
+                                                href="clothing-beautyf41a.html?categories%5B0%5D=2&amp;sort-by=name_desc">Name:
+                                                Z-A</a>
+                                        </li>
+                                        <li>
+                                            <a data-label="Rating: low to high" class=""
+                                                href="clothing-beauty2394.html?categories%5B0%5D=2&amp;sort-by=rating_asc">Rating:
+                                                low to high</a>
+                                        </li>
+                                        <li>
+                                            <a data-label="Rating: high to low" class=""
+                                                href="clothing-beauty175a.html?categories%5B0%5D=2&amp;sort-by=rating_desc">Rating:
+                                                high to low</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row product-grid-5">
+                        @foreach ($doctor as $item)
+                        <div class="col-xxl-3 col-xl-3 col-lg-6 col-md-6 mb-lg-0 mb-md-5 mb-sm-5 col-6">
+                            <div class="product-cart-wrap mb-30 wow animate__animated animate__fadeIn"
+                                data-wow-delay="0.3s">
+                                <div class="product-img-action-wrap">
+                                    <div class="product-img product-img-zoom">
+                                        <a href="{{ route('doctor.detail', ['id'=>Crypt::encrypt($item->id)]) }}">
+                                            <img class="default-img" src="{{ asset('storage/doctor').'/'.$item->image }}" alt="{{$item->name}}">
+                                            <img class="hover-img" src="{{ asset('storage/doctor').'/'.$item->image }}" alt="{{$item->name}}">
+                                        </a>
+                                    </div>
                                  
-                                </div> 
-                                
-                            @endforeach
-                             </div>   
-                          </div>  			
-                         
-                          </div>
-                         </div>
-                        </div> <!---rk -Middle Part End-->
-                      
-                      
-                     
-		            </div> <!--Middle Part End-->
+                                    <div class="product-badges product-badges-position product-badges-mrg">
+                                        <span style="background-color: #02856e !important;">New</span>
+                                    </div>
+                                </div>
+                                <div class="product-content-wrap">
+                                    
+                                    <h2 class="text-truncate"><a href="{{ route('doctor.detail', ['id'=>Crypt::encrypt($item->id)]) }}" title="{{$item->name}}">{{$item->name}}</a> </h2>
+                                    <div class="product-category">
+                                        <a href="#">Specilist</a>
+                                    </div>
+                                    {{-- <div class="product-rate-cover">
+                                        <div class="product-rate d-inline-block">
+                                            <div class="product-rating" style="width: 56%"></div>
+                                        </div>
+                                        <span class="font-small ml-5 text-muted">(10)</span>
+                                    </div> --}}
+                                    <div class="text-truncate">
+                                        <span class="font-small text-muted">Exp.
+                                           5 years</span>
+                                    </div>
+                                    <div class="text-truncate">
+                                        <span class="font-small text-muted">Specialist
+                                          MBBS</span>
+                                    </div>
+                                    <div class="product-card-bottom d-md-flex d-block">
+
+
+                                        <div class="product-price">
+                                            <span><i class="fa fa-inr"></i> 200</span>
+                                            {{-- <span class="old-price">₦410,148.16</span> --}}
+                                        </div>
+
+                                        <div class="add-cart">
+                                            <a class="action-btn add-to-cart-button add mt-md-0 mt-3" href="{{ route('doctor.detail', ['id'=>Crypt::encrypt($item->id)]) }}">
+                                                <i class="fi-rs-shopping-cart mr-5"></i> <span class="d-inline-block">Book Now</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
 @endsection
+

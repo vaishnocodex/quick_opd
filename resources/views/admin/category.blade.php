@@ -73,22 +73,9 @@
                                 </select>
                             </div>
                         </div> 
-                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                            <div class="form-group">
-                                <label for="parent">Type</label>
-                                <select name="type"  class="form-control selUser"  id="type" required>
-                                    <option value="">Select</option>
-                                    <option value="radiology" @if (!empty($Cate) && $Cate->type=='category') selected @endif >radiology</option>
-                                    <option value="category" @if (!empty($Cate) && $Cate->type=='category') selected @endif >category</option>
-                                    
-                                </select>
-                            </div>
-                        </div> 
-
-                        @else
-
-                        <input type="hidden" name="type" value="{{$cat_type}}">
                         @endif
+                        <input type="hidden" name="type" value="{{$cat_type}}">
+                        
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                             <div class="form-group">
                                 <label for="image">Image<span style="color: red">*</span></label>
@@ -121,167 +108,49 @@
                     <div class="row gutters mt-4">
 
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                            <!-- Card start -->
-                            <div class="card">
-                                <div class="row">
-                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                <div class="card-header">
-                                    <div class="card-title">All {{$heading_title}}</div>
-                                </div>
-                                </div>
-                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                    <form method="get" action="{{ route("admin.category.all") }}">
-                                   <div class="form-group row">
-                                    <label for="search" class="col-xl-2 col-lg-2 col-md-2 col-sm-6 col-12 col-form-label">Search</label>
-                                     <div class="col-xl-10 col-lg-10 col-md-10 col-sm-6 col-12">
-                                    <input type="text" name="keyword"  autocomplete="off" class="form-control @error('search') is-invalid @enderror"   placeholder="Search Here">
-                                     <button type="submit" class="btn btn-info" style="margin-top: -33px;
-                                     float: right;height: 32px;border-top-left-radius: 0px;border-bottom-left-radius: 0px;"><i class="icon-search1"></i></button>
-                                </div>
-                                </div>
-                               </div>
-                                <div class="card-body">
-                                    <div class="slimScrollDiv">
-                                        <div class="customScroll5" >
-                                            <div class="products-sold-container">
+                            <div class="table-container">
+                                <div class="t-header" style="text-align: center;font-size: 18px;">All {{$heading_title}}</div>
+    
+                                <div class="table-responsive" style="overflow-x: unset;">
+                                    <div id="copy-print-csv_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+    
+                                        <table id="copy-print-csv" class="table custom-table dataTable no-footer" role="grid" aria-describedby="copy-print-csv_info">
+                                            <thead>
+                                                <tr role="row">
+                                                    <th>Sr.</th>
+                                                    <th>Action</th>
+                                                    <th>Image</th>
+                                                    <th>Category</th>
+                                                    <th>Parent Category</th>
+                                                    
+                                                 </tr>
+                                            </thead>
+                                            <tbody>
+    
                                                 @php
-                                                $i=0;
-                                                $count=0;
-                                                $j=0;
-
-                                            @endphp
-
-                                            @foreach ($catall as $item)
-
-                                            @if(count(backHelper::Sub_Categories($item->id))>0)
-                                            @php
-                                                $count=count(backHelper::Sub_Categories($item->id));
-                                            @endphp
-
-                                                <div class="product" style="border: 1px solid #cc2626;">
-                                                    <div class="product-details">
-                                                        <div class="">
-                                                        <img class="" src="{{ asset('storage/category/').'/'.$item->image }}" style="width: 100px;
-                                                        height: 142px;object-fit: cover;"/>
-                                                        </div>
-                                                        <div class="product-title" style="padding-left: 16px;">
-                                                            <div style="display: flex">
-                                                                <div class="title"><strong>Name :</strong></div>&nbsp;
-                                                            <div class="price" style="font-size: 14px;color:black">{{ $item->name }}</div>
-                                                            </div>
-                                                            <div style="display: flex">
-                                                                <div class="title">Action :</div>&nbsp;
-                                                                <div class="price">  
-                                                                    <a href="{{ route('admin.'.$item->type, ['id'=>($item->id)]) }}" >
-                                                                        <span class="icon-border_color" style="font-size: 20px;color:#178e94"></span>
-                                                                     </a>
-                                                                <a href="javascript:void(0);" onclick="showPrompt('{{ route('admin.category.delete',['id'=>Crypt::encrypt($item->id)]) }}')" ><span class="icon-delete" style="font-size: 20px;color:#ff0000"></span> </a>
-                                                                @if ($item->status=='0')
-                                                               
-                                                                <a href="{{ route('admin.category.status', ['id'=>Crypt::encrypt($item->id)]) }}" class="btn btn-primary">Activate Category</a>
-                                                                            <span class="badge badge-danger" style="font-size: 13px;">Category Inactive</span>
-                                                            @else
-
-                                                            <a href="{{ route('admin.category.status', ['id'=>Crypt::encrypt($item->id)]) }}" class="btn btn-danger">Deactivate Category</a>
-                                                            <span class="badge badge-success" style="font-size: 13px;">Category Active</span>
-                                                            @endif
-                                                            </div>
-                                                            </div>
-                                                             <div class="title"><span class="badge badge-info " onclick="plus_row(this,'{{ $item->id }}')"><i class="icon-subdirectory_arrow_left" style="font-size: 13px;"></i></span></div>
-                                                            {{--<div class="price">{{ $item->description }}</div> --}}
-                                                        </div>
-                                                    </div>
-                                                    {{-- <div class="product-sold" style="border-left: 1px solid #ccc;padding: 3px;display: block;">
-                                                        <div class="sold text-info" style="font-size: 16px;font-weight: 500;">Tagline</div>
-                                                        <div class="sold-title">{{ $item->tegline }}</div>
-
-                                                    </div> --}}
-                                                </div>
-                                                @foreach(backHelper::Sub_Categories($item->id) as $sub_cat)
-                                                <div style="border: 1px solid #cc2626;display:none" class="product add_data{{ $item->id }}" id="{{ $item->id }}" >
-                                                    <div class="product-details">
-                                                        <div class="">
-                                                         <img class="" style="width: 100px;
-                                                         height: 142px;object-fit: cover;" src="{{ asset('storage/category/').'/'.$sub_cat->image }}" alt="Apple iPhone 11" />
-                                                        </div>
-                                                         <div class="product-title" style="padding-left: 16px;">
-                                                            <div style="display: flex">
-                                                            <div class="title">Name :</div>&nbsp;
-                                                            <div class="price" style="font-size: 14px;color:black">{{ $sub_cat->name }}</div>
-                                                            </div>
-                                                            <div style="display: flex">
-                                                                <div class="title">Action :</div>&nbsp;
-                                                                <div class="price">  <a href="{{ route('admin.'.$item->type, ['id'=>($sub_cat->id)]) }}" ><span class="icon-border_color" style="font-size: 20px;color:#178e94"></span> </a>
-                                                                <a href="javascript:void(0);" onclick="showPrompt('{{ route('admin.category.delete',['id'=>Crypt::encrypt($sub_cat->id)]) }}')" ><span class="icon-delete" style="font-size: 20px;color:#ff0000"></span> </a>
-                                                                @if ($sub_cat->status==0)
-
-                                                                <a href="{{ route('admin.category.status', ['id'=>Crypt::encrypt($sub_cat->id)]) }}" class="btn btn-primary">Activate Category</a>
-                                                                            <span class="badge badge-danger" style="font-size: 13px;">Category Inactive</span>
-                                                            @else
-
-                                                            <a href="{{ route('admin.category.status', ['id'=>Crypt::encrypt($sub_cat->id)]) }}" class="btn btn-danger">Deactivate Category</a>
-                                                            <span class="badge badge-success" style="font-size: 13px;">Category Active</span>
-                                                            @endif
-                                                            </div>
-                                                            </div>
-                                                            {{-- <div class="title">Description</div>
-                                                            <div class="price">{{ $item->description }}</div> --}}
-                                                        </div>
-                                                    </div>
-                                                    {{-- <div class="product-sold" style="border-left: 1px solid #ccc;padding: 3px;display: block;">
-                                                        <div class="sold text-info" style="font-size: 16px;font-weight: 500;">Tagline</div>
-                                                        <div class="sold-title">{{ $item->tegline }}</div>
-
-                                                    </div> --}}
-                                                </div>
+                                                    $i=0;
+                                                @endphp
+                                               @foreach ($catall as $item)
+                                                <tr>
+                                                  <td> {{ ++$i }}</td>
+                                                  <td> <a href="javascript:void(0);" onclick="showPrompt('{{ route('admin.category.delete',['id'=>Crypt::encrypt($item->id)]) }}')" ><span class="icon-delete" style="font-size: 20px;color:#ff0000"></span> </a>
+                                                  </td>
+                                                  <td> <img class="" src="{{ asset('storage/category/').'/'.$item->image }}" style="width: 80px;
+                                                        height: 80px;object-fit: cover;"/></td>
+                                                   {{-- <td>{{ $item->type }}</td> --}}
+                                                   <td>{{ $item->name }} </td>
+                                                   <td>@if($item->parent!='0'){{ backHelper::Get_parent_Category_name($item->parent)->name  }} @else -  @endif</td>
+                                                  
+                                                </tr>
                                                 @endforeach
-                                                @else
-                                                <div class="product" style="border: 1px solid #cc2626;">
-                                                    <div class="product-details">
-                                                        <div class="">
-                                                        <img class="" src="{{ asset('storage/category/').'/'.$item->image }}" alt="Apple iPhone 11" style="width: 100px;
-                                                        height: 142px;"/>
-                                                        </div>
-                                                        <div class="product-title" style="padding-left: 16px;">
-                                                            <div style="display: flex">
-                                                            <div class="title">Name :</div>&nbsp;
-                                                            <div class="price" style="font-size: 14px;">{{ $item->name }}</div>
-                                                            </div>
-                                                            <div style="display: flex">
-                                                                <div class="title">Action :</div>&nbsp;
-                                                                <div class="price"><a href="{{ route('admin.'.$item->type, ['id'=>($item->id)]) }}" ><span class="icon-border_color" style="font-size: 20px;color:#178e94"></span> </a>
-                                                                <a href="javascript:void(0);" onclick="showPrompt('{{ route('admin.category.delete',['id'=>Crypt::encrypt($item->id)]) }}')" ><span class="icon-delete" style="font-size: 20px;color:#ff0000"></span> </a>
-                                                                @if ($item->status==0)
-
-                                                                <a href="{{ route('admin.category.status', ['id'=>Crypt::encrypt($item->id)]) }}" class="btn btn-primary">Activate Category</a>
-                                                                            <span class="badge badge-danger" style="font-size: 13px;">Category Inactive</span>
-                                                            @else
-
-                                                            <a href="{{ route('admin.category.status', ['id'=>Crypt::encrypt($item->id)]) }}" class="btn btn-danger">Deactivate Category</a>
-                                                            <span class="badge badge-success" style="font-size: 13px;">Category Active</span>
-                                                            @endif
-                                                            </div>
-                                                            </div>
-                                                             {{-- <div class="title"><span class="badge badge-info " onclick="plus_row(this,'{{ $item->id }}')"><i class="icon-subdirectory_arrow_left" style="font-size: 13px;"></i></span></div> --}}
-                                                            {{--<div class="price">{{ $item->description }}</div> --}}
-                                                        </div>
-                                                    </div>
-                                                    {{-- <div class="product-sold" style="border-left: 1px solid #ccc;padding: 3px;display: block;">
-                                                        <div class="sold text-info" style="font-size: 16px;font-weight: 500;">Tagline</div>
-                                                        <div class="sold-title">{{ $item->tegline }}</div>
-
-                                                    </div> --}}
-                                                </div>
-                                                @endif
-                                                @endforeach
-
-                                            </div>
-                                        </div>
-                                     </div>
+    
+                                            </tbody>
+                                        </table>
+    
+                                    </div>
                                 </div>
                             </div>
-                            <!-- Card end -->
-                        </div>
+                            </div>
 
                     </div>
                     @endif

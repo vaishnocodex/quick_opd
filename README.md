@@ -94,4 +94,39 @@ ALTER TABLE `users` ADD `device_id` VARCHAR(455) NULL DEFAULT NULL AFTER `otp_ge
 
 ## create column in users 04-Feb-25
 ALTER TABLE `users` ADD `symptom_id` VARCHAR(300) NULL DEFAULT NULL AFTER `category_id`;
+ALTER TABLE `users` ADD `description` TEXT NULL DEFAULT NULL AFTER `device_id`;
+ALTER TABLE `users` ADD `experience` VARCHAR(100) NULL DEFAULT NULL AFTER `qualification`;
+
+## create column in users 08-Feb-25
+CREATE TABLE doctor_slots (  
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,  
+    doctor_id BIGINT NOT NULL,  
+    date DATE NOT NULL,  
+    start_time TIME NOT NULL,  
+    end_time TIME NOT NULL,  
+    slot_duration INT NOT NULL,  
+    status ENUM('available', 'unavailable', 'booked') DEFAULT 'unavailable',  
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP  
+);  
+
+## create table in users 23-Feb-25
+CREATE TABLE doctor_schedules (  
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,  
+    doctor_id BIGINT UNSIGNED NOT NULL,  
+    date DATE NOT NULL,  
+    start_time TIME DEFAULT NULL,  
+    end_time TIME DEFAULT NULL,  
+    status ENUM('available', 'unavailable') DEFAULT 'available',  
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP 
+    
+);
+
+## create column in users 03-Mar-25
+ALTER TABLE `users` ADD `short_description` TEXT NULL DEFAULT NULL AFTER `device_id`;
+
+
+
+
 
