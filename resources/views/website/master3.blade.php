@@ -37,19 +37,15 @@
     <link rel="canonical" href="https://yourwebsite.com">
     @include('website.custom_font_css')
 
-    <link media="all" type="text/css" rel="stylesheet"
-        href="{{ asset('website') }}/assets/vendor/core/plugins/bottom-bar-menu/css/menue209.css?v=1.0.0">
-    <link media="all" type="text/css" rel="stylesheet"
-        href="{{ asset('website') }}/assets/vendor/core/plugins/cookie-consent/css/cookie-consent0ff5.css?v=1.0.2">
-    <link media="all" type="text/css" rel="stylesheet"
-        href="{{ asset('website') }}/assets/vendor/core/core/base/libraries/ckeditor/content-styles.css">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ asset('website') }}/assets/vendor/core/plugins/bottom-bar-menu/css/menue209.css?v=1.0.0">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ asset('website') }}/assets/vendor/core/plugins/cookie-consent/css/cookie-consent0ff5.css?v=1.0.2">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ asset('website') }}/assets/vendor/core/core/base/libraries/ckeditor/content-styles.css">
     <link media="all" type="text/css" rel="stylesheet" href="{{ asset('website') }}/assets/themes/nest/css/vendors/normalize.css">
     <link media="all" type="text/css" rel="stylesheet" href="{{ asset('website') }}/assets/themes/nest/plugins/bootstrap/css/bootstrap.min.css">
     <link media="all" type="text/css" rel="stylesheet" href="{{ asset('website') }}/assets/themes/nest/css/vendors/uicons-regular-straight.css">
     <link media="all" type="text/css" rel="stylesheet" href="{{ asset('website') }}/assets/themes/nest/css/plugins/animate.min.css">
     <link media="all" type="text/css" rel="stylesheet" href="{{ asset('website') }}/assets/themes/nest/css/plugins/slick.css">
-    <link media="all" type="text/css" rel="stylesheet"
-        href="{{ asset('website') }}/assets/vendor/core/plugins/ecommerce/css/front-ecommercef1bc.css?v=1.25.2.3">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ asset('website') }}/assets/vendor/core/plugins/ecommerce/css/front-ecommercef1bc.css?v=1.25.2.3">
     <link media="all" type="text/css" rel="stylesheet" href="{{ asset('website') }}/assets/themes/nest/css/stylef1bc.css?v=1.25.2.3">
 
 </head>
@@ -199,20 +195,55 @@
 
                                     </div>
                                 </div> --}}
+                                @if (Auth::check())
+                                @if (Auth::user()->type == 'user')
+                                    <!-- Authenticated User (type: user) -->
+                                    <div class="header-action-icon-2">
+                                        <a href="#">
+                                            <img class="svgInject rounded-circle" alt="Account"
+                                                src="{{ asset('website/assets/themes/nest/imgs/theme/icons/icon-user.svg') }}" />
+                                        </a>
+                                        <a href="#"><span class="lable me-1">Account</span></a>
+                                        <div class="cart-dropdown-wrap cart-dropdown-hm2 account-dropdown">
+                                            <ul>
+                                                <li><a href="{{ route('user.dashboard') }}"><i class="fi fi-rs-user mr-10"></i>Dashboard</a></li>
+                                                <li><a href="#"><i class="fi fi-rs-user-add mr-10"></i>Orders</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                @else
+                                    <!-- Authenticated User (Not type: user) -->
+                                    <div class="header-action-icon-2">
+                                        <a href="#">
+                                            <img class="svgInject rounded-circle" alt="Account"
+                                                src="{{ asset('website/assets/themes/nest/imgs/theme/icons/icon-user.svg') }}" />
+                                        </a>
+                                        <a href="#"><span class="lable me-1">Account</span></a>
+                                        <div class="cart-dropdown-wrap cart-dropdown-hm2 account-dropdown">
+                                            <ul>
+                                                <li><a href="{{ route('login.user') }}"><i class="fi fi-rs-user mr-10"></i>Login</a></li>
+                                                <li><a href="{{ route('register.user') }}"><i class="fi fi-rs-user-add mr-10"></i>Register</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                @endif
+                            @else
+                                <!-- Guest User (Not Logged In) -->
                                 <div class="header-action-icon-2">
-                                    <a href="login.html">
+                                    <a href="#">
                                         <img class="svgInject rounded-circle" alt="Account"
-                                            src="{{ asset('website') }}/assets/themes/nest/imgs/theme/icons/icon-user.svg" />
+                                            src="{{ asset('website/assets/themes/nest/imgs/theme/icons/icon-user.svg') }}" />
                                     </a>
-                                    <a href="login.html"><span class="lable me-1">Account</span></a>
+                                    <a href="#"><span class="lable me-1">Account</span></a>
                                     <div class="cart-dropdown-wrap cart-dropdown-hm2 account-dropdown">
                                         <ul>
-                                            <li><a href="{{route('login.user')}}"><i class="fi fi-rs-user mr-10"></i>Login</a></li>
-                                            <li><a href="{{route('register.user')}}"><i
-                                                        class="fi fi-rs-user-add mr-10"></i>Register</a></li>
+                                            <li><a href="{{ route('login.user') }}"><i class="fi fi-rs-user mr-10"></i>Login</a></li>
+                                            <li><a href="{{ route('register.user') }}"><i class="fi fi-rs-user-add mr-10"></i>Register</a></li>
                                         </ul>
                                     </div>
                                 </div>
+                            @endif
+                            
                             </div>
                         </div>
                     </div>
@@ -276,20 +307,19 @@
                             <nav>
                                 <ul>
                                     <li><a href="{{route('welcome')}}" class="active" target="_self">
-                                            <i class="fi-rs-home me-1"></i> Home
-                                            <i class="fi-rs-angle-down"></i> </a> </li>
-                                        <li><a href="#" target="_self">  All Doctor  </a> </li>
+                                            <i class="fi-rs-home me-1"></i> Home </a> </li>
+                                        <li><a href="{{route('all.doctor')}}" target="_self">  All Doctor  </a> </li>
                                         <li><a href="{{route('all.hospital')}}" target="_self">  All Hospital  </a> </li>
                                 
                                 
                                  
                                     <li>
-                                        <a href="faq.html" target="_self">
+                                        <a href="#" target="_self">
                                             FAQ
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="contact.html" target="_self">
+                                        <a href="#" target="_self">
                                             Contact
                                         </a>
                                     </li>
@@ -404,19 +434,10 @@
                                 </ul>
 
                             </li>
-                            <li class=" menu-item-has-children  ">
+                            <li>
                                 <span class="menu-expand"></span>
-                                <a href="{{route('welcome')}}" target="_self">
-                                    Product
-                                </a>
-                                <ul class="dropdown">
-                                    <li class=" ">
-                                        <a href="{{route('welcome')}}" target="_self">
-                                            Product Right Sidebar
-                                        </a>
-                                    </li>
-                                   
-                                </ul>
+                                <a href="{{route('welcome')}}" target="_self">Home </a>
+                               
 
                             </li>
                             <li class=" menu-item-has-children  ">

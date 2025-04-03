@@ -132,7 +132,7 @@
                                                 </li>
                                                 <li class="mb-5">
                                                     <span class="d-inline-block me-1">Exp.:</span>
-                                                    <a href="#" rel="tag">5 Years</a>
+                                                    <a href="#" rel="tag">{{$doctor->experience}} Years</a>
                                                 </li>
 
                                                 <li class="mb-5">
@@ -153,7 +153,7 @@
                                         </div> --}}
                                         <div class="clearfix product-price-cover">
                                             <div class="product-price primary-color float-left">
-                                                <span class="current-price text-brand">200  </span>
+                                                <span class="current-price text-brand">₹ {{$doctor->price}}  </span>
                                                 
                                             </div>
                                         </div>
@@ -309,6 +309,7 @@
                                     </div>
                                 </div>
                             </div>
+                              {{-- similar docotrs area start --}}
                             <div class="mt-60">
                                 <h3 class="section-title style-1 mb-30">You may also like</h3>
 
@@ -342,7 +343,7 @@
                                                 </div> --}}
                                                 <div class="text-truncate">
                                                     <span class="font-small text-muted">Exp.
-                                                       5 years</span>
+                                                         {{$item->price}} years</span>
                                                 </div>
                                                 <div class="text-truncate">
                                                     <span class="font-small text-muted">Specialist
@@ -351,10 +352,10 @@
 
                                                 <div class="product-card-bottom d-md-flex d-block">
                                                     <div class="product-price">
-                                                        <span>200</span>
+                                                        <span>₹ {{$item->price}}</span>
                                                     </div>
                                                     <div class="add-cart">
-                                                        <a aria-label="Add To Cart" class="action-btn add-to-cart-button add mt-md-0 mt-3"
+                                                        <a aria-label="Add To Cart" class="action-btn   add mt-md-0 mt-3"
                                                             href="{{ route('doctor.detail', ['id'=>Crypt::encrypt($item->id)]) }}">
                                                             <i class="fi-rs-shopping-cart mr-5"></i> <span
                                                                 class="d-inline-block">Book Now</span>
@@ -369,98 +370,8 @@
                             </div>
 
 
-                         {{-- similar docotrs area start --}}
-                            <div class="mt-60">
-                                <h3 class="section-title style-1 mb-30">Similar Doctors</h3>
-
-                                <div class="row">
-                                    <div class="col-xl-3 col-lg-4 col-md-6 col-12">
-                                        <div class="product-cart-wrap mb-30 wow animate__animated animate__fadeIn"
-                                            data-wow-delay="0.1s">
-                                            <div class="product-img-action-wrap">
-                                                <div class="product-img product-img-zoom">
-                                                    <a
-                                                        href="signature-wood-fired-mushroom-and-caramelized-digital.html">
-                                                        <img class="default-img"
-                                                            src="../storage/products/24-400x400.jpg"
-                                                            alt="Signature Wood-Fired Mushroom and Caramelized (Digital)">
-                                                        <img class="hover-img"
-                                                            src="../storage/products/24-1-400x400.jpg"
-                                                            alt="Signature Wood-Fired Mushroom and Caramelized (Digital)">
-                                                    </a>
-                                                </div>
-                                                <div class="product-action-1">
-                                                    <div class="product-action-wrap"
-                                                        style="max-width: 116px !important;">
-                                                        <a aria-label="Quick View" href="#"
-                                                            class="action-btn hover-up js-quick-view-button"
-                                                            data-url="../index.html">
-                                                            <i class="fi-rs-eye"></i>
-                                                        </a>
-                                                        <a aria-label="Add To Wishlist" href="#"
-                                                            class="action-btn hover-up js-add-to-wishlist-button"
-                                                            data-url="../wishlist/24.html">
-                                                            <i class="fi-rs-heart"></i>
-                                                        </a>
-                                                        <a aria-label="Add To Compare" href="#"
-                                                            class="action-btn hover-up js-add-to-compare-button"
-                                                            data-url="../compare/24.html">
-                                                            <i class="fi-rs-shuffle"></i>
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                                <div
-                                                    class="product-badges product-badges-position product-badges-mrg">
-                                                    <span style="background-color: #fe9931 !important;">Sale</span>
-                                                </div>
-                                            </div>
-                                            <div class="product-content-wrap">
-                                                <div class="product-category">
-                                                    <a href="../product-categories/diet-foods.html">Diet Foods</a>
-                                                </div>
-                                                <h2 class="text-truncate"><a
-                                                        href="signature-wood-fired-mushroom-and-caramelized-digital.html"
-                                                        title="Signature Wood-Fired Mushroom and Caramelized (Digital)"
-                                                        title="Signature Wood-Fired Mushroom and Caramelized (Digital)">Signature
-                                                        Wood-Fired Mushroom and Caramelized (Digital)</a></h2>
-
-                                                <div class="product-rate-cover">
-                                                    <div class="product-rate d-inline-block">
-                                                        <div class="product-rating" style="width: 70%"></div>
-                                                    </div>
-                                                    <span class="font-small ml-5 text-muted">(10)</span>
-                                                </div>
-                                                <div class="text-truncate">
-                                                    <span class="font-small text-muted">Sold By <a
-                                                            href="../stores/young-shop.html">Young Shop</a></span>
-                                                </div>
-
-                                                <div class="product-card-bottom d-md-flex d-block">
-
-
-                                                    <div class="product-price">
-                                                        <span>₦1,184,531.17</span>
-                                                        <span class="old-price">₦1,668,353.76</span>
-                                                    </div>
-
-
-
-                                                    <div class="add-cart">
-                                                        <a aria-label="Add To Cart"
-                                                            class="action-btn add-to-cart-button add mt-md-0 mt-3"
-                                                            data-id="24" data-url="../ajax/cart.html"
-                                                            href="#">
-                                                            <i class="fi-rs-shopping-cart mr-5"></i> <span
-                                                                class="d-inline-block">Add</span>
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                   
-                                </div>
-                            </div>
+                       
+                          
                             {{-- similar docotrs area end --}}
                         </div>
 

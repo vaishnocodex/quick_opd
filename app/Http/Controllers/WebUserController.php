@@ -18,15 +18,16 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
+
 class WebUserController extends Controller
 {
     //
 
 
 
-    public function AllHospital_Doctor(Request $request)  
+    public function UserDashboard(Request $request)  
     {       
-         $decrypted = Crypt::decrypt($request->id);
+        
            $arr['hospital'] =  User::where('status', '1')->where('type', '2')->get();
            $arr['doctor'] =  User::where('status', '1')->where('type', '3')->get();
            $arr['category'] =  Category::where('status', '1')->where('parent', '0')->where('type', 'category')->get();
@@ -36,5 +37,29 @@ class WebUserController extends Controller
            $arr['slider'] = Slider::where('status',1)->get();
             return view('website.user.dashboard')->with($arr);
     
+    }
+
+    public function User_Update_Password(Request $request)
+    {
+        // Validate Input
+        $request->validate([
+            'password'  => 'required',
+            'npassword' => 'required|min:6',
+            'cpassword' => 'required|same:npassword',
+        ]);
+
+        // Get authenticated user
+        $user = Auth::user();
+
+        // Check if current password is correct
+        if (!Hash::check($request->password, $user->password)) {
+            return redirect()->back()->with('error', 'Current password is incorrect!');
+        }
+
+        // Update the password
+        $user->password = Hash::make($request->npassword);
+        $user->save();
+
+        return redirect()->back()->with('success', 'Password updated successfully!');
     }
 }

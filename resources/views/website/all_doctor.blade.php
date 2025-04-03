@@ -171,7 +171,7 @@
                                     </div> --}}
                                     <div class="text-truncate">
                                         <span class="font-small text-muted">Exp.
-                                           5 years</span>
+                                           {{$item->experience}} years</span>
                                     </div>
                                     <div class="text-truncate">
                                         <span class="font-small text-muted">Specialist
@@ -181,12 +181,12 @@
 
 
                                         <div class="product-price">
-                                            <span><i class="fa fa-inr"></i> 200</span>
-                                            {{-- <span class="old-price">₦410,148.16</span> --}}
+                                            <span>₹ {{$item->price}} </span>
+                                            {{-- <span class="old-price">₦410,148.16</span>  add-to-cart-button--}}
                                         </div>
 
                                         <div class="add-cart">
-                                            <a class="action-btn add-to-cart-button add mt-md-0 mt-3" href="{{ route('doctor.detail', ['id'=>Crypt::encrypt($item->id)]) }}">
+                                            <a class="action-btn add mt-md-0 mt-3" href="{{ route('doctor.detail', ['id'=>Crypt::encrypt($item->id)]) }}">
                                                 <i class="fi-rs-shopping-cart mr-5"></i> <span class="d-inline-block">Book Now</span>
                                             </a>
                                         </div>

@@ -125,6 +125,7 @@ CREATE TABLE doctor_schedules (
 
 ## create column in users 03-Mar-25
 ALTER TABLE `users` ADD `short_description` TEXT NULL DEFAULT NULL AFTER `device_id`;
+ALTER TABLE `users` ADD `price` DECIMAL NOT NULL DEFAULT '0' AFTER `experience`;
 
 
 

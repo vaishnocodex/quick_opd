@@ -8,6 +8,18 @@ use App\Http\Controllers\WebController;
 use App\Http\Controllers\DoctorSlotController;
 use App\Http\Controllers\WebUserController;
 use Illuminate\Support\Facades\Artisan;
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+
+Route::post('user/logout', function (Request $request) {
+  Auth::logout();
+  $request->session()->invalidate(); // Invalidate the session
+  $request->session()->regenerateToken(); // Prevent CSRF attacks
+  return redirect('/user/login'); // Redirect user to login page
+})->name('user.logout');
+
+
 Route::get('/clear-cache', function () {
   // Clear route cache
   Artisan::call('route:clear'); 
@@ -66,7 +78,8 @@ Route::middleware(['auth', 'user-access:user'])->group(function () {
   
     Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-    Route::get('user/dashboard/',[WebUserController::class,'User_Login'])->name('user.dashboard'); 
+    Route::get('user/dashboard/',[WebUserController::class,'UserDashboard'])->name('user.dashboard'); 
+    Route::post('user/update-password/',[WebUserController::class,'User_Update_Password'])->name('user.update-password'); 
 
 });
   
