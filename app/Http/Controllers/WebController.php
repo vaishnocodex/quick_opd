@@ -42,13 +42,13 @@ class WebController extends Controller
         // Check if Mobile Number Exists
         $user_check = User::where('mobile_no', $lastTenDigits)->where('type', '0')->first();
         if ($user_check) {
-            return response()->json(['status' => 'false', 'message' => 'Mobile Number already exists']);
+            return response()->json(['status' => false, 'message' => 'Mobile Number already exists']);
         }
     
         // Check if Email Exists
         $user_check = User::where('email', $request->email)->where('type', '0')->first();
         if ($user_check) {
-            return response()->json(['status' => 'false', 'message' => 'Email Address already exists']);
+            return response()->json(['status' => false, 'message' => 'Email Address already exists']);
         }
     
         // Create New User
@@ -66,7 +66,7 @@ class WebController extends Controller
     
         // Redirect to Dashboard
         return response()->json([
-            'status' => 'success',
+            'status' => true,
             'message' => 'Registration successful!',
             'redirect' => route('user.dashboard') // Ensure you have a named route for dashboard
         ]);

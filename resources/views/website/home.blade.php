@@ -32,7 +32,7 @@
                 <div class="container wow animate__animated animate__fadeIn">
                     <div class="section-title">
                         <div class="title">
-                            <h3>Book Our Specialist By</h3>
+                            <h3 class="section-title style-1 mb-30">Book Our Specialist By</h3>
                         </div>
                         <div class="slider-arrow slider-arrow-2 flex-right carousel-10-columns-arrow" id="carousel-10-columns-arrows"></div>
                     </div>
@@ -63,7 +63,7 @@
                 <div class="container wow animate__animated animate__fadeIn">
                     <div class="section-title">
                         <div class="title">
-                            <h3>Select Problem</h3>
+                            <h3 class="section-title style-1 mb-30">Select Problem</h3>
                         </div>
                         <div class="slider-arrow slider-arrow-2 flex-right carousel-10-columns-arrow" id="carousel-10-columns-arrows1"></div>
                     </div>
@@ -95,7 +95,7 @@
                 <div class="container wow animate__animated animate__fadeIn">
                     <div class="section-title">
                         <div class="title">
-                            <h3>Book Our Radiology By</h3>
+                            <h3 class="section-title style-1 mb-30">Book Our Radiology By</h3>
                         </div>
                         <div class="slider-arrow slider-arrow-2 flex-right carousel-10-columns-arrow" id="carousel-10-columns-arrows2"></div>
                     </div>

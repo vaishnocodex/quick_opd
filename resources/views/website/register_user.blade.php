@@ -232,9 +232,16 @@
         method: "POST",
         data: $(this).serialize() + "&_token=" + '{{ csrf_token() }}',
         success: function(response) {
-            toastr.success(response.message);
+            
+            if(response.status){
+                toastr.success(response.message);
             $('#registerForm')[0].reset();
-            window.location.href = response.redirect;
+           window.location.href = response.redirect;
+            }else{
+                toastr.error(response.message);
+          
+            }
+          
         },
         error: function(xhr) {
             var errors = xhr.responseJSON.errors;
