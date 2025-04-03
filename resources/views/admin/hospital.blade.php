@@ -18,120 +18,117 @@
                     @include('admin.message')
                      @if(!empty($staff_id))@endif
                    
-                    <form method="POST" action="{{ route('admin.hospital.add') }}" enctype="multipart/form-data">
+                     <form method="POST" action="{{ route('admin.hospital.add') }}" enctype="multipart/form-data">
                         @csrf
                         <div class="row gutters">
+                            <input type="hidden" name="hospital_type" value="hospital">
                             
+                            <!-- Hospital Name -->
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label for="name">Hospital Name <span style="color:red">*</span></label>
-                                    <input type="text" required class="form-control" name="name" id="name" placeholder="Enter Hospital Name" />
-                                    @error('name')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
+                                    <input type="text" class="form-control" name="name" id="name" value="{{ old('name') }}" placeholder="Enter Hospital Name" required>
+                                   
                                 </div>
                             </div>
+                    
+                            <!-- Image (cannot retain old value for file input) -->
                             <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label for="image">Image<span style="color: red">*</span></label>
-                                                                    
-                                     <input type="file" class="form-control" name="image" id="image" placeholder="Enter" required/>
-                                    
+                                    <label for="image">Image <span style="color: red">*</span></label>
+                                    <input type="file" class="form-control" name="image" id="image" required>
                                 </div>
                             </div>
+                    
+                            <!-- Mobile -->
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label for="mobile">Mobile <span style="color:red">*</span></label>
-                                    <input type="text" required pattern="[0-9]{10}" maxlength="11" class="idm form-control @error('mobile') is-invalid @enderror" name="mobile" id="mobile" placeholder="Enter Mobile" />
-                                    @error('mobile')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
+                                    <input type="text" class="form-control" name="mobile" id="mobile" value="{{ old('mobile') }}" pattern="[0-9]{10}" maxlength="11" placeholder="Enter Mobile" required>
+                                   
                                 </div>
                             </div>
-
+                    
+                            <!-- Email -->
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label for="email">Email <span style="color:red">*</span></label>
-                                    <input type="email" required value="{{!empty($staff)?$staff[0]->email:'' }}" class="form-control @error('email') is-invalid @enderror" name="email" id="email" placeholder="Enter Email" autocomplete="off" />
-                                    @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
+                                    <input type="email" class="form-control" name="email" id="email" value="{{ old('email') }}" placeholder="Enter Email" autocomplete="off" required>
+                                   
                                 </div>
                             </div>
+                    
+                            <!-- State -->
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label for="password">State <span style="color:red">*</span></label>
-                                    <select  class="form-control" id="state" name="state" onchange="getCity(this.value)" required>
+                                    <label for="state">State <span style="color:red">*</span></label>
+                                    <select class="form-control" id="state" name="state" onchange="getCity(this.value)" required>
                                         <option value="">Select</option>
                                         @foreach ($state_data as $item)
-                                        <option value="{{$item->id}}">{{$item->name}}</option>
+                                            <option value="{{ $item->id }}" {{ old('state') == $item->id ? 'selected' : '' }}>{{ $item->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
+                    
+                            <!-- City -->
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label for="city">City <span style="color:red">*</span></label>
-                                    <select  class="form-control" id="getcity" name="city" required>
+                                    <label for="getcity">City <span style="color:red">*</span></label>
+                                    <select class="form-control" id="getcity" name="city" required>
                                         <option value="">Select</option>
-                                        
+                                        {{-- Populate city dropdown dynamically --}}
                                     </select>
                                 </div>
                             </div>
+                    
+                            <!-- Password -->
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label for="password">Password <span style="color:red">*</span></label>
-                                    <input type="text" required class="form-control @error('password') is-invalid @enderror" name="password" id="password" placeholder="Enter Password" />
-                                    @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
+                                    <input type="text" class="form-control" name="password" id="password" value="{{ old('password') }}" placeholder="Enter Password" required>
+                                   
                                 </div>
                             </div>
+                    
+                            <!-- Category -->
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                 <div class="form-group">
-                                    <label for="city">Category <span style="color:red">*</span></label>
-                                        <select class="selectpicker11 form-control" name="category_id[]" multiple data-live-search="true">
-                                          @foreach ($category_data as $item)
-                                            <option value="{{$item->id}}">{{$item->name}}</option>
-                                            @endforeach 
-                                        </select>
+                                    <label for="category_id">Category <span style="color:red">*</span></label>
+                                    <select class="selectpicker11 form-control" name="category_id[]" multiple data-live-search="true">
+                                        @foreach ($category_data as $item)
+                                            <option value="{{ $item->id }}" {{ collect(old('category_id'))->contains($item->id) ? 'selected' : '' }}>{{ $item->name }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
-                            
+                    
+                            <!-- Address -->
                             <div class="col-xl-8 col-lg-8 col-md-8 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label for="address">Address <span style="color:red">*</span></label>
-                                    <textarea class="form-control" name="address" id="address" placeholder="Enter Address"></textarea>
-                                    @error('address')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
+                                    <textarea class="form-control" name="address" id="address" placeholder="Enter Address">{{ old('address') }}</textarea>
+                                   
                                 </div>
                             </div>
+                    
+                            <!-- Map -->
                             <div class="col-xl-8 col-lg-8 col-md-8 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label for="address">Select Hospital Location <span style="color:red">*</span></label>
-                                    <input type="hidden" id="latitude" placeholder="Latitude" readonly>
-                                    <input type="hidden" id="longitude" placeholder="Longitude" readonly>
-                                    
+                                    <label for="location">Select Hospital Location <span style="color:red">*</span></label>
+                                    <input type="hidden" id="latitude" name="latitude" value="{{ old('latitude') }}" placeholder="Latitude" readonly>
+                                    <input type="hidden" id="longitude" name="longitude" value="{{ old('longitude') }}" placeholder="Longitude" readonly>
                                     <div id="map"></div>
                                 </div>
                             </div>
-
+                    
+                            <!-- Submit Button -->
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                <button type="submit" class="btn btn-primary">  Add Hospital</button>
+                                <button type="submit" class="btn btn-primary">Add Hospital</button>
                             </div>
                         </div>
                     </form>
+                    
                     <hr>
                     <div class="row gutters mt-4">
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">

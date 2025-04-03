@@ -5,6 +5,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\WebController;
+use App\Http\Controllers\DoctorSlotController;
+use App\Http\Controllers\WebUserController;
 use Illuminate\Support\Facades\Artisan;
 Route::get('/clear-cache', function () {
   // Clear route cache
@@ -20,6 +22,8 @@ Route::get('admin/', function () {
     return view('auth.login');
 });
 
+
+Route::get('home3/',[WebController::class,'Home_View3'])->name('home3'); 
 Route::get('about-us/', function () {
   return view('website.about');
 })->name("about.us");
@@ -36,7 +40,16 @@ Route::post('/login/',[AjaxController::class,'login'])->name("login");
 
 
 //==================================>Website Routes
+Route::get('login/user/',[WebController::class,'User_Login'])->name('login.user'); 
+Route::get('register/user/',[WebController::class,'User_Register'])->name('register.user'); 
+
+//user login register route
+Route::post('user-register/submit/',[WebController::class,'User_RegisterSubmit'])->name('user-register.submit'); 
+Route::post('user/do-login/',[WebController::class,'login_User_Submit'])->name('user.do-login'); 
+
 Route::get('/',[WebController::class,'Home_View'])->name('welcome'); 
+Route::get('hospital/all-doctor/{id?}',[WebController::class,'AllHospital_Doctor'])->name('hospital.all-doctor'); 
+Route::get('doctor/detail/{id?}',[WebController::class,'SingleDoctorDetail'])->name('doctor.detail'); 
 Route::get('all-hospital/',[WebController::class,'All_Hospital'])->name('all.hospital'); 
 Route::get('all-doctor/',[WebController::class,'All_Doctor'])->name('all.doctor'); 
 
@@ -52,6 +65,9 @@ All Normal Users Routes List
 Route::middleware(['auth', 'user-access:user'])->group(function () {
   
     Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+    Route::get('user/dashboard/',[WebUserController::class,'User_Login'])->name('user.dashboard'); 
+
 });
   
 /*------------------------------------------
@@ -77,6 +93,23 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
   Route::get('/admin/edit/doctor/{id?}', [VendorController::class, 'NewDoctor'])->name('admin.edit.doctor');
   Route::post('/admin/doctor/add', [VendorController::class, 'AddDoctor'])->name('admin.doctor.add');
   Route::post('/admin/doctor/update', [VendorController::class, 'UpdateDoctor'])->name('admin.doctor.update');
+  Route::get('/admin/doctor-slot-display', [DoctorSlotController::class, 'Admin_Doctor_SlotView'])->name('admin.doctor-slot-display');
+  Route::post('/admin/doctor-slot-display-filter', [DoctorSlotController::class, 'Admin_Doctor_SlotView'])->name('admin.doctor-slot-display-filter');
+
+  Route::get('/admin/doctor-schedules/{doctor_id?}', [VendorController::class, 'getDoctorSchedule'])->name('admin.doctor.schedules');
+  Route::post('/admin/doctor-schedule-add', [VendorController::class, 'Add_DoctorSchedule'])->name('admin.doctor.schedule-add');
+ 
+   //=======>Admin doctor Slot admin.doctor.slot
+
+   Route::get('/admin-doctor-slots', [DoctorSlotController::class, 'AdminDoctor_SlotForm'])->name('admin.doctor.slot');
+   Route::post('/admin-doctor-slots/generate', [DoctorSlotController::class, 'Admin_generateSlots'])->name('admin-doctor-slots.generate');
+   Route::post('/admin-doctor-slots/save-selection', [DoctorSlotController::class, 'Admin_SaveSelectedSlots'])->name('admin-doctor-slots.saveSelection');
+
+   Route::get('/doctor-slots/create', [DoctorSlotController::class, 'showSlotForm'])->name('doctor-slots.create');
+ Route::post('/doctor-slots/generate', [DoctorSlotController::class, 'generateSlots'])->name('doctor-slots.generate');
+ Route::post('/doctor-slots/save-selection', [DoctorSlotController::class, 'saveSelectedSlots'])->name('doctor-slots.saveSelection');
+ Route::get('/doctor-slots', [DoctorSlotController::class, 'index'])->name('doctor-slots.index');
+ 
 
   //Slider
   Route::get('admin/slider/{id?}',[VendorController::class,'showSlider'])->name('admin.slider');

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Exception;
-
+use App\Models\DoctorSchedule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
@@ -78,13 +78,15 @@ class VendorController extends Controller
         $checkemail = DB::table('users')->where('email', $rest->email)->where('type','2')->count();
        if ($checkemail > 0) {
             session()->flash('msgVendor', 'Email Address already exist.');
-            return redirect()->route('admin.hospital');
+            return redirect()->back()->withInput();
+            //return redirect()->route('admin.hospital');
         }
 
         $chkm = DB::table('users')->where('mobile_no', $rest->mobile)->where('type','2')->count();
        if ($chkm > 0) {
             session()->flash('msgVendor', 'This Mobile No. already exist.');
-            return redirect()->route('admin.hospital');
+            return redirect()->back()->withInput();
+           // return redirect()->route('admin.hospital');
         }else{
             if ($rest->image) {
                 $firmImage = time() . rand(1000000, 9999999) . '.' . $rest->image->extension();
@@ -106,6 +108,7 @@ class VendorController extends Controller
                 $array['status'] =1;
                 $array['role_id'] ='2';
                 $array['type'] ='2';
+                $array['hospital_type'] =$rest->hospital_type;
                  $array['created_at'] = Carbon::now();
              
                 
@@ -335,13 +338,15 @@ class VendorController extends Controller
         $checkemail = DB::table('users')->where('email', $rest->email)->where('type','3')->count();
        if ($checkemail > 0) {
             session()->flash('msgVendor', 'Email Address already exist.');
-            return redirect()->route('admin.doctor');
+            return redirect()->back()->withInput();
+           // return redirect()->route('admin.doctor');
         }
 
         $chkm = DB::table('users')->where('mobile_no', $rest->mobile)->where('type','3')->count();
        if ($chkm > 0) {
             session()->flash('msgVendor', 'This Mobile No. already exist.');
-            return redirect()->route('admin.doctor');
+            return redirect()->back()->withInput();
+           // return redirect()->route('admin.doctor');
         }else{
                
             if ($rest->image) {
@@ -359,6 +364,9 @@ class VendorController extends Controller
                 $array['mobile_no'] =$rest->mobile;
                 $array['password'] = Hash::make($rest->password);
                 $array['pass_hint'] =$rest->password;
+                $array['qualification'] =$rest->qualification;
+                $array['experience'] =$rest->experience;
+                $array['description'] =$rest->description;
                 
                
                 $array['email'] =$rest->email;
@@ -438,6 +446,9 @@ class VendorController extends Controller
                 $array['city'] =$rest->city;
                 $array['pincode'] =$rest->pincode;
                 $array['address'] =$rest->address;
+                $array['qualification'] =$rest->qualification;
+                $array['experience'] =$rest->experience;
+                $array['description'] =$rest->description;
                 $array['status'] =1;
                 $array['updated_at'] = Carbon::now();
                   
@@ -470,11 +481,13 @@ class VendorController extends Controller
            else{
                $arr["category_id"]=null;
            }
-           $arr['categories'] = DB::table('category')->where('type','symptom')->get();
-           $cats = DB::table('category')->where(['parent'=>0])->where('type','symptom')->get();
+           $arr['categories'] = DB::table('category')->where('type','radiology')->get();
+           $cats = DB::table('category')
+           //->where(['parent'=>0])
+           ->where('type','radiology')->get();
            $arr['catall'] = $cats;
-           $arr['heading_title'] = 'Symptom';
-           $arr['cat_type'] = 'symptom';
+           $arr['heading_title'] = 'Radiology';
+           $arr['cat_type'] = 'radiology';
    
            return view('admin.category')->with($arr);
        }
@@ -505,7 +518,9 @@ class VendorController extends Controller
                $arr["category_id"]=null;
            }
            $arr['categories'] = DB::table('category')->where('type','category')->get();
-           $cats = DB::table('category')->where(['parent'=>0])->where('type','category')->get();
+           $cats = DB::table('category')
+           //->where(['parent'=>0])
+           ->where('type','category')->get();
            $arr['catall'] = $cats;
            $arr['heading_title'] = 'category';
            $arr['cat_type'] = 'category';
@@ -657,7 +672,10 @@ class VendorController extends Controller
             }
                 if($request->type=="category"){
                     return redirect()->route('admin.category');
-                }else{
+                }elseif($request->type=="radiology"){
+                    return redirect()->route('admin.radiology.category');
+                }
+                else{
                     return redirect()->route('admin.symptom');
                 }
             
@@ -751,8 +769,84 @@ class VendorController extends Controller
 
   
 
+//==========================================================================
 
+    public function create()
+    {
+        return view('doctor.slots.create');
+    }
 
+    public function generate(Request $request)
+    {
+        $request->validate([
+            'date' => 'required|date',
+            'slot_duration' => 'required|integer|min:5|max:60',
+            'start_time' => 'required|date_format:H:i',
+            'end_time' => 'required|date_format:H:i|after:start_time',
+        ]);
+
+        $date = Carbon::parse($request->date);
+        $slotDuration = 30;//$request->slot_duration;
+        $startTime = Carbon::parse($request->date . ' ' . $request->start_time);
+        $endTime = Carbon::parse($request->date . ' ' . $request->end_time);
+
+        $slots = $this->generateSlots($startTime, $endTime, $slotDuration);
+
+        return view('doctor.slots.select', compact('slots', 'date', 'slotDuration', 'startTime', 'endTime'));
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'slots' => 'required|array',
+        ]);
+
+        $doctorId = Auth::id();
+        foreach ($request->slots as $slot) {
+            [$start, $end] = explode('|', $slot);
+            Slot::create([
+                'doctor_id' => $doctorId,
+                'start_time' => Carbon::parse($start),
+                'end_time' => Carbon::parse($end),
+            ]);
+        }
+
+        return redirect()->route('doctor.slots.create')->with('success', 'Slots added successfully!');
+    }
+
+    private function generateSlots($startTime, $endTime, $duration)
+    {
+        $slots = [];
+        while ($startTime < $endTime) {
+            $slots[] = [
+                'start_time' => $startTime->format('H:i'),
+                'end_time' => $startTime->copy()->addMinutes($duration)->format('H:i'),
+            ];
+            $startTime->addMinutes($duration);
+        }
+        return $slots;
+    }
+
+  
+    public function getDoctorSchedule($doctor_id = 1)
+{
+    // Get current week's Monday-Sunday dates
+    $currentWeekStart = Carbon::now()->startOfWeek(Carbon::MONDAY);
+    $dates = [];
+
+    for ($i = 0; $i < 7; $i++) {
+        $dates[] = $currentWeekStart->copy()->addDays($i)->format('Y-m-d');
+    }
+
+    // Fetch doctor's existing schedule for the current week
+    $existingSchedule = DoctorSchedule::where('doctor_id', $doctor_id)
+        ->whereIn('date', $dates)
+        ->get()
+        ->keyBy('date'); // Key by date for easy access
+
+    // Return view with data
+    return view('admin.add_doctor_schedule', compact('dates', 'existingSchedule', 'doctor_id'));
+}
 
     //---End
 }

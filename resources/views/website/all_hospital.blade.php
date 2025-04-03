@@ -1,71 +1,108 @@
-@extends('website.master')
+@extends('website.master3') 
 @section('content')
-	<!-- Main Container  -->
-	<div style="padding:10px;" class="main-container container">
-		<ul class="breadcrumb">
-			<li><a href="{{route('welcome')}}"><i class="fa fa-home"></i></a></li>
-			<li>All Hospital</li>
-				
-		</ul>
-		
-		<div class="row">
-			   
-			<!--Middle Part Start-->
-            <div id="content" class="col-md-12 col-sm-12">
-                <div class="products-category">
-                  
-                    
-             
-              <div style="margin-top:20px;" class="so-categories module custom-slidercates">  
-                <h3 class="modtitle"><span>All Hospital</span></h3>
-                <div class="container-fluid">
-                        <div class="row">
-                           <center> 
-                           
-                               @foreach ($hospital as $item)
-                             <div style=" border-radius:10px; padding:5px; margin:5px;  box-shadow:0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" class="col-md-6 col-sm-12 col-xs-12">
-                             <div class="row">
-                              <div  class="col-md-6 col-lg-6 col-xs-6 col-sm-6 para02" style="overflow:hidden;">
-                                <a  href="#" target="_self"> <br>
-                                        <img class="img_hos" src="{{ asset('storage/hospital/').'/'.$item->image }}" style="height:150px; width:65%; margin-top: -20px; border-radius:15px;" title="{{$item->name}}" alt="{{$item->name}}" />
-                                    </a>
-                            </div>
-                             
-                               <div  class="col-md-6 col-lg-6 col-xs-6 col-sm-6">
-                             
-                                  <a style="font-weight:600; float:left; font-size:12px;" href="#" target="_self">{{$item->name}}</a>
-                                    <Br> <p   style=" float:left; font-size:10px;"><i class="fa fa-map-marker "></i>&nbsp;{{substr($item->address, 0, 25)}}</p> <br>
-                                 
-                                  
-                                    <br><p  style="float:left; font-size:10px;"><i class="fa fa-clock"></i>&nbsp;{{$item->name}}</p>
-                             
-                              
-                            </div> 
-                            </div>
-                            </div>
-                            
-                            @endforeach
-                           
-                         </center>
-                        </div>
-                    
+<main class="main pages mb-80" id="main-section">
+    <div class="page-header breadcrumb-wrap">
+        <div class="container">
+            <div class="breadcrumb">
+                <div class="breadcrumb-item d-inline-block">
+                    <a href="{{route('welcome')}}"title="Home">
+                        Home
+                    </a>
                 </div>
-            
-            
+                <span></span>
+                <div class="breadcrumb-item d-inline-block active">
+                    <div itemprop="item">
+                        Stores
+                    </div>
+                </div>
             </div>
-                           
-                           
-                           
-          
-          
-          
-          
-         </div>  
-      </div>
-  </div>
-                    <!--// End Changed listings-->
-                   
-                    
+        </div>
+    </div>
+
+
+    <div class="page-content pt-50">
+        <div class="container">
+            <div class="page-content pt-50">
+                <div class="container">
+                    <div class="archive-header-2 text-center">
+                        <h1 class="display-2 mb-50">Hospitals</h1>
+                        <div class="row">
+                            <div class="col-lg-5 mx-auto">
+                                <div class="sidebar-widget-2 widget_search mb-50">
+                                    <div class="search-form form-group">
+                                        <form  method="GET">
+                                            <input class="form-control" name="q" required value=""
+                                                type="text" placeholder="Search hospital...">
+                                            <button type="submit"><i class="fi-rs-search"></i></button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+               
+
+                    <div class="row vendor-grid">
+                      @foreach ($hospital as $item)
+                        <div class="col-lg-3 col-md-6 col-12 col-sm-6">
+                            <div class="vendor-wrap mb-40">
+                                <div class="vendor-img-action-wrap">
+                                    <div class="vendor-img">
+                                        <a href="{{ route('hospital.all-doctor', ['id'=>Crypt::encrypt($item->id)]) }}">
+                                            <img class="default-img" src="{{ asset('storage/hospital/').'/'.$item->image }}"
+                                                alt="{{$item->name}}" />
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="vendor-content-wrap">
+                                    <div class="d-flex justify-content-between align-items-end mb-30">
+                                        <div class="overflow-hidden">
+                                            {{-- <div class="product-category">
+                                                <span class="text-muted">Since 2025</span>
+                                            </div> --}}
+                                            <h4 class="mb-5 text-truncate"><a href="{{ route('hospital.all-doctor', ['id'=>Crypt::encrypt($item->id)]) }}">{{$item->name}}</a></h4>
+                                            <p>(14 Doctors)</p>
+                                            {{-- <div class="product-rate-cover">
+                                                <div class="product-rate d-inline-block">
+                                                    <div class="product-rating" style="width: 57.985611510791%"></div>
+                                                </div>
+                                                <span class="font-small ml-5 text-muted"> (139)</span>
+                                            </div> --}}
+                                        </div>
+                                    </div>
+
+                                    <div class="vendor-info mb-30">
+                                        <ul class="font-sm mb-20">
+                                            <li>
+                                                <span class="d-inline-block"><img
+                                                        src="{{ asset('website') }}/assets/themes/nest/imgs/theme/icons/icon-location.svg"
+                                                        alt="Address" /> <strong
+                                                        class="d-inline-block ms-1 me-1">Address:</strong> {{substr($item->address, 0, 45)}}</span>
+                                            </li>
+                                            {{-- <li>
+                                                <img src="themes/nest/imgs/theme/icons/icon-contact.svg"
+                                                    alt="Phone" />
+                                                <strong class="d-inline-block ms-1 me-1">Call Us:</strong>
+                                                <span class="d-inline-block" dir="ltr">+14435141496</span>
+                                            </li> --}}
+                                        </ul>
+                                    </div>
+                                    <a href="{{ route('hospital.all-doctor', ['id'=>Crypt::encrypt($item->id)]) }}" class="btn btn-xs">Book Now <i
+                                            class="fi-rs-arrow-small-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+
+                      
+                    </div>
+
+
                 </div>
-      </div>
+            </div>
+
+        </div>
+    </div>
+</main>
+
 @endsection

@@ -12,9 +12,15 @@ class backHelper
     {
         return DB::table("category")->where(['parent'=>0,'status'=>1])->get();
     }
+    
     public static function Sub_Categories($id)
     {
     return DB::table("category")->where("parent",$id)->get();
+    }
+
+    public static function Get_parent_Category_name($id)
+    {
+    return DB::table("category")->where("parent",$id)->first();
     }
     public static function get_category($id)
     {

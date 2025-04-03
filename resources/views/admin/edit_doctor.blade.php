@@ -66,6 +66,20 @@
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
                                 <div class="form-group">
+                                    <label for="experience">Experience </label>
+                                    <input type="text" maxlength="11" class="idm form-control" value="{{$data->experience}}" name="experience" id="Experience" placeholder="Enter Experience" />
+                                   
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label for="mobile">Qualification </label>
+                                    <input type="text" class="form-control" name="qualification" value="{{$data->qualification}}" id="qualification" placeholder="Enter qualification" />
+                                   
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+                                <div class="form-group">
                                     <label for="password">State <span style="color:red">*</span></label>
                                     <select  class="form-control" id="state" name="state" onchange="getCity(this.value)" required>
                                         <option value="">Select</option>
@@ -121,7 +135,14 @@
                             <div class="col-xl-8 col-lg-8 col-md-8 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label for="address">Address <span style="color:red">*</span></label>
-                                    <textarea class="form-control @error('address') is-invalid @enderror" name="address" id="address" placeholder="Enter Address">{{$data->address}}</textarea>
+                                    <textarea class="form-control" name="address" id="address" placeholder="Enter Address">{{$data->address}}</textarea>
+                                   
+                                </div>
+                            </div>
+                            <div class="col-xl-8 col-lg-8 col-md-8 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label for="address">Description</label>
+                                    <textarea class="form-control" name="description" id="description" placeholder="Enter description">{{$data->description}}</textarea>
                                    
                                 </div>
                             </div>
