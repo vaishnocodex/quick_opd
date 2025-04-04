@@ -60,8 +60,13 @@ Route::post('user-register/submit/',[WebController::class,'User_RegisterSubmit']
 Route::post('user/do-login/',[WebController::class,'login_User_Submit'])->name('user.do-login'); 
 
 Route::get('/',[WebController::class,'Home_View'])->name('welcome'); 
+Route::get('specialist/all-doctor/{id?}',[WebController::class,'All_Specialist_Doctor'])->name('specialist.all-doctor'); 
+Route::get('problem/all-doctor/{id?}',[WebController::class,'All_Specialist_Doctor'])->name('problem.all-doctor'); 
 Route::get('hospital/all-doctor/{id?}',[WebController::class,'AllHospital_Doctor'])->name('hospital.all-doctor'); 
 Route::get('doctor/detail/{id?}',[WebController::class,'SingleDoctorDetail'])->name('doctor.detail'); 
+Route::get('booking/checkout/{id?}',[WebController::class,'CheckoutPage'])->name('booking.checkout'); 
+
+
 Route::get('all-hospital/',[WebController::class,'All_Hospital'])->name('all.hospital'); 
 Route::get('all-doctor/',[WebController::class,'All_Doctor'])->name('all.doctor'); 
 
@@ -80,6 +85,7 @@ Route::middleware(['auth', 'user-access:user'])->group(function () {
 
     Route::get('user/dashboard/',[WebUserController::class,'UserDashboard'])->name('user.dashboard'); 
     Route::post('user/update-password/',[WebUserController::class,'User_Update_Password'])->name('user.update-password'); 
+    Route::post('user/updateProfile/',[WebUserController::class,'update_UserProfile'])->name('user.updateProfile'); 
 
 });
   

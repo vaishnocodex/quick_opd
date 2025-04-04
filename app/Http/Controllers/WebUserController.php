@@ -62,4 +62,36 @@ class WebUserController extends Controller
 
         return redirect()->back()->with('success', 'Password updated successfully!');
     }
+
+    public function update_UserProfile(Request $request)
+    {
+        // Ensure user is authenticated
+        if (!Auth::check()) {
+            return redirect()->back()->with('error', 'You must be logged in to update profile.');
+        }
+
+        // Validate Input
+        $request->validate([
+            'name'      => 'required|string|max:255',
+            'email'     => 'required|email|max:255' . Auth::id(),
+            'state'     => 'required|string|max:255',
+            'district'  => 'required|string|max:255',
+            'pincode'   => 'required|digits:6',
+            'address'   => 'required|string|max:500',
+        ]);
+
+        // Retrieve Authenticated User
+        $user = Auth::user();
+
+        // Update User Details
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->state = $request->state;
+        $user->district = $request->district;
+        $user->pincode = $request->pincode;
+        $user->address = $request->address;
+        $user->save();
+
+        return redirect()->back()->with('success', 'Profile updated successfully!');
+    }
 }

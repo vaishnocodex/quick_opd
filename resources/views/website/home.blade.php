@@ -42,12 +42,12 @@
                             @foreach ($category as $item)
                         <div style="margin-top:20px;" class="col-md-2 col-lg-2 col-xs-4 col-sm-4">
                             <div class="image-cat">
-                                <a  href="#" title="{{$item->name}}" target="_self">
+                                <a  href="{{ route('specialist.all-doctor', ['id'=>Crypt::encrypt($item->id)]) }}" title="{{$item->name}}" target="_self">
                                     <img style="height:75px !important; width:75px !important; border-radius:50%;" class="img-circled"  src="{{ asset('storage/category/').'/'.$item->image }}" title="{{$item->name}}" alt="{{$item->name}}" />
                                 </a>
                             </div>
                           <div class="cat-title text-center"> 
-                              <a style="font-size:11px;" href="#" title="{{$item->name}}" target="_self">{{$item->name}} </a>
+                              <a style="font-size:11px;" href="{{ route('specialist.all-doctor', ['id'=>Crypt::encrypt($item->id)]) }}" title="{{$item->name}}" target="_self">{{$item->name}} </a>
                             </div>
                         </div>
                         @endforeach
@@ -73,12 +73,12 @@
                             @foreach ($symptom as $item)
                         <div style="margin-top:20px;" class="col-md-2 col-lg-2 col-xs-4 col-sm-4">
                             <div class="image-cat">
-                                <a  href="#" title="{{$item->name}}" target="_self">
+                                <a  href="{{ route('problem.all-doctor', ['id'=>Crypt::encrypt($item->id)]) }}" title="{{$item->name}}" target="_self">
                                     <img style="height:75px !important; width:75px !important; border-radius:50%;" class="img-circled"  src="{{ asset('storage/category/').'/'.$item->image }}" title="{{$item->name}}" alt="{{$item->name}}" />
                                 </a>
                             </div>
                           <div class="cat-title text-center"> 
-                              <a style="font-size:11px;" href="#" title="{{$item->name}}" target="_self">{{$item->name}} </a>
+                              <a style="font-size:11px;" href="{{ route('problem.all-doctor', ['id'=>Crypt::encrypt($item->id)]) }}" title="{{$item->name}}" target="_self">{{$item->name}} </a>
                             </div>
                         </div>
                         @endforeach
