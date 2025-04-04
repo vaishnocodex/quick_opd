@@ -250,7 +250,8 @@
                                             <input type="hidden" name="id" class="hidden-product-id" value="{{$doctor->id}}" />
                                             <div class="detail-extralink mb-30">
                                                 <div class="product-extra-link2  has-buy-now-button ">
-                                                    <button type="submit" class="button button-add-to-cart "><i class="ri-book-open-line"></i>Book Now</button>
+                                                    {{-- <button type="submit" class="button"><i class="ri-book-open-line"></i>Book Now</button> --}}
+                                                    <a href="{{ route('booking.checkout', ['id'=>Crypt::encrypt($doctor->id)]) }}" class="button"><i class="ri-book-open-line"></i>Book Now</a>
                                                   
                                                 </div>
                                             </div>

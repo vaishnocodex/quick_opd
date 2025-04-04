@@ -143,42 +143,50 @@
                                         </div>
                                         <div class="card-body">
                                            
-                                            <form method="post" >
+                                            <form method="post" action="{{ route('user.updateProfile') }}">
+                                                @csrf
                                                 <div class="row">
                                                     <div class="form-group col-md-12">
                                                         <label>Full Name <span class="required"></span></label>
-                                                        <input required="" class="form-control"  value="{{Auth::user()->name}}" name="name" type="text" />
+                                                        <input required class="form-control" value="{{ Auth::user()->name }}" name="name" type="text" />
                                                     </div>
-                                                   
+                                            
                                                     <div class="form-group col-md-12">
                                                         <label>Email Address <span class="required"></span></label>
-                                                        <input required="" class="form-control"  value="{{Auth::user()->email}}" name="email" type="email" />
+                                                        <input required class="form-control" value="{{ Auth::user()->email }}" name="email" type="email" />
                                                     </div>
+                                            
                                                     <div class="form-group col-md-6">
                                                         <label>Phone Number <span class="required"></span></label>
-                                                        <input  class="form-control" value="{{Auth::user()->mobile_no}}"  type="text"  readonly/>
+                                                        <input class="form-control" value="{{ Auth::user()->mobile_no }}" type="text" readonly />
                                                     </div>
+                                            
                                                     <div class="form-group col-md-6">
                                                         <label>State <span class="required"></span></label>
-                                                        <input required="" class="form-control" name="password" type="password" />
+                                                        <input required class="form-control" value="{{ Auth::user()->state ?? '' }}" name="state" type="text" />
                                                     </div>
+                                            
                                                     <div class="form-group col-md-6">
                                                         <label>District <span class="required"></span></label>
-                                                        <input required="" class="form-control" name="npassword" type="password" />
+                                                        <input required class="form-control" value="{{ Auth::user()->district ?? '' }}" name="district" type="text" />
                                                     </div>
+                                            
                                                     <div class="form-group col-md-6">
-                                                        <label>Pincode<span class="required"></span></label>
-                                                        <input required="" class="form-control" name="cpassword" type="password" />
+                                                        <label>Pincode <span class="required"></span></label>
+                                                        <input required class="form-control" value="{{ Auth::user()->pincode ?? '' }}" name="pincode" type="text" />
                                                     </div>
+                                            
                                                     <div class="form-group col-md-12">
-                                                        <label>address<span class="required"></span></label>
-                                                        <textarea  class="form-control" name="address" ></textarea>
+                                                        <label>Address <span class="required"></span></label>
+                                                        <textarea class="form-control" name="address">{{ Auth::user()->address ?? '' }}</textarea>
                                                     </div>
+                                            
                                                     <div class="col-md-12">
-                                                        <button type="submit" class="btn btn-fill-out submit font-weight-bold" name="submit" value="Submit">Update Detail</button>
+                                                        <button type="submit" class="btn btn-fill-out submit font-weight-bold">Update Detail</button>
                                                     </div>
                                                 </div>
                                             </form>
+                                            
                                         </div>
                                     </div>
                                 </div>
