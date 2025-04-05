@@ -10,6 +10,7 @@ use App\Models\PartnerRegOtp;
 use App\Models\Category;
 use App\Models\State; 
 use App\Models\City;
+use App\Models\Slider;
 
 
 use Illuminate\Support\Facades\Storage;
@@ -31,6 +32,245 @@ use OpenApi\Annotations as OA;
 class UserApiController extends Controller
 {
 
+
+    public function Home_Category_data(Request $request)
+    {
+        try {
+            
+            // Count the total number of approved and for-sale test series
+            $Slider = Slider::select('id', 'title', 'image', 'url', 'description', 'status', 'created_at', 'updated_at')
+                    ->where('status', '1') 
+                    ->get(); 
+            $categories = Category::select('id', 'name', 'parent', 'image', 'status', 'type')  
+                        ->where('type', 'category')  
+                        ->where('status', '1')->limit(15)  
+                        ->get();  
+            $symptom = Category::select('id', 'name', 'parent', 'image', 'status', 'type')  
+                        ->where('type', 'symptom')  
+                        ->where('status', '1')->limit(15)  
+                        ->get();  
+            $radiology = Category::select('id', 'name', 'parent', 'image', 'status', 'type')  
+                        ->where('type', 'radiology')  
+                        ->where('status', '1')->limit(15)  
+                        ->get();  
+           
+
+            return response()->json([
+                'status' => true,
+                'data' => [
+                    'message' => 'Successfully retrieved home data.', 
+                    'category_image_path' => '/storage/category',
+                    'home_slider' => $Slider,
+                    'specailist_category' => $categories,
+                    'symptom_category' => $symptom,
+                    'radiology_category' => $radiology,
+                   
+                    
+                ],
+            ], 200); // Status code 200 for success
+
+        } catch (\Exception $e) {
+            // Log the exception message using the global Log facade
+           
+            return response()->json([
+                'status' => false,
+                'data' => [
+                    'message' => 'An error occurred: ' . $e->getMessage()
+
+                ],
+            ], 500); // Status code 500 for server error
+        }
+    }
+
+    public function getAllSpecialCategory(Request $request)  
+    {  
+        try {  
+            // Fetch approved special categories  
+            $categories = Category::select('id', 'name', 'parent', 'image', 'status', 'type')  
+                ->where('type', 'category')  
+                ->where('status', '1')  
+                ->get();  
+    
+            // Check if categories were found  
+            if ($categories->isEmpty()) {  
+                return response()->json([  
+                    'status' => false,  
+                    'data' => [  
+                        'message' => 'No special categories found.',  
+                    ],  
+                ], 404); // Using 404 for not found  
+            }  
+    
+            // Return categories if found  
+            return response()->json([  
+                'status' => true,  
+                'data' => [  
+                    'message' => 'Successfully retrieved special categories.', 
+                    'category_image_path' => '/storage/category',  
+                    'specialist_category' => $categories,  
+                    
+                ],  
+            ], 200); // Status code 200 for success  
+    
+        } catch (\Exception $e) {  
+            // Log the exception message using the global Log facade  
+            Log::error('Error fetching special categories: ' . $e->getMessage());  
+    
+            return response()->json([  
+                'status' => false,  
+                'data' => [  
+                    'message' => 'An error occurred: ' . $e->getMessage(),  
+                ],  
+            ], 500); // Status code 500 for server error  
+        }  
+    }  
+    
+    public function getAllSymptomCategory(Request $request)  
+    {  
+        try {  
+            // Fetch approved symptom categories  
+            $symptoms = Category::select('id', 'name', 'parent', 'image', 'status', 'type')  
+                ->where('type', 'symptom')  
+                ->where('status', '1')  
+                ->get();  
+    
+            // Check if symptoms were found  
+            if ($symptoms->isEmpty()) {  
+                return response()->json([  
+                    'status' => false,  
+                    'data' => [  
+                        'message' => 'No symptom categories found.',  
+                    ],  
+                ], 404); // Using 404 for not found  
+            }  
+    
+            // Return symptoms if found  
+            return response()->json([  
+                'status' => true,  
+                'data' => [  
+                    'message' => 'Successfully retrieved symptom categories.',
+                    'category_image_path' => '/storage/category',   
+                    'symptom_category' => $symptoms,  
+                    
+                ],  
+            ], 200); // Status code 200 for success  
+    
+        } catch (\Exception $e) {  
+            // Log the exception message using the global Log facade  
+            Log::error('Error fetching symptom categories: ' . $e->getMessage());  
+    
+            return response()->json([  
+                'status' => false,  
+                'data' => [  
+                    'message' => 'An error occurred: ' . $e->getMessage(),  
+                ],  
+            ], 500); // Status code 500 for server error  
+        }  
+    }  
+    public function getAllRadiologyCategory(Request $request)  
+    {  
+        try {  
+            // Fetch approved symptom categories  
+            $radiology = Category::select('id', 'name', 'parent', 'image', 'status', 'type')  
+            ->where('type', 'radiology')  
+            ->where('status', '1') 
+            ->get();   
+    
+            // Check if symptoms were found  
+            if ($radiology->isEmpty()) {  
+                return response()->json([  
+                    'status' => false,  
+                    'data' => [  
+                        'message' => 'No radiology categories found.',  
+                    ],  
+                ], 404); // Using 404 for not found  
+            }  
+    
+            // Return symptoms if found  
+            return response()->json([  
+                'status' => true,  
+                'data' => [  
+                    'message' => 'Successfully retrieved symptom categories.', 
+                    'category_image_path' => '/storage/category',  
+                    'symptom_category' => $radiology,  
+                     
+                ],  
+            ], 200); // Status code 200 for success  
+    
+        } catch (\Exception $e) {  
+            // Log the exception message using the global Log facade  
+            Log::error('Error fetching symptom categories: ' . $e->getMessage());  
+    
+            return response()->json([  
+                'status' => false,  
+                'data' => [  
+                    'message' => 'An error occurred: ' . $e->getMessage(),  
+                ],  
+            ], 500); // Status code 500 for server error  
+        }  
+    }  
+
+    public function getAllHospital(Request $request)  
+    {  
+        try {  
+            // Fetch approved hospitals with specified fields and eager load relationships  
+            $hospitals = User::select('id', 'name', 'mobile_no', 'email', 'pincode', 'address', 'image', 'short_description')  
+                ->where('role_id', '3')  
+                ->where('status', '1')  
+                ->with(['state', 'city'])  // Eager loading state and city with specific fields  
+                ->get();  
+
+            // Check if hospitals were found  
+            if ($hospitals->isEmpty()) {  
+                return response()->json([  
+                    'status' => false,  
+                    'data' => [  
+                        'message' => 'No hospitals found.',  
+                    ],  
+                ], 404); // Using 404 for not found  
+            }  
+
+            // Format the hospitals response to include state_name and city_name  
+            $formattedHospitals = $hospitals->map(function ($hospital) {  
+                return [  
+                    'name' => $hospital->name,  
+                    'mobile_no' => $hospital->mobile_no,  
+                    'email' => $hospital->email,  
+                    'pincode' => $hospital->pincode,  
+                    'address' => $hospital->address,  
+                    'image' => $hospital->image,  
+                    'short_description' => $hospital->short_description,  
+                    'state_name' => $hospital->state->name ?? null,  // Check if state exists  
+                    'city_name' => $hospital->city->name ?? null,    // Check if city exists  
+                    'distance' => '14 KM',    // Check if city exists  
+                ];  
+            });  
+
+            // Return hospitals if found  
+            return response()->json([  
+                'status' => true,  
+                'data' => [  
+                    'message' => 'Successfully retrieved hospitals data.',   
+                    'image_path' => '/storage/hospital',  // Base path for images if needed  
+                    'hospitals' => $formattedHospitals,  // Renamed variable for clarity  
+                ],  
+            ], 200); // Status code 200 for success  
+
+        } catch (\Exception $e) {  
+            // Log the exception message using the global Log facade  
+            Log::error('Error fetching hospitals: ' . $e->getMessage());  
+    
+            return response()->json([  
+                'status' => false,  
+                'data' => [  
+                    'message' => 'An error occurred: ' . $e->getMessage(),  
+                ],  
+            ], 500); // Status code 500 for server error  
+        }  
+    }  
+
+
+    
     /**
  * @OA\Post(
  *     path="/api/user/logout",

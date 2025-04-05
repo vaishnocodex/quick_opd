@@ -4,7 +4,7 @@
 <!-- Mirrored from ecommerce12.testsoftwares.site/ by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 25 Mar 2025 15:58:38 GMT -->
 <!-- Added by HTTrack -->
 <meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
-
+@php  $firm_detail=backHelper::get_fimddetails(); @endphp
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -176,14 +176,14 @@
                         <div class="header-action-right">
                             <div class="header-action-2">
                              
-                                <div class="header-action-icon-2">
+                                {{-- <div class="header-action-icon-2">
                                     <a href="wishlist.html">
                                         <img class="svgInject" alt="Wishlist"
                                             src="{{ asset('website') }}/assets/themes/nest/imgs/theme/icons/icon-heart.svg" />
                                         <span class="pro-count blue wishlist-count"> 0 </span>
                                     </a>
                                     <a href="wishlist.html"><span class="lable">History</span></a>
-                                </div>
+                                </div> --}}
                                 {{-- <div class="header-action-icon-2">
                                     <a class="mini-cart-icon" href="cart.html">
                                         <img alt="Cart" src="{{ asset('website') }}/assets/themes/nest/imgs/theme/icons/icon-cart.svg" />
@@ -330,7 +330,7 @@
                     </div>
                     <div class="hotline d-none d-lg-flex">
                         <img src="{{ asset('website') }}/assets/themes/nest/imgs/theme/icons/icon-headphone.svg" alt="hotline" />
-                        <p>1900 - 888<span>24/7 Support Center</span></p>
+                        <p>{{$firm_detail->mobile}}<span>24/7 Support Center</span></p>
                     </div>
                     <div class="header-action-icon-2 d-block d-lg-none">
                         <div class="burger-icon burger-icon-white">
@@ -438,7 +438,7 @@
                                 </a>
                             </li>
                             <li class=" ">
-                                <a href="contact.html" target="_self">
+                                <a href="{{route('contact.us')}}" target="_self">
                                     Contact
                                 </a>
                             </li>
@@ -539,7 +539,7 @@
                                             </clipPath>
                                         </defs>
                                     </svg>&nbsp;
-                                    <strong>Call Us:</strong>&nbsp;<span dir="ltr">(+91) - 540-025-124553</span>
+                                    <strong>Call Us:</strong>&nbsp;<span dir="ltr">(+91) - {{$firm_detail->mobile}}</span>
                                 </li>
 
                                 <li>
@@ -557,7 +557,7 @@
                                             </clipPath>
                                         </defs>
                                     </svg>&nbsp;
-                                    <strong>Email:</strong>&nbsp;<span>sale@testsoftwares.site</span>
+                                    <strong>Email:</strong>&nbsp;<span>{{$firm_detail->email}}</span>
                                 </li>
                                 <li>
                                     <svg width="17" height="17" viewBox="0 0 17 17" fill="none"

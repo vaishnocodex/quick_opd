@@ -9,6 +9,14 @@ use App\Http\Controllers\API\DoctorApiController;
 
 
 //authentication
+
+Route::get('get-home-data/', [UserApiController::class, 'Home_Category_data']);
+Route::get('all-specialist-categories/', [UserApiController::class, 'getAllSpecialCategory']);  
+Route::get('all-symptom-categories/', [UserApiController::class, 'getAllSymptomCategory']);  
+Route::get('all-radiology-categories/', [UserApiController::class, 'getAllRadiologyCategory']);  
+Route::get('get-all-hospital/', [UserApiController::class, 'getAllHospital']);  
+
+
 Route::get('/user/all_sliders', [UserApiController::class, 'getSliders']);
 Route::post('/user/send-otp', [UserApiController::class, 'sendOtp']);
 Route::post('/user/verify-otp', [UserApiController::class, 'verifyOtp']);
