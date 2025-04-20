@@ -32,7 +32,7 @@ class VendorController extends Controller
         if($rest->id){
             $arr["staff_id"]=$rest->id;
             $decrypted = Crypt::decrypt($rest->id);
-            $user= DB::table('users')->where('id',$decrypted)->where('role_id','2')->first();
+            $user= DB::table('users')->where('id',$decrypted)->where('role_id','3')->first();
             $arr['data'] =$user;
             $arr['state_data'] = DB::table('state')->where('fcountryid', 101)->get();
             $arr['city_data'] = DB::table('city')->where('fstateid', $user->state)->get();
@@ -48,7 +48,7 @@ class VendorController extends Controller
         ->select(['a.*', 'b.name as state_name', 'c.name as city_name'])
         ->leftJoin('state as b', 'a.state', '=', 'b.id')
         ->leftJoin('city as c', 'a.city', '=', 'c.id')
-        ->where('a.type', '2')
+        ->where('a.type', '3')
         ->where('a.user_id', '0')->where('a.status', 1)
         ->orderBy('a.id', 'DESC')
         ->get();
@@ -106,8 +106,8 @@ class VendorController extends Controller
                 $array['pincode'] =$rest->pincode;
                 $array['address'] =$rest->address;
                 $array['status'] =1;
-                $array['role_id'] ='2';
-                $array['type'] ='2';
+                $array['role_id'] ='3';
+                $array['type'] ='3';
                 $array['hospital_type'] =$rest->hospital_type;
                  $array['created_at'] = Carbon::now();
              
@@ -263,7 +263,7 @@ class VendorController extends Controller
         if($rest->id){
             $arr["staff_id"]=$rest->id;
             $decrypted = Crypt::decrypt($rest->id);
-            $arr['data'] = DB::table('users')->where('id',$decrypted)->where('role_id','3')->first();
+            $arr['data'] = DB::table('users')->where('id',$decrypted)->where('role_id','4')->first();
             return view('admin.edit_hospital')->with($arr);
         }
         else{
@@ -275,7 +275,7 @@ class VendorController extends Controller
         ->leftJoin('state as b', 'a.state', '=', 'b.id')
         ->leftJoin('city as c', 'a.city', '=', 'c.id')
         ->leftJoin('users as h', 'h.id', '=', 'a.user_id')
-        ->where('a.type', '3')
+        ->where('a.type', '4')
         //->where('a.user_id', '0')->where('a.status', 1)
         ->orderBy('a.id', 'DESC')
         ->get();
@@ -291,7 +291,7 @@ class VendorController extends Controller
         if($rest->id){
             $arr["staff_id"]=$rest->id;
             $decrypted = Crypt::decrypt($rest->id);
-            $user= DB::table('users')->where('id',$decrypted)->where('role_id','3')->first();
+            $user= DB::table('users')->where('id',$decrypted)->where('role_id','4')->first();
             $arr['data'] =$user;
             $arr['hospital_data'] = DB::table('users')->where('type', 2)->get();
             $arr['state_data'] = DB::table('state')->where('fcountryid', 101)->get();
@@ -308,7 +308,7 @@ class VendorController extends Controller
         ->select(['a.*', 'b.name as state_name', 'c.name as city_name'])
         ->leftJoin('state as b', 'a.state', '=', 'b.id')
         ->leftJoin('city as c', 'a.city', '=', 'c.id')
-        ->where('a.type', '3')
+        ->where('a.type', '4')
         //->where('a.user_id', '0')->where('a.status', 1)
         ->orderBy('a.id', 'DESC')
         ->get();
@@ -335,14 +335,14 @@ class VendorController extends Controller
 
         ]);
         
-        $checkemail = DB::table('users')->where('email', $rest->email)->where('type','3')->count();
+        $checkemail = DB::table('users')->where('email', $rest->email)->where('type','4')->count();
        if ($checkemail > 0) {
             session()->flash('msgVendor', 'Email Address already exist.');
             return redirect()->back()->withInput();
            // return redirect()->route('admin.doctor');
         }
 
-        $chkm = DB::table('users')->where('mobile_no', $rest->mobile)->where('type','3')->count();
+        $chkm = DB::table('users')->where('mobile_no', $rest->mobile)->where('type','4')->count();
        if ($chkm > 0) {
             session()->flash('msgVendor', 'This Mobile No. already exist.');
             return redirect()->back()->withInput();
@@ -356,8 +356,8 @@ class VendorController extends Controller
    
            }
             $array['user_id'] = $rest->hospital;
-            $array['role_id'] ='3';
-            $array['type'] ='3';
+            $array['role_id'] ='4';
+            $array['type'] ='4';
             $array['category_id'] = implode(',', $rest->category_id); 
             $array['symptom_id'] = implode(',', $rest->symptom_id); 
             $array['name'] =$rest->name;
@@ -416,13 +416,13 @@ class VendorController extends Controller
         ]);
         
         $update_id=$rest->update_id;
-        $checkemail = DB::table('users')->where('id','!=', $update_id)->where('email', $rest->email)->where('type','3')->count();
+        $checkemail = DB::table('users')->where('id','!=', $update_id)->where('email', $rest->email)->where('type','4')->count();
        if ($checkemail > 0) {
             session()->flash('msgVendor', 'Email Address already exist.');
             return redirect()->back();
         }
 
-        $chkm = DB::table('users')->where('id','!=', $update_id)->where('mobile_no', $rest->mobile)->where('type','3')->count();
+        $chkm = DB::table('users')->where('id','!=', $update_id)->where('mobile_no', $rest->mobile)->where('type','4')->count();
        if ($chkm > 0) {
             session()->flash('msgVendor', 'This Mobile No. already exist.');
             return redirect()->back();

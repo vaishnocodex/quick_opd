@@ -31,11 +31,14 @@ class Category extends Model
 
     // You can define relationships here if applicable.  
     // Example: A category might have many subcategories  
-    public function subcategories()  
-    {  
-        return $this->hasMany(Category::class, 'parent', 'id');  
-    }  
+   
     
+
+    public function subcategories()
+{
+    return $this->hasMany(self::class, 'parent', 'id');
+}
+
     // Or if it has a parent category  
     public function parentCategory()  
     {  

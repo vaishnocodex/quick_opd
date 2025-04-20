@@ -41,6 +41,9 @@
     <link media="all" type="text/css" rel="stylesheet" href="{{ asset('website') }}/assets/vendor/core/plugins/cookie-consent/css/cookie-consent0ff5.css?v=1.0.2">
     <link media="all" type="text/css" rel="stylesheet" href="{{ asset('website') }}/assets/vendor/core/core/base/libraries/ckeditor/content-styles.css">
     <link media="all" type="text/css" rel="stylesheet" href="{{ asset('website') }}/assets/themes/nest/css/vendors/normalize.css">
+   <!-- Font Awesome 6 CDN -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
     <link media="all" type="text/css" rel="stylesheet" href="{{ asset('website') }}/assets/themes/nest/plugins/bootstrap/css/bootstrap.min.css">
     <link media="all" type="text/css" rel="stylesheet" href="{{ asset('website') }}/assets/themes/nest/css/vendors/uicons-regular-straight.css">
     <link media="all" type="text/css" rel="stylesheet" href="{{ asset('website') }}/assets/themes/nest/css/plugins/animate.min.css">
@@ -263,11 +266,11 @@
 
                     <div class="header-nav d-none d-lg-flex">
                         <div class="main-categories-wrap d-none d-lg-block">
-                            <a class="categories-button-active" href="#">
-                                <span class="fi-rs-apps"></span> <span class="et">Browse</span> All Categories
-                                <i class="fi-rs-angle-down"></i>
+                            <a class="categories-button-active" href="{{route('welcome')}}">
+                                <span class="fi-rs-apps"></span> <span class="et">Home </span> 
+                              
                             </a>
-                            <div class="categories-dropdown-wrap categories-dropdown-active-large font-heading">
+                            {{-- <div class="categories-dropdown-wrap categories-dropdown-active-large font-heading">
 
                                 <div class="d-flex categories-dropdown-inner">
                                     <ul>
@@ -300,23 +303,23 @@
 
                                 </div>
                                
-                            </div>
+                            </div> --}}
                         </div>
 
                         <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block font-heading">
                             <nav>
                                 <ul>
-                                    <li><a href="{{route('welcome')}}" class="active" target="_self">
-                                            <i class="fi-rs-home me-1"></i> Home </a> </li>
-                                        <li><a href="{{route('all.doctor')}}" target="_self">  All Doctor  </a> </li>
-                                        <li><a href="{{route('all.hospital')}}" target="_self">  All Hospital  </a> </li>
+                                    {{-- <li><a href="" class="active" target="_self">
+                                            <i class="fi-rs-home me-1"></i> Home </a> </li> --}}
+                                        <li><a href="{{route('all.doctor')}}" target="_self">  All Doctors  </a> </li>
+                                        <li><a href="{{route('all.hospital')}}" target="_self">  All Hospitals  </a> </li>
                                 
                                 
-                                 
+                                        <li>
+                                            <a href="#" target="_self">  Blogs</a>
+                                        </li>
                                     <li>
-                                        <a href="#" target="_self">
-                                            FAQ
-                                        </a>
+                                        <a href="#" target="_self">  FAQ</a>
                                     </li>
                                     <li>
                                         <a href="#" target="_self">
@@ -962,7 +965,7 @@
             lazyLoadShortcodeBlocks();
         });
     </script> --}}
-    <div class="js-cookie-consent cookie-consent cookie-consent-full-width"
+    {{-- <div class="js-cookie-consent cookie-consent cookie-consent-full-width"
         style="background-color: #000; color: #fff;">
         <div class="cookie-consent-body" style="max-width: 1170px;">
             <span class="cookie-consent__message">
@@ -977,7 +980,7 @@
         </div>
     </div>
     <div data-site-cookie-name="cookie_for_consent"></div>
-    <div data-site-cookie-lifetime="7300"></div>
+    <div data-site-cookie-lifetime="7300"></div> --}}
     
 
     <script>

@@ -143,8 +143,8 @@ class DoctorSlotController extends Controller
 //--------------------------------Admin side slot booking form
 public function AdminDoctor_SlotForm()
 { 
-    $arr['doctor_data'] = DB::table('users')->where('type', 3)->get();
-    return view('admin.doctor_slots_create')->with($arr);
+    $arr['doctor_data'] = DB::table('users')->where('type', '4')->get();
+    return view('admin.add_doctor_slot')->with($arr);
 }    
 
 public function Admin_Doctor_SlotView(Request $request)
@@ -180,7 +180,34 @@ public function Admin_Doctor_SlotView(Request $request)
     $arr['tdate'] =$tdate; 
     return view('admin.doctor_slot_view')->with($arr);
 }  
+
+
 public function Admin_generateSlots(Request $request)
+{
+
+    $request->validate([
+        'doctor_id' => 'required',
+        'date' => 'required|date',
+        'start_time' => 'required',
+        'end_time' => 'required|after:start_time',
+        'max_slot' => 'required|integer',
+    ]);
+
+    DoctorSlot::create([
+        'doctor_id' => $request->doctor_id,
+        'date' => $request->date,
+        'start_time' => $request->start_time,
+        'end_time' => $request->end_time,
+        'max_slot' => $request->max_slot,
+        'shift' => 'null',
+        'status' => $request->status,
+    ]);
+
+    return response()->json(['success' => true , 'message' => 'Slots saved successfully!']);
+}
+
+
+public function Admin_generateSlots222(Request $request)
 {
     $request->validate([
         'doctor_id' => 'required',
@@ -274,6 +301,23 @@ public function Admin_SaveSelectedSlots(Request $request)
     }
 
     return redirect()->route('admin.doctor.slot')->with('msgVendor', 'Slots saved successfully!');
+}
+
+public function fetchSlots(Request $request)
+{
+    $slots = DoctorSlot::where('doctor_id', '1')->get();
+
+    $events = [];
+
+    foreach ($slots as $slot) {
+        $events[] = [
+            'title' => $slot->shift . ' (' . $slot->start_time . ' - ' . $slot->end_time . ') | Max: ' . $slot->max_slot,
+            'start' => $slot->date,
+            'allDay' => true,
+        ];
+    }
+
+    return response()->json($events);
 }
 //-----------------
 

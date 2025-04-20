@@ -33,6 +33,99 @@ class UserApiController extends Controller
 {
 
 
+/**
+ * @OA\Get(
+ *     path="/api/get-home-data",
+ *     tags={"Home"},
+ *     summary="Get home page data",
+ *     description="Fetches sliders, specialist categories, symptoms, and radiology categories for the home screen.",
+ *     operationId="getHomeData",
+ *     @OA\Response(
+ *         response=200,
+ *         description="Successfully retrieved home data",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="object",
+ *                 @OA\Property(property="message", type="string", example="Successfully retrieved home data."),
+ *                 @OA\Property(property="category_image_path", type="string", example="/storage/category"),
+
+ *                 @OA\Property(
+ *                     property="home_slider",
+ *                     type="array",
+ *                     @OA\Items(
+ *                         type="object",
+ *                         @OA\Property(property="id", type="integer", example=1),
+ *                         @OA\Property(property="title", type="string", example="Welcome Slide"),
+ *                         @OA\Property(property="image", type="string", example="slider1.jpg"),
+ *                         @OA\Property(property="url", type="string", example="https://example.com"),
+ *                         @OA\Property(property="description", type="string", example="A short description of the slide."),
+ *                         @OA\Property(property="status", type="string", example="1"),
+ *                         @OA\Property(property="created_at", type="string", format="date-time", example="2024-04-07T10:00:00Z"),
+ *                         @OA\Property(property="updated_at", type="string", format="date-time", example="2024-04-07T10:00:00Z")
+ *                     )
+ *                 ),
+
+ *                 @OA\Property(
+ *                     property="specailist_category",
+ *                     type="array",
+ *                     @OA\Items(
+ *                         type="object",
+ *                         @OA\Property(property="id", type="integer", example=1),
+ *                         @OA\Property(property="name", type="string", example="Cardiology"),
+ *                         @OA\Property(property="parent", type="integer", example=null),
+ *                         @OA\Property(property="image", type="string", example="category1.jpg"),
+ *                         @OA\Property(property="status", type="string", example="1"),
+ *                         @OA\Property(property="type", type="string", example="category")
+ *                     )
+ *                 ),
+
+ *                 @OA\Property(
+ *                     property="symptom_category",
+ *                     type="array",
+ *                     @OA\Items(
+ *                         type="object",
+ *                         @OA\Property(property="id", type="integer", example=2),
+ *                         @OA\Property(property="name", type="string", example="Headache"),
+ *                         @OA\Property(property="parent", type="integer", example=null),
+ *                         @OA\Property(property="image", type="string", example="symptom1.jpg"),
+ *                         @OA\Property(property="status", type="string", example="1"),
+ *                         @OA\Property(property="type", type="string", example="symptom")
+ *                     )
+ *                 ),
+
+ *                 @OA\Property(
+ *                     property="radiology_category",
+ *                     type="array",
+ *                     @OA\Items(
+ *                         type="object",
+ *                         @OA\Property(property="id", type="integer", example=3),
+ *                         @OA\Property(property="name", type="string", example="X-Ray"),
+ *                         @OA\Property(property="parent", type="integer", example=null),
+ *                         @OA\Property(property="image", type="string", example="radiology1.jpg"),
+ *                         @OA\Property(property="status", type="string", example="1"),
+ *                         @OA\Property(property="type", type="string", example="radiology")
+ *                     )
+ *                 )
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="An error occurred",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="object",
+ *                 @OA\Property(property="message", type="string", example="An error occurred: Something went wrong")
+ *             )
+ *         )
+ *     )
+ * )
+ */
+
     public function Home_Category_data(Request $request)
     {
         try {
@@ -49,10 +142,22 @@ class UserApiController extends Controller
                         ->where('type', 'symptom')  
                         ->where('status', '1')->limit(15)  
                         ->get();  
-            $radiology = Category::select('id', 'name', 'parent', 'image', 'status', 'type')  
-                        ->where('type', 'radiology')  
-                        ->where('status', '1')->limit(15)  
-                        ->get();  
+
+                        $radiology = Category::select('id', 'name', 'parent', 'image', 'status', 'type')
+                        ->where('type', 'category')
+                        ->where('status', '1')
+                        ->withCount([
+                            'subcategories as children_count' => function ($query) {
+                                $query->where('status', '1');
+                            }
+                        ])
+                        ->limit(15)
+                        ->get();
+
+            // $radiology = Category::select('id', 'name', 'parent', 'image', 'status', 'type')  
+            //             ->where('type', 'radiology')  
+            //             ->where('status', '1')->limit(15)  
+            //             ->get();  
            
 
             return response()->json([
@@ -81,6 +186,66 @@ class UserApiController extends Controller
             ], 500); // Status code 500 for server error
         }
     }
+
+    /**
+ * @OA\Get(
+ *     path="/api/all-specialist-categories",
+ *     tags={"Categories"},
+ *     summary="Get all approved specialist categories",
+ *     description="Returns a list of approved specialist categories.",
+ *     operationId="getAllSpecialCategory",
+ *     @OA\Response(
+ *         response=200,
+ *         description="Successfully retrieved special categories",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="object",
+ *                 @OA\Property(property="message", type="string", example="Successfully retrieved special categories."),
+ *                 @OA\Property(property="category_image_path", type="string", example="/storage/category"),
+ *                 @OA\Property(
+ *                     property="specialist_category",
+ *                     type="array",
+ *                     @OA\Items(
+ *                         type="object",
+ *                         @OA\Property(property="id", type="integer", example=1),
+ *                         @OA\Property(property="name", type="string", example="Cardiology"),
+ *                         @OA\Property(property="parent", type="integer", example=null),
+ *                         @OA\Property(property="image", type="string", example="cardiology.jpg"),
+ *                         @OA\Property(property="status", type="string", example="1"),
+ *                         @OA\Property(property="type", type="string", example="category")
+ *                     )
+ *                 )
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="No special categories found",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="object",
+ *                 @OA\Property(property="message", type="string", example="No special categories found.")
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Server error",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="object",
+ *                 @OA\Property(property="message", type="string", example="An error occurred: Something went wrong")
+ *             )
+ *         )
+ *     )
+ * )
+ */
 
     public function getAllSpecialCategory(Request $request)  
     {  
@@ -125,6 +290,66 @@ class UserApiController extends Controller
         }  
     }  
     
+    /**
+ * @OA\Get(
+ *     path="/api/all-symptom-categories",
+ *     tags={"Categories"},
+ *     summary="Get all approved symptom categories",
+ *     description="Returns a list of approved symptom categories.",
+ *     operationId="getAllSymptomCategory",
+ *     @OA\Response(
+ *         response=200,
+ *         description="Successfully retrieved symptom categories",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="object",
+ *                 @OA\Property(property="message", type="string", example="Successfully retrieved symptom categories."),
+ *                 @OA\Property(property="category_image_path", type="string", example="/storage/category"),
+ *                 @OA\Property(
+ *                     property="symptom_category",
+ *                     type="array",
+ *                     @OA\Items(
+ *                         type="object",
+ *                         @OA\Property(property="id", type="integer", example=1),
+ *                         @OA\Property(property="name", type="string", example="Headache"),
+ *                         @OA\Property(property="parent", type="integer", example=null),
+ *                         @OA\Property(property="image", type="string", example="headache.jpg"),
+ *                         @OA\Property(property="status", type="string", example="1"),
+ *                         @OA\Property(property="type", type="string", example="symptom")
+ *                     )
+ *                 )
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="No symptom categories found",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="object",
+ *                 @OA\Property(property="message", type="string", example="No symptom categories found.")
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Server error",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="object",
+ *                 @OA\Property(property="message", type="string", example="An error occurred: Something went wrong")
+ *             )
+ *         )
+ *     )
+ * )
+ */
+
     public function getAllSymptomCategory(Request $request)  
     {  
         try {  
@@ -167,14 +392,84 @@ class UserApiController extends Controller
             ], 500); // Status code 500 for server error  
         }  
     }  
+
+    /**
+ * @OA\Get(
+ *     path="/api/all-radiology-categories",
+ *     tags={"Categories"},
+ *     summary="Get all approved radiology categories",
+ *     description="Returns a list of approved radiology categories.",
+ *     operationId="getAllRadiologyCategory",
+ *     @OA\Response(
+ *         response=200,
+ *         description="Successfully retrieved radiology categories",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="object",
+ *                 @OA\Property(property="message", type="string", example="Successfully retrieved radiology categories."),
+ *                 @OA\Property(property="category_image_path", type="string", example="/storage/category"),
+ *                 @OA\Property(
+ *                     property="radiology_category",
+ *                     type="array",
+ *                     @OA\Items(
+ *                         type="object",
+ *                         @OA\Property(property="id", type="integer", example=1),
+ *                         @OA\Property(property="name", type="string", example="X-Ray"),
+ *                         @OA\Property(property="parent", type="integer", example=null),
+ *                         @OA\Property(property="image", type="string", example="xray.jpg"),
+ *                         @OA\Property(property="status", type="string", example="1"),
+ *                         @OA\Property(property="type", type="string", example="radiology")
+ *                     )
+ *                 )
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="No radiology categories found",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="object",
+ *                 @OA\Property(property="message", type="string", example="No radiology categories found.")
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Server error",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="object",
+ *                 @OA\Property(property="message", type="string", example="An error occurred: Something went wrong")
+ *             )
+ *         )
+ *     )
+ * )
+ */
+
     public function getAllRadiologyCategory(Request $request)  
     {  
         try {  
             // Fetch approved symptom categories  
-            $radiology = Category::select('id', 'name', 'parent', 'image', 'status', 'type')  
-            ->where('type', 'radiology')  
-            ->where('status', '1') 
-            ->get();   
+            // $radiology = Category::select('id', 'name', 'parent', 'image', 'status', 'type')  
+            // ->where('type', 'radiology')  
+            // ->where('status', '1') 
+            // ->get();   
+            $radiology = Category::select('id', 'name', 'parent', 'image', 'status', 'type')
+            ->where('type', 'category')
+            ->where('status', '1')
+            ->withCount([
+                'subcategories as children_count' => function ($query) {
+                    $query->where('status', '1');
+                }
+            ])
+            ->get();
     
             // Check if symptoms were found  
             if ($radiology->isEmpty()) {  
@@ -190,16 +485,16 @@ class UserApiController extends Controller
             return response()->json([  
                 'status' => true,  
                 'data' => [  
-                    'message' => 'Successfully retrieved symptom categories.', 
+                    'message' => 'Successfully retrieved radiology categories.', 
                     'category_image_path' => '/storage/category',  
-                    'symptom_category' => $radiology,  
+                    'radiology_category' => $radiology,  
                      
                 ],  
             ], 200); // Status code 200 for success  
     
         } catch (\Exception $e) {  
             // Log the exception message using the global Log facade  
-            Log::error('Error fetching symptom categories: ' . $e->getMessage());  
+            Log::error('Error fetching radiology categories: ' . $e->getMessage());  
     
             return response()->json([  
                 'status' => false,  
@@ -1014,51 +1309,7 @@ public function getTopCategories(Request $request)
     }  
 }
 
-        /**
-     * @OA\Get(
-     *     path="/api/user/all_category/{type}",
-     *     summary="Get All Categories",
-     *     description="Fetches all categories based on the provided type.",
-     *     tags={"Categories"},
-     *     @OA\Parameter(
-     *         name="type",
-     *         in="path",
-     *         required=true,
-     *         description="Type of category (e.g., category, symptom)",
-     *         @OA\Schema(type="string", example="category")
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Successful response",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="status", type="boolean", example=true),
-     *             @OA\Property(property="data", type="object",
-     *                 @OA\Property(property="categories_image_path", type="string", example="storage/categories/"),
-     *                 @OA\Property(property="categories", type="array",
-     *                     @OA\Items(
-     *                         type="object",
-     *                         @OA\Property(property="id", type="integer", example=1),
-     *                         @OA\Property(property="name", type="string", example="Health"),
-     *                         @OA\Property(property="status", type="string", example="1"),
-     *                         @OA\Property(property="parent", type="string", example="0"),
-     *                         @OA\Property(property="type", type="string", example="category")
-     *                     )
-     *                 )
-     *             )
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=500,
-     *         description="Server error",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="status", type="boolean", example=false),
-     *             @OA\Property(property="message", type="string", example="An error occurred while processing the request.")
-     *         )
-     *     )
-     * )
-     */
+   
 
 public function getAllCategories($type)
 {

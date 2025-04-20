@@ -19,6 +19,8 @@ class DoctorSlot extends Model
         'start_time',  
         'end_time',  
         'slot_duration',  
+        'max_slot',  
+        'shift',  
         'status',  
     ];  
 

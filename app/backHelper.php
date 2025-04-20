@@ -4,6 +4,25 @@ use Illuminate\Support\Facades\DB;
 
 class backHelper
 {
+
+
+    public static function Get_SpecilastName($specialist_id)
+    {
+        if ($specialist_id) {
+            $ids = explode(',', $specialist_id);
+    
+            $names = DB::table("category")
+                ->whereIn("id", $ids)
+                ->pluck('name') 
+                ->toArray(); // convert collection to array
+    
+            return implode(', ', $names); // return as comma-separated string
+        }
+    
+        return '';
+    }
+    
+
     public static function get_fimddetails()
     {
         return  DB::table('firmdetails')->get()[0];

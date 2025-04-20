@@ -63,6 +63,14 @@
     .bb-social-sharing .bb-social-sharing-text {
         display: none;
     }
+
+    .available-info li {
+    color: black;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin-bottom: 2px;
+}
 </style>
 <main class="main" id="main-section">
     <div class="page-header breadcrumb-wrap">
@@ -103,54 +111,45 @@
                                                     <img src="{{ asset('storage/doctor').'/'.$doctor->image }}" alt="{{$doctor->name}}">
                                                 </a>
                                             </figure>
-                                            <figure class="border-radius-10">
+                                            {{-- <figure class="border-radius-10">
                                                 <a href="{{ asset('storage/doctor').'/'.$doctor->image }}">
                                                     <img src="{{ asset('storage/doctor').'/'.$doctor->image }}" alt="{{$doctor->name}}">
                                                 </a>
-                                            </figure>
+                                            </figure> --}}
                                         </div>
-                                        <div class="slider-nav-thumbnails">
+                                        {{-- <div class="slider-nav-thumbnails">
                                             <div><img src="{{ asset('storage/doctor').'/'.$doctor->image }}" alt="{{$doctor->name}}"></div>
                                             <div><img src="{{ asset('storage/doctor').'/'.$doctor->image }}" alt="{{$doctor->name}}"></div>
-                                        </div>
+                                        </div> --}}
+                                    </div>
+                                    <div class="short-desc mb-30">
+                                        <p>{{$doctor->short_description}}</p>
                                     </div>
                                  
 
                                 </div>
                                 <div class="col-md-6 col-sm-12 col-xs-12">
                                     <div class="detail-info pr-30 pl-30">
-                                        <h2 class="title-detail">{{$doctor->name}}</h2>
-                                        <div class="font-xs">
-
-                                            <ul class="mr-50 float-start">
-                                                <li class="mb-5">
-                                                    <span class="d-inline-block me-1">Specialist:</span>
-                                                    <a href="#">MBBS</a>, 
-                                                    <a href="#">MBBS &amp; MBBS</a>,
-                                                     <a href="#" >MBBS</a>,
-                                                      <a href="#">MBBS</a>
-                                                </li>
-                                                <li class="mb-5">
-                                                    <span class="d-inline-block me-1">Exp.:</span>
-                                                    <a href="#" rel="tag">{{$doctor->experience}} Years</a>
-                                                </li>
-
-                                                <li class="mb-5">
-                                                    <span class="d-inline-block me-1">Exp:</span>
-                                                    <a href="#" >5 Years</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        {{-- <div class="product-detail-rating">
-                                            <a href="#Reviews">
-                                                <div class="product-rate-cover text-end">
-                                                    <div class="product-rate d-inline-block">
-                                                        <div class="product-rating" style="width: 62%"></div>
-                                                    </div>
-                                                    <span class="font-small ml-5 text-muted">(10 reviews)</span>
-                                                </div>
-                                            </a>
-                                        </div> --}}
+                                        <h2 class="title-detail" style="margin-bottom: 10px;color: #198754;">{{$doctor->name}}</h2>
+                                       
+                                        <ul class="available-info">
+                                            <li>
+        
+                                                Specialist: {{backHelper::Get_SpecilastName($doctor->category_id )}} 
+                                            </li>
+                                            <li>
+        
+                                                <i class="fa fa-map-marker-alt"></i> {{$doctor->city_name }}
+                                            </li>
+        
+                                            <li> <i class="far fa-clock"></i>  {{$doctor->experience}} Years of Experience
+                                            </li>
+        
+                                            <li>
+                                                <i class="fas fa-clinic-medical"></i> {{$doctor->hospital_name }}
+                                            </li>
+        
+                                        </ul>
                                         <div class="clearfix product-price-cover">
                                             <div class="product-price primary-color float-left">
                                                 <span class="current-price text-brand">₹ {{$doctor->price}}  </span>
@@ -158,104 +157,65 @@
                                             </div>
                                         </div>
      
-                                        <div class="short-desc mb-30">
-                                            <p>{{$doctor->short_description}}</p>
-                                        </div>
+                                       
 
-                                        <form class="add-to-cart-form" method="POST">
-                                           @csrf
+                                        <form  action="{{ route('booking.submit') }}" method="POST">
+                                            @csrf
                                             <div class="pr_switch_wrap">
-                                                <div class="product-attributes"
-                                                    data-target="haagen-dazs-caramel-cone-ice-cream.html">
-                                                    <div class="text-swatches-wrapper attribute-swatches-wrapper attribute-swatches-wrapper form-group product__attribute product__color"
-                                                        data-type="text">
+                                                <div class="product-attributes" data-target="haagen-dazs-caramel-cone-ice-cream.html">
+                                                    <div class="text-swatches-wrapper attribute-swatches-wrapper attribute-swatches-wrapper form-group product__attribute product__color" data-type="text">
                                                         <label class="attribute-name">Select Date</label>
                                                         <div class="attribute-values">
                                                             <ul class="text-swatch attribute-swatch color-swatch">
-                                                                @php
-                                                                    use Carbon\Carbon;
-                                                                    $today = Carbon::now(); // Current date
-                                                                @endphp
-                                                            
-                                                                @for ($i = 1; $i <= 7; $i++) 
-                                                                    @php
-                                                                        $date = $today->copy()->addDays($i)->format('Y-m-d'); // Get next dates in Y-m-d format
-                                                                        $displayDate = $today->copy()->addDays($i)->format('d M Y'); // Display format (e.g., 03 Mar 2025)
-                                                                    @endphp
-                                                                    <li data-slug="day{{$i}}" data-id="{{$i}}" class="attribute-swatch-item">
+                                                                 <input type="hidden" name="doctor_id" class="hidden-product-id" value="{{$doctor->id}}" />
+                                                                 @foreach ($slots as $item)
+                                                                   
+                                                                    <li data-slug="day{{$item->id}}" data-id="{{$item->id}}" class="attribute-swatch-item">
                                                                         <div>
                                                                             <label>
-                                                                                <input class="product-filter-item" type="radio" name="attribute_weight_1907920428" value="{{$date}}" {{ $i == 1 ? 'checked' : '' }}>
-                                                                                <span>{{ $displayDate }}</span>
+                                                                                <input class="product-filter-item" type="radio" name="attribute_weight_1907920428" value="{{ $item->date }}">
+                                                                                <span>{{ $item->date }}</span>
                                                                             </label>
                                                                         </div>
                                                                     </li>
-                                                                @endfor
+                                                                @endforeach
                                                             </ul>
-                                                            
                                                         </div>
                                                     </div>
-                                                    {{-- another box --}}
-                                                    {{-- <div class="text-swatches-wrapper attribute-swatches-wrapper attribute-swatches-wrapper form-group product__attribute product__color"
-                                                        data-type="text">
-                                                        <label class="attribute-name">Boxes</label>
-                                                        <div class="attribute-values">
-                                                            <ul class="text-swatch attribute-swatch color-swatch">
-                                                                <li data-slug="1-box" data-id="6"
-                                                                    class="attribute-swatch-item  pe-none ">
-                                                                    <div>
-                                                                        <label>
-                                                                            <input class="product-filter-item"  type="radio" name="attribute_boxes_1907920428" value="6">
-                                                                            <span>1 Box</span>
-                                                                        </label>
-                                                                    </div>
-                                                                </li>
-                                                                <li data-slug="2-boxes" data-id="7"
-                                                                    class="attribute-swatch-item ">
-                                                                    <div>
-                                                                        <label>
-                                                                            <input class="product-filter-item" type="radio" name="attribute_boxes_1907920428" value="7" checked>
-                                                                            <span>2 Boxes</span>
-                                                                        </label>
-                                                                    </div>
-                                                                </li>
-                                                                <li data-slug="5-boxes" data-id="10"
-                                                                    class="attribute-swatch-item  pe-none ">
-                                                                    <div>
-                                                                        <label>
-                                                                            <input class="product-filter-item" type="radio" name="attribute_boxes_1907920428" value="10">
-                                                                            <span>5 Boxes</span>
-                                                                        </label>
-                                                                    </div>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div> --}}
-
-                                                    {{-- another box --}}
                                                 </div>
-
                                             </div>
-
+                                        
                                             <div class="pr_switch_wrap" id="product-option"></div>
-
+                                          @if(count($slots)>0)
                                             <div style="margin-bottom: 20px;">
                                                 <label class="me-1">Availability: </label>
                                                 <span class="number-items-available">
-                                                    <span class="text-success"> available
+                                                    <span class="text-success" id="availability-status"> 
                                                     </span>
                                                 </span>
                                             </div>
-
-                                            <input type="hidden" name="id" class="hidden-product-id" value="{{$doctor->id}}" />
+                                            @else
+                                            <div style="margin-bottom: 20px;">
+                                                <label class="me-1">Availability: </label>
+                                                <span class="number-items-available">
+                                                    <span class="text-success" id="notavail">Not Available
+                                                    </span>
+                                                </span>
+                                            </div>
+                                            @endif
+                                            <input type="hidden" name="doctor_id" class="hidden-product-id" value="{{$doctor->id}}" />
+                                        
                                             <div class="detail-extralink mb-30">
                                                 <div class="product-extra-link2  has-buy-now-button ">
-                                                    {{-- <button type="submit" class="button"><i class="ri-book-open-line"></i>Book Now</button> --}}
-                                                    <a href="{{ route('booking.checkout', ['id'=>Crypt::encrypt($doctor->id)]) }}" class="button"><i class="ri-book-open-line"></i>Book Now</a>
-                                                  
+                                                    {{-- Button is initially hidden --}}
+                                                    <button type="submit" class="button" id="book-now-btn" style="display:none;">
+                                                        <i class="ri-book-open-line"></i> Book Appointment
+                                                    </button>
                                                 </div>
                                             </div>
                                         </form>
+                                        
+                                        
                                    
                                     </div>
                                 </div>
@@ -276,9 +236,9 @@
                                                 href="#Reviews">Reviews (10)</a>
                                         </li>
 
-                                        <li class="nav-item">
+                                        {{-- <li class="nav-item">
                                             <a class="nav-link" data-bs-toggle="tab" href="#tab-vendor">Vendor</a>
-                                        </li>
+                                        </li> --}}
 
                                       
                                     </ul>
@@ -383,6 +343,40 @@
         </div>
     </div>
 </main>
+<!-- Include jQuery (make sure this is before your custom scripts) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    // Handle date selection change
+    $('input[name="attribute_weight_1907920428"]').on('change', function() {
+        var selectedDate = $(this).val();  // Get the selected date
+        var doctorId = '{{ $doctor->id }}';  // Doctor's ID
+
+        // AJAX request to check availability
+        $.ajax({
+            url: '{{ route("check.availability") }}',  // Route to check availability
+            method: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                doctor_id: doctorId,
+                selected_date: selectedDate
+            },
+            success: function(response) {
+                if (response.isAvailable) {
+                    $('#availability-status').text('Available');
+                    $('#book-now-btn').show();  // Show the Book Now button
+                } else {
+                    $('#availability-status').text('Not Available');
+                    $('#book-now-btn').hide();  // Hide the Book Now button
+                }
+            },
+            error: function(xhr, status, error) {
+                console.log("Error: " + error);
+            }
+        });
+    });
+</script>
+
 <script>
     window.addEventListener('DOMContentLoaded', function() {
         function toggleClipboardActionIcon(element) {

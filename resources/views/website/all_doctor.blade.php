@@ -160,26 +160,25 @@
                                 <div class="product-content-wrap">
                                     
                                     <h2 class="text-truncate"><a href="{{ route('doctor.detail', ['id'=>Crypt::encrypt($item->id)]) }}" title="{{$item->name}}">{{$item->name}}</a> </h2>
-                                    <div class="product-category">
-                                        <a href="#">Specilist</a>
-                                    </div>
-                                    {{-- <div class="product-rate-cover">
-                                        <div class="product-rate d-inline-block">
-                                            <div class="product-rating" style="width: 56%"></div>
-                                        </div>
-                                        <span class="font-small ml-5 text-muted">(10)</span>
-                                    </div> --}}
-                                    <div class="text-truncate">
-                                        <span class="font-small text-muted">Exp.
-                                           {{$item->experience}} years</span>
-                                    </div>
-                                    <div class="text-truncate">
-                                        <span class="font-small text-muted">Specialist
-                                          MBBS</span>
-                                    </div>
+                                    <p class="speciality"> Specilist</p>
+                                  
+                                        <ul class="available-info">
+
+                                            <li>
+        
+                                                <i class="fa fa-map-marker-alt"></i> {{$item->city_name }}
+                                            </li>
+        
+                                            <li> <i class="far fa-clock"></i>  {{$item->experience}} Years of Experience
+                                            </li>
+        
+                                            <li>
+                                                <i class="fas fa-clinic-medical"></i> {{$item->hospital_name }}
+                                            </li>
+        
+                                        </ul>
+                                  
                                     <div class="product-card-bottom d-md-flex d-block">
-
-
                                         <div class="product-price">
                                             <span>₹ {{$item->price}} </span>
                                             {{-- <span class="old-price">₦410,148.16</span>  add-to-cart-button--}}
