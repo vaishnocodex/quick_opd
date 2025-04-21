@@ -6,6 +6,579 @@
         "version": "1.0.0"
     },
     "paths": {
+        "/api/get-home-data": {
+            "get": {
+                "tags": [
+                    "Home"
+                ],
+                "summary": "Get home page data",
+                "description": "Fetches sliders, specialist categories, symptoms, and radiology categories for the home screen.",
+                "operationId": "getHomeData",
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved home data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Successfully retrieved home data."
+                                                },
+                                                "category_image_path": {
+                                                    "type": "string",
+                                                    "example": "/storage/category"
+                                                },
+                                                "home_slider": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "title": {
+                                                                "type": "string",
+                                                                "example": "Welcome Slide"
+                                                            },
+                                                            "image": {
+                                                                "type": "string",
+                                                                "example": "slider1.jpg"
+                                                            },
+                                                            "url": {
+                                                                "type": "string",
+                                                                "example": "https://example.com"
+                                                            },
+                                                            "description": {
+                                                                "type": "string",
+                                                                "example": "A short description of the slide."
+                                                            },
+                                                            "status": {
+                                                                "type": "string",
+                                                                "example": "1"
+                                                            },
+                                                            "created_at": {
+                                                                "type": "string",
+                                                                "format": "date-time",
+                                                                "example": "2024-04-07T10:00:00Z"
+                                                            },
+                                                            "updated_at": {
+                                                                "type": "string",
+                                                                "format": "date-time",
+                                                                "example": "2024-04-07T10:00:00Z"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "specailist_category": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "Cardiology"
+                                                            },
+                                                            "parent": {
+                                                                "type": "integer",
+                                                                "example": null
+                                                            },
+                                                            "image": {
+                                                                "type": "string",
+                                                                "example": "category1.jpg"
+                                                            },
+                                                            "status": {
+                                                                "type": "string",
+                                                                "example": "1"
+                                                            },
+                                                            "type": {
+                                                                "type": "string",
+                                                                "example": "category"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "symptom_category": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 2
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "Headache"
+                                                            },
+                                                            "parent": {
+                                                                "type": "integer",
+                                                                "example": null
+                                                            },
+                                                            "image": {
+                                                                "type": "string",
+                                                                "example": "symptom1.jpg"
+                                                            },
+                                                            "status": {
+                                                                "type": "string",
+                                                                "example": "1"
+                                                            },
+                                                            "type": {
+                                                                "type": "string",
+                                                                "example": "symptom"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "radiology_category": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 3
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "X-Ray"
+                                                            },
+                                                            "parent": {
+                                                                "type": "integer",
+                                                                "example": null
+                                                            },
+                                                            "image": {
+                                                                "type": "string",
+                                                                "example": "radiology1.jpg"
+                                                            },
+                                                            "status": {
+                                                                "type": "string",
+                                                                "example": "1"
+                                                            },
+                                                            "type": {
+                                                                "type": "string",
+                                                                "example": "radiology"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "An error occurred: Something went wrong"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/all-specialist-categories": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Get all approved specialist categories",
+                "description": "Returns a list of approved specialist categories.",
+                "operationId": "getAllSpecialCategory",
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved special categories",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Successfully retrieved special categories."
+                                                },
+                                                "category_image_path": {
+                                                    "type": "string",
+                                                    "example": "/storage/category"
+                                                },
+                                                "specialist_category": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "Cardiology"
+                                                            },
+                                                            "parent": {
+                                                                "type": "integer",
+                                                                "example": null
+                                                            },
+                                                            "image": {
+                                                                "type": "string",
+                                                                "example": "cardiology.jpg"
+                                                            },
+                                                            "status": {
+                                                                "type": "string",
+                                                                "example": "1"
+                                                            },
+                                                            "type": {
+                                                                "type": "string",
+                                                                "example": "category"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No special categories found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "No special categories found."
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "An error occurred: Something went wrong"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/all-symptom-categories": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Get all approved symptom categories",
+                "description": "Returns a list of approved symptom categories.",
+                "operationId": "getAllSymptomCategory",
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved symptom categories",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Successfully retrieved symptom categories."
+                                                },
+                                                "category_image_path": {
+                                                    "type": "string",
+                                                    "example": "/storage/category"
+                                                },
+                                                "symptom_category": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "Headache"
+                                                            },
+                                                            "parent": {
+                                                                "type": "integer",
+                                                                "example": null
+                                                            },
+                                                            "image": {
+                                                                "type": "string",
+                                                                "example": "headache.jpg"
+                                                            },
+                                                            "status": {
+                                                                "type": "string",
+                                                                "example": "1"
+                                                            },
+                                                            "type": {
+                                                                "type": "string",
+                                                                "example": "symptom"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No symptom categories found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "No symptom categories found."
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "An error occurred: Something went wrong"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/all-radiology-categories": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Get all approved radiology categories",
+                "description": "Returns a list of approved radiology categories.",
+                "operationId": "getAllRadiologyCategory",
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved radiology categories",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Successfully retrieved radiology categories."
+                                                },
+                                                "category_image_path": {
+                                                    "type": "string",
+                                                    "example": "/storage/category"
+                                                },
+                                                "radiology_category": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "X-Ray"
+                                                            },
+                                                            "parent": {
+                                                                "type": "integer",
+                                                                "example": null
+                                                            },
+                                                            "image": {
+                                                                "type": "string",
+                                                                "example": "xray.jpg"
+                                                            },
+                                                            "status": {
+                                                                "type": "string",
+                                                                "example": "1"
+                                                            },
+                                                            "type": {
+                                                                "type": "string",
+                                                                "example": "radiology"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No radiology categories found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "No radiology categories found."
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "An error occurred: Something went wrong"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/user/logout": {
             "post": {
                 "tags": [
@@ -706,103 +1279,6 @@
                 }
             }
         },
-        "/api/user/all_category/{type}": {
-            "get": {
-                "tags": [
-                    "Categories"
-                ],
-                "summary": "Get All Categories",
-                "description": "Fetches all categories based on the provided type.",
-                "operationId": "17b2bbdfae9d62ddd4de3edff13eebd8",
-                "parameters": [
-                    {
-                        "name": "type",
-                        "in": "path",
-                        "description": "Type of category (e.g., category, symptom)",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "example": "category"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "data": {
-                                            "properties": {
-                                                "categories_image_path": {
-                                                    "type": "string",
-                                                    "example": "storage/categories/"
-                                                },
-                                                "categories": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "properties": {
-                                                            "id": {
-                                                                "type": "integer",
-                                                                "example": 1
-                                                            },
-                                                            "name": {
-                                                                "type": "string",
-                                                                "example": "Health"
-                                                            },
-                                                            "status": {
-                                                                "type": "string",
-                                                                "example": "1"
-                                                            },
-                                                            "parent": {
-                                                                "type": "string",
-                                                                "example": "0"
-                                                            },
-                                                            "type": {
-                                                                "type": "string",
-                                                                "example": "category"
-                                                            }
-                                                        },
-                                                        "type": "object"
-                                                    }
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "An error occurred while processing the request."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "/api/user/child_category/{parent_id}": {
             "get": {
                 "tags": [
@@ -1123,16 +1599,20 @@
     },
     "tags": [
         {
+            "name": "Home",
+            "description": "Home"
+        },
+        {
+            "name": "Categories",
+            "description": "Categories"
+        },
+        {
             "name": "Authentication",
             "description": "Authentication"
         },
         {
             "name": "user",
             "description": "user"
-        },
-        {
-            "name": "Categories",
-            "description": "Categories"
         },
         {
             "name": "Locations",

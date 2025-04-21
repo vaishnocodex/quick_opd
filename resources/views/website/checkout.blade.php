@@ -1,24 +1,33 @@
 @extends('website.master3') 
 @section('content')
 <style>
-footer .hotline {
-    min-width: 200px;
-}
+    footer .hotline {
+        min-width: 200px;
+    }
 
-select.form-control {
-    -webkit-appearance: inherit;
-    -moz-appearance: inherit;
-    appearance: auto;
-    height: 60px;
+    select.form-control {
+        -webkit-appearance: inherit;
+        -moz-appearance: inherit;
+        appearance: auto;
+        height: 60px;
+    }
+
+    .form-group input {
+    background: #f2f3f4;
+    border: 1px solid #ececec;
+    box-shadow: none;
+    font-size: 16px;
+    height: 64px;
+    padding-left: 20px;
+    width: 100%;
 }
-    </style>
+</style>
 
 <main class="main">
     <div class="page-header breadcrumb-wrap">
         <div class="container">
             <div class="breadcrumb">
                 <a href="{{route('welcome')}}" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
-                
                 <span></span> Checkout
             </div>
         </div>
@@ -32,15 +41,17 @@ select.form-control {
                 </div>
             </div>
         </div>
-        <form method="POST" action="#">
+        <form method="POST" action="{{route('booking-payment-submit')}}">
             @csrf
+            <input type="hidden" name="cart_id" value="{{ $cart->id ?? '' }}">
+            
             <div class="row">
                 <!-- Billing Details -->
                 <div class="col-lg-7">
                     <h4 class="mb-30">Billing Details</h4>
         
                     <div class="form-group col-lg-12">
-                        <input type="text" name="full_name" required placeholder="Full Name *" value="{{ old('full_name') }}">
+                        <input type="text" name="full_name" required placeholder="Full Name *" value="{{ old('full_name', Auth::user()->name ?? '') }}">
                     </div>
         
                     <div class="form-group col-lg-12">
@@ -60,11 +71,13 @@ select.form-control {
                     </div>
         
                     <div class="form-group col-lg-12">
-                        <input type="number" name="mobile" required placeholder="Contact Number *" value="{{ old('mobile') }}">
+                        <input type="number" name="mobile" required placeholder="Contact Number *" 
+                               value="{{ old('mobile', Auth::user()->phone ?? '') }}">
                     </div>
         
                     <div class="form-group col-lg-12">
-                        <input type="email" name="email" required placeholder="Email Address *" value="{{ old('email') }}">
+                        <input type="email" name="email" required placeholder="Email Address *" 
+                               value="{{ old('email', Auth::user()->email ?? '') }}">
                     </div>
                 </div>
         
@@ -77,20 +90,22 @@ select.form-control {
                         <div class="table-responsive order_table checkout">
                             <table class="table no-border">
                                 <tbody>
+                                    @if(isset($doctor))
                                     <tr>
                                         <td class="image product-thumbnail">
-                                            <img src="{{ asset('assets/imgs/shop/product-1-1.jpg') }}" alt="#">
+                                            <img src="{{ asset('storage/doctor').'/'.$doctor->image }}" alt="{{ $doctor->name }}">
                                         </td>
                                         <td>
                                             <h6 class="w-160 mb-5">
-                                                <a href="#" class="text-heading">Dr. John Doe</a>
+                                                <a href="#" class="text-heading">Dr. {{ $doctor->name }}</a>
                                             </h6>
-                                            <p class="text-muted">Specialist: Cardiology</p>
+                                            <p class="text-muted">Specialist: {{ $doctor->specialization ?? 'General Physician' }}</p>
                                         </td>
                                         <td>
-                                            <h4 class="text-brand">$150</h4>
+                                            <h4 class="text-brand">₹{{ number_format($doctor->price, 2) }}</h4>
                                         </td>
                                     </tr>
+                                    @endif
                                 </tbody>
                             </table>
                         </div>
@@ -100,20 +115,17 @@ select.form-control {
                         <h4 class="mb-30">Payment</h4>
                         <div class="payment_option">
                             <div class="custome-radio">
-                                <input class="form-check-input" type="radio" name="payment_option" value="cash" id="cash" required>
+                                <input class="form-check-input" type="radio" name="payment_option" value="cash" id="cash" required 
+                                    {{ old('payment_option') == 'cash' ? 'checked' : '' }}>
                                 <label class="form-check-label" for="cash">Cash on Counter</label>
                             </div>
                             <div class="custome-radio">
-                                <input class="form-check-input" type="radio" name="payment_option" value="online" id="online" required>
+                                <input class="form-check-input" type="radio" name="payment_option" value="online" id="online" required
+                                    {{ old('payment_option') == 'online' ? 'checked' : '' }}>
                                 <label class="form-check-label" for="online">Online Pay</label>
                             </div>
                         </div>
-                        <div class="payment-logo d-flex mt-2">
-                            <img class="mr-15" src="{{ asset('assets/imgs/theme/icons/payment-paypal.svg') }}" alt="">
-                            <img class="mr-15" src="{{ asset('assets/imgs/theme/icons/payment-visa.svg') }}" alt="">
-                            <img class="mr-15" src="{{ asset('assets/imgs/theme/icons/payment-master.svg') }}" alt="">
-                            <img src="{{ asset('assets/imgs/theme/icons/payment-zapper.svg') }}" alt="">
-                        </div>
+                        
         
                         <button type="submit" class="btn btn-fill-out btn-block mt-30">
                             Place an Order <i class="fi-rs-sign-out ml-15"></i>
@@ -122,9 +134,6 @@ select.form-control {
                 </div>
             </div>
         </form>
-        
     </div>
 </main>
-
-
 @endsection

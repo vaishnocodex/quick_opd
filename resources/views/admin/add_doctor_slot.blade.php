@@ -11,14 +11,43 @@
 <div class="main-container">
   <div class="page-header">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item">Add Doctor</li>
+      <li class="breadcrumb-item">Add Doctor Slot</li>
+      <li class="breadcrumb-item">
+        <button type="button" class="btn btn-primary m-3" onclick="Add_slot()">
+        <i class="icon-add"></i>  &nbsp;Add Slot
+      </button>
+    </li>
     </ol>
   </div>
 
-  <div class="container">
-    <h2 class="text-center mt-4">Doctor Slot Calendar</h2>
-    <div id="calendar"></div>
-  </div>
+  <div class="row gutters mt-4">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="table-container">
+            <div class="t-header" style="text-align: center; font-size: 18px;">Doctor Slots</div>
+
+            <div class="table-responsive">
+                <div id="copy-print-csv_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                    <table id="copy-print-csv" class="table custom-table dataTable no-footer" role="grid" aria-describedby="copy-print-csv_info">
+                        <thead>
+                            <tr role="row">
+                                <th>Action</th>
+                                <th>Image</th>
+                                <th>Doctor Detail</th>
+                                <th>Hospital Detail</th>
+                                <th>Login Detail</th>
+                                 <th>Address</th>
+                                <th>Created At</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                           
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
 
   <!-- Modal -->
   <div class="modal fade" id="slotModal" tabindex="-1">
@@ -31,7 +60,7 @@
             <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
           </div>
           <div class="modal-body">
-            <input type="hidden" name="date" id="formDate">
+           
             <div class="row gutters">
               <div class="col-md-4">
                 <div class="form-group">
@@ -42,6 +71,12 @@
                     <option value="{{$item->id}}">{{$item->name}}</option>
                     @endforeach
                   </select>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Date:</label>
+                  <input type="date" name="date" class="form-control">
                 </div>
               </div>
               <div class="col-md-4">
@@ -89,28 +124,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-  let calendarEl = document.getElementById('calendar');
-  let calendar = new FullCalendar.Calendar(calendarEl, {
-    initialView: 'dayGridMonth',
-    selectable: true,
-    eventDisplay: 'block',
-    dateClick: function (info) {
-      $('#selectedDate').text(info.dateStr);
-      $('#formDate').val(info.dateStr);
-      $('#slotForm')[0].reset();
-      $('#slotModal').modal('show');
-    },
-    events: {
-      url: '/doctor-slots/fetch',
-      method: 'GET',
-      failure: function () {
-        toastr.error("Failed to fetch events");
-      }
-    }
-  });
 
-  calendar.render();
+    function Add_slot(){
+
+        $('#slotForm')[0].reset();
+        $('#slotModal').modal('show');
+    }
+
 
   $('#slotForm').on('submit', function (e) {
     e.preventDefault();
@@ -132,6 +152,6 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
   });
-});
+
 </script>
 @endsection

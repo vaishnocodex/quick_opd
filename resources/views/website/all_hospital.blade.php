@@ -25,8 +25,8 @@
             <div class="page-content pt-50">
                 <div class="container">
                     <div class="archive-header-2 text-center">
-                        <h1 class="display-2 mb-50">Hospitals</h1>
-                        <div class="row">
+                        <h3 class="display-2 mb-50">Hospitals</h3>
+                        {{-- <div class="row">
                             <div class="col-lg-5 mx-auto">
                                 <div class="sidebar-widget-2 widget_search mb-50">
                                     <div class="search-form form-group">
@@ -38,7 +38,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                
 
@@ -78,6 +78,9 @@
                                                         src="{{ asset('website') }}/assets/themes/nest/imgs/theme/icons/icon-location.svg"
                                                         alt="Address" /> <strong
                                                         class="d-inline-block ms-1 me-1">Address:</strong> {{substr($item->address, 0, 45)}}</span>
+                                            </li>
+                                            <li>
+                                                <span class="d-inline-block"> {{$item->city_name}} {{$item->state_name}}</span>
                                             </li>
                                             {{-- <li>
                                                 <img src="themes/nest/imgs/theme/icons/icon-contact.svg"

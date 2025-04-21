@@ -318,4 +318,52 @@
     :root {
         --primary-font: "Inter", sans-serif;
     }
+
+
+  .speciality {
+    font-size: 13px;
+    color: #757575;
+    margin-bottom: 5px;
+    min-height: 5px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.available-info {
+    font-size: 13px;
+    color: #757575;
+    font-weight: 400;
+    list-style: none;
+    padding: 0;
+    margin-bottom: 15px;
+}
+.available-info li {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.available-info li i {
+    width: 22px;
+}
+
+.product-cart-wrap .product-content-wrap h2 a {
+    font-weight: bold;
+    color: #1ac576;
+}
+
+.hotline img {
+    height: 32px!important;
+    margin-right: 12px;
+    min-width: 32px;
+}
+
+/* body {
+   
+    background-color: #e8e2eb!important;
+} */
+ /* .footer-mid {
+background: #3bb77e;
+} */
 </style>

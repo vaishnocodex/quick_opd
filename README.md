@@ -127,6 +127,14 @@ CREATE TABLE doctor_schedules (
 ALTER TABLE `users` ADD `short_description` TEXT NULL DEFAULT NULL AFTER `device_id`;
 ALTER TABLE `users` ADD `price` DECIMAL NOT NULL DEFAULT '0' AFTER `experience`;
 
+## create column in users 04-Apr-25
+ALTER TABLE `doctor_slots` ADD `max_slot` INT NOT NULL DEFAULT '0' AFTER `slot_duration`, ADD `shift` VARCHAR(200) NULL DEFAULT NULL AFTER `max_slot`;
+
+## create column in users 18-Apr-25
+ALTER TABLE `orders` ADD `order_id` VARCHAR(300) NOT NULL AFTER `doctor_id`;
+ALTER TABLE `orders` ADD `pa_name` VARCHAR(200) NULL DEFAULT NULL AFTER `appointment_for`;
+
+ALTER TABLE `orders` ADD `total_amount` DECIMAL NOT NULL AFTER `time_slot`, ADD `discount` DECIMAL NOT NULL DEFAULT '0' AFTER `total_amount`;
 
 
 
