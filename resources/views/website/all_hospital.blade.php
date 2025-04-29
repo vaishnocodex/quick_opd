@@ -1,23 +1,33 @@
 @extends('website.master3') 
 @section('content')
+
+<style>
+    main{
+    background-color: #e8e2eb;
+}
+
+.vendor-wrap .vendor-img-action-wrap img {
+    max-width: 100%;
+}
+</style>
 <main class="main pages mb-80" id="main-section">
-    <div class="page-header breadcrumb-wrap">
-        <div class="container">
-            <div class="breadcrumb">
-                <div class="breadcrumb-item d-inline-block">
-                    <a href="{{route('welcome')}}"title="Home">
-                        Home
-                    </a>
-                </div>
-                <span></span>
-                <div class="breadcrumb-item d-inline-block active">
-                    <div itemprop="item">
-                        Stores
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!--<div class="page-header breadcrumb-wrap">-->
+    <!--    <div class="container">-->
+    <!--        <div class="breadcrumb">-->
+    <!--            <div class="breadcrumb-item d-inline-block">-->
+    <!--                <a href="{{route('welcome')}}"title="Home">-->
+    <!--                    Home-->
+    <!--                </a>-->
+    <!--            </div>-->
+    <!--            <span></span>-->
+    <!--            <div class="breadcrumb-item d-inline-block active">-->
+    <!--                <div itemprop="item">-->
+    <!--                    Stores-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--    </div>-->
+    <!--</div>-->
 
 
     <div class="page-content pt-50">
@@ -50,7 +60,7 @@
                                     <div class="vendor-img">
                                         <a href="{{ route('hospital.all-doctor', ['id'=>Crypt::encrypt($item->id)]) }}">
                                             <img class="default-img" src="{{ asset('storage/hospital/').'/'.$item->image }}"
-                                                alt="{{$item->name}}" />
+                                                alt="{{$item->name}}"  />
                                         </a>
                                     </div>
                                 </div>

@@ -125,7 +125,8 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
   Route::get('/admin/doctor-slot-display', [DoctorSlotController::class, 'Admin_Doctor_SlotView'])->name('admin.doctor-slot-display');
   Route::post('/admin/doctor-slot-display-filter', [DoctorSlotController::class, 'Admin_Doctor_SlotView'])->name('admin.doctor-slot-display-filter');
 
-  Route::get('/admin/doctor-schedules/{doctor_id?}', [VendorController::class, 'getDoctorSchedule'])->name('admin.doctor.schedules');
+  Route::get('/admin/doctor-schedule/{doctor_id?}', [VendorController::class, 'DoctorScheduleList'])->name('admin.doctor-schedule');
+  //Route::get('/admin/doctor-schedules/{doctor_id?}', [VendorController::class, 'getDoctorSchedule'])->name('admin.doctor.schedules');
   Route::post('/admin/doctor-schedule-add', [VendorController::class, 'Add_DoctorSchedule'])->name('admin.doctor.schedule-add');
  
    //=======>Admin doctor Slot admin.doctor.slot

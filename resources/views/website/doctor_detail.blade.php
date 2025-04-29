@@ -73,26 +73,26 @@
 }
 </style>
 <main class="main" id="main-section">
-    <div class="page-header breadcrumb-wrap">
-        <div class="container">
-            <div class="breadcrumb">
-                <div class="breadcrumb-item d-inline-block">
-                    <a href="#"title="Home"> Home </a>
-                </div>
-                {{-- <span></span>
-                <div class="breadcrumb-item d-inline-block">
-                    <a href="#"title="Products"> Products
-                    </a>
-                </div>
-                <span></span>
-                <div class="breadcrumb-item d-inline-block">
-                    <a href="#"title="Pet Foods">  Pet Foods
-                    </a>
-                </div> --}}
+    <!--<div class="page-header breadcrumb-wrap">-->
+    <!--    <div class="container">-->
+    <!--        <div class="breadcrumb">-->
+    <!--            <div class="breadcrumb-item d-inline-block">-->
+    <!--                <a href="#"title="Home"> Home </a>-->
+    <!--            </div>-->
+    <!--            {{-- <span></span>-->
+    <!--            <div class="breadcrumb-item d-inline-block">-->
+    <!--                <a href="#"title="Products"> Products-->
+    <!--                </a>-->
+    <!--            </div>-->
+    <!--            <span></span>-->
+    <!--            <div class="breadcrumb-item d-inline-block">-->
+    <!--                <a href="#"title="Pet Foods">  Pet Foods-->
+    <!--                </a>-->
+    <!--            </div> --}}-->
               
-            </div>
-        </div>
-    </div>
+    <!--        </div>-->
+    <!--    </div>-->
+    <!--</div>-->
 
 
     <div class="container mb-30">
@@ -282,8 +282,8 @@
                                             <div class="product-img-action-wrap">
                                                 <div class="product-img product-img-zoom">
                                                     <a href="{{ route('doctor.detail', ['id'=>Crypt::encrypt($item->id)]) }}">
-                                                        <img class="default-img" src="{{ asset('storage/doctor').'/'.$item->image }}" alt="{{$item->name}}">
-                                                        <img class="hover-img" src="{{ asset('storage/doctor').'/'.$item->image }}" alt="{{$item->name}}">
+                                                        <img class="default-img" src="{{ asset('storage/doctor').'/'.$item->image }}" alt="{{$item->name}}" style="height: 200px;">
+                                                        <img class="hover-img" src="{{ asset('storage/doctor').'/'.$item->image }}" alt="{{$item->name}}" style="height: 200px;">
                                                     </a>
                                                 </div>
                                                 <div class="product-badges product-badges-position product-badges-mrg">

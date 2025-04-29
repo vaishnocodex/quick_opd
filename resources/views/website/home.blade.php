@@ -129,7 +129,7 @@
                         <div class="col-lg-4 col-md-6">
                             <div class="banner-img wow animate__animated animate__fadeInUp " data-wow-delay="0.2">
                                 <div style="text-align: center;">
-                                    <a href="products.html" target="_blank" title="Banner">
+                                    <a href="#" target="_blank" title="Banner">
                                         <picture>
                                             <source srcset="{{ asset('website') }}/assets/storage/promotion/1.png"
                                                 media="(min-width: 1200px)" />
@@ -143,10 +143,10 @@
                                 </div>
 
                                 <div class="banner-text">
-                                    <h4>Everyday Fresh &amp; <br>
+                                    <h4>Everyday  &amp; <br>
                                         Clean with Our <br>
-                                        Products</h4>
-                                    <a href="products.html" target="_blank" class="btn btn-xs">
+                                        </h4>
+                                    <a href="#" target="_blank" class="btn btn-xs">
                                         Book now <i class="fi-rs-arrow-small-right"></i>
                                     </a>
                                 </div>
@@ -223,11 +223,11 @@
                         style="background-image: url(storage/general/newsletter-background-image.png) !important;">
                         <div class="newsletter-content">
                             <h2 class="mb-20">
-                                Stay home &amp; get your daily <br>needs from our shop
+                                Stay home &amp; get your cunslant <br>needs from us
                             </h2>
-                            <p class="mb-45">Start Your Daily Shopping with <span>Nest Mart</span></p>
+                            <p class="mb-45">Book Doctor with <span>Quick OPD</span></p>
                             <form method="POST"
-                                action="https://ecommerce12.testsoftwares.site/newsletter/subscribe"
+                                action="#"
                                 accept-charset="UTF-8" id="botble-newsletter-forms-fronts-newsletter-form"
                                 class="newsletter-form dirty-check"><input name="_token" type="hidden"
                                     value="ppw6IRBuLBJdSn6XFSNYwPGd47hlBcD8A46RBxKx">
@@ -346,7 +346,7 @@
                         </div>
                         <div class="banner-text">
                             <h3 class="icon-box-title">Enter Patient Details & Confirm Booking</h3>
-                            <p>After filling in details, the system shows the total cost</p>
+                            <p>After it the system shows the total cost</p>
                         </div>
                     </div>
                 </div>
@@ -369,7 +369,7 @@
                             <img src="{{ asset('website') }}/assets/storage/general/icon-5.png" alt="icon">
                         </div>
                         <div class="banner-text">
-                            <h3 class="icon-box-title"> Attend Your Appointment & Get Reports</h3>
+                            <h3 class="icon-box-title"> Attend Your Appointment</h3>
                             <p>Users visit the diagnostic center for the test.</p>
                         </div>
                     </div>
