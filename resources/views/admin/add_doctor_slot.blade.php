@@ -31,15 +31,26 @@
                         <thead>
                             <tr role="row">
                                 <th>Action</th>
-                                <th>Image</th>
-                                <th>Doctor Detail</th>
-                                <th>Hospital Detail</th>
-                                <th>Login Detail</th>
-                                 <th>Address</th>
-                                <th>Created At</th>
+                                <th>Date</th>
+                                <th>Start Time</th>
+                                <th>End Time</th>
+                                <th>Max Slots</th>
+                                 <th>Status</th>
+                               
                             </tr>
                         </thead>
                         <tbody>
+                          @foreach ($data as $item)
+                          <tr>
+                              <td>{{$doctor_data->name}}</td>
+                              <td>{{ \Carbon\Carbon::parse($item->date)->format('d M Y') }}</td>
+                              <td>{{ \Carbon\Carbon::parse($item->start_time)->format('h:i A') }}</td>
+                              <td>{{ \Carbon\Carbon::parse($item->end_time)->format('h:i A') }}</td>
+
+                              <td>{{$item->max_slot}}</td>
+                              <td>{{$item->status}}</td>
+                          </tr>
+                          @endforeach
                            
                         </tbody>
                     </table>
@@ -62,39 +73,30 @@
           <div class="modal-body">
            
             <div class="row gutters">
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label>Doctor: <span class="text-danger">*</span></label>
-                  <select class="form-control" name="doctor_id" required>
-                    <option value="">Select</option>
-                    @foreach ($doctor_data as $item)
-                    <option value="{{$item->id}}">{{$item->name}}</option>
-                    @endforeach
-                  </select>
-                </div>
-              </div>
+             <input type="hidden" name="doctor_id" value="{{$decrypted}}">
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Date:</label>
-                  <input type="date" name="date" class="form-control">
+                  <input type="date" id="dateInput" name="date" class="form-control" min="{{ date('Y-m-d') }}">
+
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Duty Start Time:</label>
-                  <input type="time" name="start_time" class="form-control">
+                  <input type="time" name="start_time" value="{{$last_slot->start_time}}" class="form-control">
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Duty End Time:</label>
-                  <input type="time" name="end_time" class="form-control">
+                  <input type="time" name="end_time" value="{{$last_slot->end_time}}" class="form-control">
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Max Bookings:</label>
-                  <input type="number" name="max_slot" class="form-control" required>
+                  <input type="number" name="max_slot" value="{{ $last_slot->max_slot}}" class="form-control" required>
                 </div>
               </div>
               <div class="col-md-4">
@@ -142,6 +144,7 @@
         $('#slotModal').modal('hide');
         calendar.refetchEvents();
         toastr.success("Slot added successfully!");
+        location.reload();
       },
       error: function (xhr) {
         let msg = "Error saving slot!";
@@ -153,5 +156,27 @@
     });
   });
 
+
+
+  const disabledDates = @json($future_dates);
+
+document.addEventListener('DOMContentLoaded', function() {
+  const dateInput = document.getElementById('dateInput');
+
+  dateInput.addEventListener('input', function() {
+    const selectedDate = this.value;
+    if (disabledDates.includes(selectedDate)) {
+      toastr.error('This date schedule already added. Please choose another date.');
+
+      this.value = '';
+    }
+  });
+});
+
+
+
+
 </script>
+
+
 @endsection

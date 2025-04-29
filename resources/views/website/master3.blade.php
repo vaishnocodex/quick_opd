@@ -90,27 +90,27 @@
                                         <i class="fi-rs-bell d-inline-block mr-5 d-inline-block mr-5"></i>
 
                                         <span class="d-inline-block">
-                                            <b class="text-success"> Trendy 25</b> silver jewelry, save up 35% off
+                                            <b class="text-success"> Book Doctor Online</b> and, save up 35% 
                                             today
                                         </span>
-                                        <a class="active d-inline-block" href="products.html">&nbsp;Shop now</a>
+                                        <a class="active d-inline-block" href="#">&nbsp;Book now</a>
                                     </li>
-                                    <li style="display: none">
-                                        <i class="fi-rs-asterisk d-inline-block mr-5 d-inline-block mr-5"></i>
+                                    <!--<li style="display: none">-->
+                                    <!--    <i class="fi-rs-asterisk d-inline-block mr-5 d-inline-block mr-5"></i>-->
 
-                                        <span class="d-inline-block">
-                                            <b class="text-danger">Super Value Deals</b> - Save more with coupons
-                                        </span>
-                                    </li>
-                                    <li style="display: none">
-                                        <i
-                                            class="fi-rs-angle-double-right d-inline-block mr-5 d-inline-block mr-5"></i>
+                                    <!--    <span class="d-inline-block">-->
+                                    <!--        <b class="text-danger">Super Value Deals</b> - Save more with coupons-->
+                                    <!--    </span>-->
+                                    <!--</li>-->
+                                    <!--<li style="display: none">-->
+                                    <!--    <i-->
+                                    <!--        class="fi-rs-angle-double-right d-inline-block mr-5 d-inline-block mr-5"></i>-->
 
-                                        <span class="d-inline-block">
-                                            Get great devices up to 50% off
-                                        </span>
-                                        <a class="active d-inline-block" href="products.html">&nbsp;View details</a>
-                                    </li>
+                                    <!--    <span class="d-inline-block">-->
+                                    <!--        Get great devices up to 50% off-->
+                                    <!--    </span>-->
+                                    <!--    <a class="active d-inline-block" href="#">&nbsp;View details</a>-->
+                                    <!--</li>-->
                                 </ul>
                             </div>
                         </div>
@@ -267,7 +267,7 @@
                     <div class="header-nav d-none d-lg-flex">
                         <div class="main-categories-wrap d-none d-lg-block">
                             <a class="categories-button-active" href="{{route('welcome')}}">
-                                <span class="fi-rs-apps"></span> <span class="et">Home </span> 
+                                <span class="fi-rs-apps"></span> <span class="et">Home1 </span> 
                               
                             </a>
                             {{-- <div class="categories-dropdown-wrap categories-dropdown-active-large font-heading">
@@ -377,66 +377,21 @@
                     <!-- mobile menu start -->
                     <nav>
                         <ul class="mobile-menu">
+                         
+                        
+                           
                             <li>
-                                <span class="menu-expand"></span>
-                                <a href="{{route('welcome')}}" target="_self">
-                                    <i class="fi-rs-home me-1"></i> Home
-                                </a>
-                            </li>
-                            <li class=" menu-item-has-children  ">
-                                <span class="menu-expand"></span>
-                                <a href="products.html" target="_self">
-                                    Shop
-                                </a>
-                                <ul class="dropdown">
-                                    <li class=" ">
-                                        <a href="products.html" target="_self">
-                                            Shop Grid - Full Width
-                                        </a>
-                                    </li>
-                                </ul>
-
-                            </li>
-                            <li class=" menu-item-has-children  ">
-                                <span class="menu-expand"></span>
-                                <a href="stores.html" target="_self">
-                                    Stores
-                                </a>
-                                <ul class="dropdown">
-                                    <li class=" ">
-                                        <a href="stores.html" target="_self">
-                                            Stores - Grid
-                                        </a>
-                                    </li>
-                                  
-                                </ul>
-
-                            </li>
-                            <li>
-                                <span class="menu-expand"></span>
                                 <a href="{{route('welcome')}}" target="_self">Home </a>
                                
 
                             </li>
-                            <li class=" menu-item-has-children  ">
-                                <span class="menu-expand"></span>
-                                <a href="blog.html" target="_self">
-                                    Blog
-                                </a>
-                                <ul class="dropdown">
-                                  
-                                    <li class=" menu-item-has-children  ">
-                                        <span class="menu-expand"></span>
-                                        <a href="{{route('welcome')}}" target="_self">
-                                            Single Post
-                                        </a>
-                                      
-                                    </li>
-                                </ul>
-
-                            </li>
+                            <li>
+                                <a href="{{route('all.doctor')}}" target="_self">All Doctor </a> </li>
+                            <li>
+                                <a href="{{route('all.hospital')}}" target="_self">All Hospital </a></li>
+                      
                             <li class=" ">
-                                <a href="faq.html" target="_self">
+                                <a href="#" target="_self">
                                     FAQ
                                 </a>
                             </li>

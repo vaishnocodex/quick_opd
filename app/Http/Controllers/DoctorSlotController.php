@@ -198,6 +198,7 @@ public function Admin_generateSlots(Request $request)
         'date' => $request->date,
         'start_time' => $request->start_time,
         'end_time' => $request->end_time,
+        'slot_duration' =>'0',
         'max_slot' => $request->max_slot,
         'shift' => 'null',
         'status' => $request->status,

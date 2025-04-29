@@ -47,7 +47,7 @@
                                                 <tr>
                                                   
                                                     <td ><span>{{ ++$i }})</span>&nbsp;&nbsp; <a href="{{ route('admin.edit.doctor', ['id'=>Crypt::encrypt($item->id)]) }}" ><span class="icon-border_color" style="font-size: 20px;color:#178e94"></span> </a>
-                                                        
+                                                        <a href="{{ route('admin.doctor-schedule', ['doctor_id'=>Crypt::encrypt($item->id)]) }}" >Schedule </a>
                                                       
                                                     </td>
                                                     <td> @if($item->image) <img src="{{ asset('storage/doctor/').'/'.$item->image}}" style="height: 70px;width:70px;"> @endif</td>
