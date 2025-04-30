@@ -2,8 +2,7 @@
 @section('content')
 
 <!-- Bootstrap Select CSS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.14/css/bootstrap-select.min.css">
-<link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+
 <!-- Toastr CSS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
@@ -11,10 +10,10 @@
 <div class="main-container">
   <div class="page-header">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item">Add Doctor Slot</li>
+     
       <li class="breadcrumb-item">
         <button type="button" class="btn btn-primary m-3" onclick="Add_slot()">
-        <i class="icon-add"></i>  &nbsp;Add Slot
+        <i class="icon-add"></i>  &nbsp;Add Doctor Slot
       </button>
     </li>
     </ol>
@@ -30,11 +29,11 @@
                     <table id="copy-print-csv" class="table custom-table dataTable no-footer" role="grid" aria-describedby="copy-print-csv_info">
                         <thead>
                             <tr role="row">
-                                <th>Action</th>
+                                <th>Doctor Name  </th>
                                 <th>Date</th>
                                 <th>Start Time</th>
                                 <th>End Time</th>
-                                <th>Max Slots</th>
+                                <th>Max Booking</th>
                                  <th>Status</th>
                                
                             </tr>
@@ -42,12 +41,12 @@
                         <tbody>
                           @foreach ($data as $item)
                           <tr>
-                              <td>{{$doctor_data->name}}</td>
+                              <td>{{$doctor_data->name}} </td>
                               <td>{{ \Carbon\Carbon::parse($item->date)->format('d M Y') }}</td>
                               <td>{{ \Carbon\Carbon::parse($item->start_time)->format('h:i A') }}</td>
                               <td>{{ \Carbon\Carbon::parse($item->end_time)->format('h:i A') }}</td>
 
-                              <td>{{$item->max_slot}}</td>
+                              <td>{{$item->max_slot}}  </td>
                               <td>{{$item->status}}</td>
                           </tr>
                           @endforeach
@@ -77,7 +76,7 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Date:</label>
-                  <input type="date" id="dateInput" name="date" class="form-control" min="{{ date('Y-m-d') }}">
+                  <input type="date" id="dateInput" name="date" class="form-control" min="{{ date('Y-m-d') }}" onfocus="this.showPicker()">
 
                 </div>
               </div>
@@ -121,8 +120,7 @@
 
 <!-- Scripts -->
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 <script>
@@ -142,7 +140,7 @@
       data: $(this).serialize(),
       success: function (response) {
         $('#slotModal').modal('hide');
-        calendar.refetchEvents();
+        
         toastr.success("Slot added successfully!");
         location.reload();
       },
@@ -162,6 +160,16 @@
 
 document.addEventListener('DOMContentLoaded', function() {
   const dateInput = document.getElementById('dateInput');
+   
+  dateInput.addEventListener('input', function() {
+    if (disabledDates.includes(this.value)) {
+      // Immediately clear the selection without alert
+      this.value = '';
+      
+      // Optional: Re-open the picker to force new selection
+      setTimeout(() => this.showPicker(), 100);
+    }
+  });
 
   dateInput.addEventListener('input', function() {
     const selectedDate = this.value;

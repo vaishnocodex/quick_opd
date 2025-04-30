@@ -48,6 +48,9 @@ Route::get('abt/', function () {
   return view('website.home2');
 });
 //-------------------------------------Custom Routes
+Route::post('/login/admin',[VendorController::class,'loginAdmin'])->name("login.admin");
+
+
 Route::post('/getStateCity',[AjaxController::class,'getStateCity'])->name("getStateCity");
 Route::post('/logout',[AjaxController::class,'Logout'])->name("logout"); 
 Route::post('/login/',[AjaxController::class,'login'])->name("login"); 
