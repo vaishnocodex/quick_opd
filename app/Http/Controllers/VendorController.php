@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Exception;
 use App\Models\DoctorSchedule;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
@@ -21,6 +22,42 @@ use Log;
 class VendorController extends Controller
 {
     //
+
+
+
+    public function loginAdmin(Request $request)
+    {   
+        $input = $request->all();
+     
+        $this->validate($request, [
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+       $check_user= User::where('email',$input['email'])->where('type','1')->first();
+        if(!$check_user){
+            return redirect()->back()->with('error','Email-Address And Password Are Wrong.');
+           
+
+        }
+
+        
+
+        if(auth()->attempt(array('email' => $input['email'], 'password' => $input['password'])))
+        {
+            if (auth()->user()->type == 'admin') {
+                return redirect()->route('admin.home');
+            }else if (auth()->user()->type == 'manager') {
+                return redirect()->route('manager.home');
+            }else{
+                return redirect()->route('home');
+            }
+        }else{
+            return redirect()->route('login')
+                ->with('error','Invalid Password.');
+        }
+          
+    }
 
     public function AdminHome()
     {

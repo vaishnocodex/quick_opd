@@ -148,9 +148,7 @@
 
                     <div class="header-right">
                         <div class="search-style-2">
-                            <form action="https://ecommerce12.testsoftwares.site/products" class="form--quick-search"
-                                data-ajax-url="https://ecommerce12.testsoftwares.site/ajax/search-products"
-                                method="GET">
+                            <form action="#" class="form--quick-search" method="GET">
                                 <div class="form-group--icon position-relative">
                                     <div class="product-cat-label">All Categories</div>
                                     <select class="product-category-select" name="categories[]"
