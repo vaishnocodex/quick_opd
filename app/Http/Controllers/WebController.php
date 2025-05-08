@@ -76,11 +76,14 @@ class WebController extends Controller
             'redirect' => route('user.dashboard') // Ensure you have a named route for dashboard
         ]);
     }
-    public function login_User_Submit(Request $request): RedirectResponse
+    public function login_User_Submit(Request $request)
     {
        
         // Find the user by mobile number
+        if (Auth::check()){
+            Auth::logout();
 
+        }
         $user = User::where('mobile_no', $request->username)->where('type','0')->first();
 
         if (!$user) {
@@ -93,11 +96,11 @@ class WebController extends Controller
 
         // Log in the user manually
         Auth::login($user);
-
-        return redirect()->intended('welcome');
+      
+        //return redirect()->intended('welcome');
         // Retrieve intended URL or default to home
         $redirectTo = session('url.intended', route('welcome'));
-
+      
         // Clear session value
         session()->forget('url.intended');
 
@@ -133,16 +136,28 @@ class WebController extends Controller
            $arr['slider'] = Slider::where('status',1)->get();
            $arr['radiology_category'] = Category::where('status', '1')  
             ->where('parent', '0')
-            ->where('type', 'category')  
-            ->where('is_top', '1')  
-            ->orderBy('id', 'desc') 
+            ->where('type', 'radiology')->orderBy('id', 'desc') 
             ->take(10)  
             ->get();  
         
             return view('website.home')->with($arr);
     
     }
+    public function Radiology_Subcategory(Request $request)  
+    {  
+        $decrypted = Crypt::decrypt($request->id);
+        $arr['category'] =  Category::where('status', '1')->where('id', $decrypted)->get();
 
+        $arr['radiology_category'] = Category::where('status', '1')  
+        ->where('parent', $decrypted)
+        ->where('type', 'radiology')->orderBy('id', 'desc') 
+       //->take(10)  
+        ->get(); 
+           $arr['heading'] = "Subcategory of";
+
+            return view('website.radiology_subcat')->with($arr);
+    
+    }
     public function Home_View3(Request $request)  
     {  
       
@@ -255,7 +270,32 @@ class WebController extends Controller
     
     }
 
+    public function SingleRadiologyDetail(Request $request)  
+    {       
+         $decrypted = Crypt::decrypt($request->id);
+         $cdate = Carbon::today()->format('Y-m-d'); // today's date
+         $futureDate = Carbon::today()->addDays(6)->format('Y-m-d');
+         $arr['hospital'] =  User::where('status', '1')->where('type', '3')->get();
 
+         $arr['doctor'] = DB::table('users as doctor')
+         ->leftJoin('users as hospital', 'doctor.user_id', '=', 'hospital.id')
+         ->leftJoin('city', 'doctor.city', '=', 'city.id')
+         ->where('doctor.id', $decrypted)
+         ->where('doctor.status', '1')
+         ->where('doctor.type', '4')
+         ->select(
+             'doctor.*',
+             'hospital.name as hospital_name',
+             'city.name as city_name'
+         )
+         ->first();
+         $slots= DoctorSlot::where('doctor_id',$decrypted)->whereBetween('date', [$cdate,$futureDate])->get();
+        
+         $arr['slots'] =$slots;
+          $arr['similar_doctor'] =  User::where('status', '1')->where('type', '4')->get();
+            return view('website.radiology_detail')->with($arr);
+    
+    }
 
     public function All_Doctor(Request $request)  
     {  
@@ -282,8 +322,60 @@ class WebController extends Controller
             return view('website.all_doctor')->with($arr);
     
     }
+    public function All_Radiology(Request $request)  
+    {  
+      
+          $arr['hospital'] =  User::where('status', '1')->where('type', '2')->get();
+          $arr['radiology'] = DB::table('users as doctor')
+          ->leftJoin('users as hospital', 'doctor.user_id', '=', 'hospital.id')
+          ->leftJoin('city', 'doctor.city', '=', 'city.id')
+          ->where('doctor.status', '1')
+          ->where('doctor.type', '3')
+          ->where('doctor.hospital_type', 'radiology')
+          ->select(
+              'doctor.*',
+              'hospital.name as hospital_name',
+              'city.name as city_name'
+          )
+          ->get();
+          $arr['category'] =  Category::where('status', '1')->where('parent', '0')->where('type', 'category')->get();
+           $arr['symptom']  = Category::where('status', '1')->where('parent', '0')->where('type', 'symptom')->get();
 
-  // DoctorController.php
+           $arr['states'] = State::select('id', 'name')->where('fcountryid',101)->get();
+           $arr['slider'] = Slider::where('status',1)->get();
+           $arr['heading'] = "All Radiology";
+
+            return view('website.radiology_list')->with($arr);
+    
+    }
+
+    public function Radiology_ServiceList(Request $request)  
+    {  
+        $decrypted = Crypt::decrypt($request->id);
+        //dd($decrypted);
+         $radiology_singlelist=  User::where('id', $decrypted)->where('status', '1')->first();
+          $arr['doctor'] = DB::table('users as doctor')
+          ->leftJoin('users as hospital', 'doctor.user_id', '=', 'hospital.id')
+          ->leftJoin('city', 'doctor.city', '=', 'city.id')
+          ->where('doctor.user_id', $radiology_singlelist->id)
+          ->where('doctor.status', '1')
+          ->where('doctor.type', '4')
+          ->select(
+              'doctor.*',
+              'hospital.name as hospital_name',
+              'city.name as city_name'
+          )
+          ->get();
+
+           $arr['radiology'] = $radiology_singlelist;
+           $arr['slider'] = Slider::where('status',1)->get();
+           $arr['heading'] = "All Doctors";
+
+            return view('website.radiology_service_list')->with($arr);
+    
+    }
+
+  // DoctorController.php  
 public function checkAvailability(Request $request)
 {
     // Get doctor id and selected date
@@ -291,10 +383,26 @@ public function checkAvailability(Request $request)
     $selectedDate = $request->selected_date;
 
     // Check if the doctor is available on the selected date
-    // $isAvailable = DoctorAvailability::where('doctor_id', $doctorId)
-    //                                   ->where('available_date', $selectedDate)
-    //                                   ->exists();
-    $isAvailable=1;
+    $getdetail = DoctorSlot::where('doctor_id', $doctorId)->where('date', $selectedDate)->where('status','available')->first();
+        if($getdetail){
+          $total_booking=$getdetail->max_slot;
+            $cart_count = Cart::where('doctor_id', $doctorId)->where('booking_date', $selectedDate)->count('id');
+            $order_count = Order::where('doctor_id', $doctorId)->where('booking_date', $selectedDate)->count('id');
+            $total_bookings_have =$cart_count+$order_count;
+            if($total_bookings_have<$total_booking){
+               
+                $isAvailable=1;
+
+            }else{
+                $isAvailable=0;
+
+            }
+              
+
+        }else{
+            $isAvailable=0;
+        }
+  
     // Return the availability status
     return response()->json(['isAvailable' => $isAvailable]);
 }

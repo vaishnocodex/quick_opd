@@ -74,6 +74,11 @@ Route::get('doctor/detail/{id?}',[WebController::class,'SingleDoctorDetail'])->n
 Route::get('all-hospital/',[WebController::class,'All_Hospital'])->name('all.hospital'); 
 Route::get('all-doctor/',[WebController::class,'All_Doctor'])->name('all.doctor'); 
 
+//===radiology website routes
+Route::get('radiology/subcategory/{id?}',[WebController::class,'Radiology_Subcategory'])->name('radiology.subcategory'); 
+Route::get('radiology/list/{id?}',[WebController::class,'All_Radiology'])->name('radiology.list'); 
+Route::get('radiology/service-list/{id?}',[WebController::class,'Radiology_ServiceList'])->name('radiology.service-list'); 
+Route::get('radiology/detail/{id?}',[WebController::class,'SingleRadiologyDetail'])->name('radiology.detail'); 
 
 // web.php
 
@@ -112,7 +117,11 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
 
     Route::get('/doctor-slots/fetch', [DoctorSlotController::class, 'fetchSlots']);
 
-        
+//======Radiology add
+Route::get('/admin/radiology/{id?}', [VendorController::class, 'ShowRAdiology'])->name('admin.radiology');
+Route::post('/admin/radiology/add', [VendorController::class, 'AddRadiology'])->name('admin.radiology.add');
+Route::post('/admin/radiology/update', [VendorController::class, 'UpdateHospital'])->name('admin.radiology.update');
+
 //==Store CRUD Operation
 //Route::get('/admin/default/store/{id?}', [VendorController::class, 'SetDefaultStore'])->name('admin.default.store');
   Route::get('/admin/hospital/{id?}', [VendorController::class, 'ShowHospital'])->name('admin.hospital');
@@ -150,7 +159,7 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
   Route::get('/admin/delete/slider/{id?}',[VendorController::class,'DeleteSlider'])->name('admin.delete.slider');
 /*category*/
   Route::get('/admin/symptom/{id?}',[VendorController::class,'showSymptom'])->name('admin.symptom');
-  Route::get('/admin/radiology/category/{id?}',[VendorController::class,'showRadiologyCat'])->name('admin.radiology.category');
+  Route::get('/admin/radiology-category/{id?}',[VendorController::class,'showRadiologyCat'])->name('admin.radiology-category');
   
   Route::get('/admin/category/{id?}',[VendorController::class,'showCategory'])->name('admin.category');
   Route::post('/admin/category/add',[VendorController::class,'insertCategory'])->name('admin.category.add');

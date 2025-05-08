@@ -102,18 +102,26 @@
                     <div class="carousel-10-columns-cover position-relative">
                         <div class="carousel-slider-wrapper carousel-10-columns" id="carousel-10-columns2"
                             title="Top Categories" data-slick="{&quot;autoplay&quot;:false,&quot;infinite&quot;:false,&quot;autoplaySpeed&quot;:3000,&quot;speed&quot;:800}" data-items-xxl="10" data-items-xl="6" data-items-lg="4" data-items-md="3" data-items-sm="2">
-                            @foreach ($category as $item)
+                            @foreach ($radiology_category as $item)
                         <div style="margin-top:20px;" class="col-md-2 col-lg-2 col-xs-4 col-sm-4">
                             <div class="image-cat">
-                                <a  href="#" title="{{$item->name}}" target="_self">
+                                <a  href="@if(count(backHelper::Check_RadiologySubacategory_Count($item->id))>0)
+                                                 {{ route('radiology.subcategory', ['id'=>Crypt::encrypt($item->id)]) }}
+                                                @else
+                                                 {{ route('radiology.list', ['id'=>Crypt::encrypt($item->id)]) }}
+                                                @endif" title="{{$item->name}}" target="_self">
                                     <img style="height:75px !important; width:75px !important; border-radius:50%;" class="img-circled"  src="{{ asset('storage/category/').'/'.$item->image }}" title="{{$item->name}}" alt="{{$item->name}}" />
                                 </a>
                             </div>
                           <div class="cat-title text-center"> 
-                              <a style="font-size:11px;" href="#" title="{{$item->name}}" target="_self">{{$item->name}} </a>
+                              <a style="font-size:11px;" href="@if(count(backHelper::Check_RadiologySubacategory_Count($item->id))>0)
+                                                 {{ route('radiology.subcategory', ['id'=>Crypt::encrypt($item->id)]) }}
+                                                @else   
+                                                 {{ route('radiology.list', ['id'=>Crypt::encrypt($item->id)]) }}
+                                                @endif" title="{{$item->name}}" title="{{$item->name}}" target="_self">{{$item->name}} </a>
                             </div>
                         </div>
-                        @endforeach
+                        @endforeach 
                            
                         </div>
                     </div>
