@@ -2071,7 +2071,7 @@ public function get_doctor_details($doctor_id)
 
 /**
  * @OA\Get(
- *     path="/api/user/get_all_hospitals/{doctor_id}",
+ *     path="/api/user/get_all_hospitals",
  *     summary="Get list of all active hospitals",
  *     description="Returns a paginated list of hospitals with their details, including state and city names.",
  *     operationId="getAllHospitals",

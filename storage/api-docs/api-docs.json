@@ -2018,7 +2018,7 @@
                 }
             }
         },
-        "/api/user/get_all_hospitals/{doctor_id}": {
+        "/api/user/get_all_hospitals": {
             "get": {
                 "tags": [
                     "Hospital"
