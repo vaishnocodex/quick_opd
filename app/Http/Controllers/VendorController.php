@@ -523,7 +523,7 @@ class VendorController extends Controller
             $decrypted = Crypt::decrypt($rest->id);
             $user= DB::table('users')->where('id',$decrypted)->where('role_id','4')->first();
             $arr['data'] =$user;
-            $arr['hospital_data'] = DB::table('users')->where('type', 2)->get();
+            $arr['hospital_data'] = DB::table('users')->where('type', 3)->get();
             $arr['state_data'] = DB::table('state')->where('fcountryid', 101)->get();
             $arr['city_data'] = DB::table('city')->where('fstateid', $user->state)->get();
             $arr['category_data'] = DB::table('category')->where('type','category')->get();

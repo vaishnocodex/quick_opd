@@ -1583,6 +1583,596 @@ public function districts_all(Request $request){
         ], 500);  // Internal Server Error
     }
 }
+
+/**
+ * @OA\Get(
+ *     path="/api/user/get_doctor_bycategory/{category_id}",
+ *     summary="Get doctors by specialist category",
+ *     description="Fetches a paginated list of doctors by category ID with hospital, city, and state details.",
+ *     operationId="getDoctorsBySpecialistCategory",
+ *     tags={"Doctor"},
+ *     @OA\Parameter(
+ *         name="category_id",
+ *         in="path",
+ *         required=true,
+ *         description="Category ID for which doctors are to be fetched",
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Doctors fetched successfully",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="data", type="object",
+ *                 @OA\Property(property="message", type="string", example="Doctors fetched successfully"),
+ *                 @OA\Property(property="test_series_image_path", type="string", example="storage/doctor/"),
+ *                 @OA\Property(property="doctors", type="object",
+ *                     description="Paginated list of doctors with related hospital, city, and state info"
+ *                    
+ *                 )
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Unexpected error",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="data", type="object",
+ *                 @OA\Property(property="message", type="string", example="An unexpected error occurred"),
+ *                 @OA\Property(property="error", type="string", nullable=true)
+ *             )
+ *         )
+ *     )
+ * )
+ */
+
+public function Doctor_get_by_Specilist(Request $request,$category_id)  
+{
+    try {
+        // Validate input
+       
+
+        $categoryId = $category_id;
+
+        $doctors = User::from('users as doctors')
+            ->leftJoin('state', 'doctors.state', '=', 'state.id')
+            ->leftJoin('city', 'doctors.city', '=', 'city.id')
+            ->leftJoin('users as hospitals', function($join) {
+                $join->on('doctors.user_id', '=', 'hospitals.id')
+                     ->where('hospitals.type', 'hospital'); 
+            })
+            ->whereRaw('FIND_IN_SET(?, doctors.category_id) > 0', [$categoryId]) 
+            ->where('doctors.status', '1')
+            ->where('doctors.type', '4')
+            ->select([
+                'doctors.id',
+                'doctors.user_id',
+                'doctors.role_id',
+                'doctors.category_id',
+                'doctors.symptom_id',
+               
+                'doctors.name',
+                'doctors.type',
+                'doctors.mobile_no',
+                'doctors.email',
+                'doctors.pincode',
+                'doctors.address',
+                'doctors.experience',
+                'doctors.price',
+                'doctors.qualification',
+                'doctors.device_id',
+                'doctors.short_description',
+                'doctors.status',
+                'doctors.image',
+                'state.name as state_name',
+                'city.name as city_name',
+                'hospitals.name as hospital_name'
+            ])
+            ->paginate(15);
+
+        return response()->json([
+            'status' => true,
+            'data' => [
+                'message' => 'Doctors fetched successfully',
+                'test_series_image_path' => 'storage/doctor/',
+                'doctors' => $doctors,
+            ]
+        ], 200);
+
+
+    } catch (Exception $e) {
+        Log::error('Doctor fetch error: ' . $e->getMessage());
+        
+        return response()->json([
+            'status' => true,
+            'data' => [
+                'message' => 'An unexpected error occurred',
+                'error' => config('app.debug') ? $e->getMessage() : null
+            ]
+        ], 500);
+    }
+}
+/**
+ * @OA\Get(
+ *     path="/api/user/get_doctor_byhospital/{hospital_id}",
+ *     summary="Get doctors by hospital ID",
+ *     description="Fetches a paginated list of doctors that belong to a specific hospital, including city and state information.",
+ *     operationId="getDoctorsByHospital",
+ *     tags={"Doctor"},
+ *     @OA\Parameter(
+ *         name="hospital_id",
+ *         in="path",
+ *         required=true,
+ *         description="Hospital ID to fetch associated doctors",
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Doctors fetched successfully",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="data", type="object",
+ *                 @OA\Property(property="message", type="string", example="Doctors fetched successfully"),
+ *                 @OA\Property(property="test_series_image_path", type="string", example="storage/doctor/"),
+ *                 @OA\Property(property="doctors", type="object",
+ *                     description="Paginated list of doctors from the specified hospital"
+ *                 )
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Unexpected error",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="data", type="object",
+ *                 @OA\Property(property="message", type="string", example="An unexpected error occurred"),
+ *                 @OA\Property(property="error", type="string", nullable=true)
+ *             )
+ *         )
+ *     )
+ * )
+ */
+
+public function Doctor_get_by_Hospital(Request $request,$hsopital_id)  
+{
+    try {
+       
+        $hsopital_id = $hsopital_id;
+
+        $doctors = User::from('users as doctors')
+            ->leftJoin('state', 'doctors.state', '=', 'state.id')
+            ->leftJoin('city', 'doctors.city', '=', 'city.id')
+            ->leftJoin('users as hospitals', function($join) {
+                $join->on('doctors.user_id', '=', 'hospitals.id')
+                     ->where('hospitals.type', 'hospital'); 
+            })
+            ->where('doctors.user_id', $hsopital_id)
+            ->where('doctors.status', '1')
+            ->where('doctors.type', '4')
+            ->select([
+                'doctors.id',
+                'doctors.user_id',
+                'doctors.role_id',
+                'doctors.category_id',
+                'doctors.symptom_id',
+                'doctors.name',
+                'doctors.type',
+                'doctors.mobile_no',
+                'doctors.email',
+                'doctors.pincode',
+                'doctors.address',
+                'doctors.experience',
+                'doctors.price',
+                'doctors.qualification',
+                'doctors.device_id',
+                'doctors.short_description',
+                'doctors.status',
+                'doctors.image',
+                'state.name as state_name',
+                'city.name as city_name',
+                'hospitals.name as hospital_name'
+            ])
+            ->paginate(15);
+
+        return response()->json([
+            'status' => true,
+            'data' => [
+                'message' => 'Doctors fetched successfully',
+                'test_series_image_path' => 'storage/doctor/',
+                'doctors' => $doctors,
+            ]
+        ], 200);
+
+
+    } catch (Exception $e) {
+        Log::error('Doctor fetch error: ' . $e->getMessage());
+        
+        return response()->json([
+            'status' => true,
+            'data' => [
+                'message' => 'An unexpected error occurred',
+                'error' => config('app.debug') ? $e->getMessage() : null
+            ]
+        ], 500);
+    }
+}
+
+
+/**
+ * @OA\Get(
+ *     path="/api/user/get_doctor_bysymptom/{symptom_id}",
+ *     summary="Get doctors by symptom ID",
+ *     description="Fetches a paginated list of doctors based on a symptom ID. Includes hospital, city, and state information.",
+ *     operationId="getDoctorsBySymptom",
+ *     tags={"Doctor"},
+ *     @OA\Parameter(
+ *         name="symptom_id",
+ *         in="path",
+ *         required=true,
+ *         description="Symptom ID to filter doctors",
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Doctors fetched successfully",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="data", type="object",
+ *                 @OA\Property(property="message", type="string", example="Doctors fetched successfully"),
+ *                 @OA\Property(property="test_series_image_path", type="string", example="storage/doctor/"),
+ *                 @OA\Property(property="doctors", type="object",
+ *                     description="Paginated list of doctors matching the symptom"
+ *                 )
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Unexpected error",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="data", type="object",
+ *                 @OA\Property(property="message", type="string", example="An unexpected error occurred"),
+ *                 @OA\Property(property="error", type="string", nullable=true)
+ *             )
+ *         )
+ *     )
+ * )
+ */
+
+public function Doctor_get_by_Symptom(Request $request,$symptom_id)  
+{
+    try {
+        // Validate input
+        $symptom_id = $symptom_id;
+
+        $doctors = User::from('users as doctors')
+            ->leftJoin('state', 'doctors.state', '=', 'state.id')
+            ->leftJoin('city', 'doctors.city', '=', 'city.id')
+            ->leftJoin('users as hospitals', function($join) {
+                $join->on('doctors.user_id', '=', 'hospitals.id')
+                     ->where('hospitals.type', 'hospital'); 
+            })
+            ->whereRaw('FIND_IN_SET(?, doctors.symptom_id) > 0', [$symptom_id]) 
+            ->where('doctors.status', '1')
+            ->where('doctors.type', '4')
+            ->select([
+                'doctors.id',
+                'doctors.user_id',
+                'doctors.role_id',
+                'doctors.category_id',
+                'doctors.symptom_id',
+                'doctors.name',
+                'doctors.type',
+                'doctors.mobile_no',
+                'doctors.email',
+                'doctors.pincode',
+                'doctors.address',
+                'doctors.experience',
+                'doctors.price',
+                'doctors.qualification',
+                'doctors.device_id',
+                'doctors.short_description',
+                'doctors.status',
+                'doctors.image',
+                'state.name as state_name',
+                'city.name as city_name',
+                'hospitals.name as hospital_name'
+            ])
+            ->paginate(15);
+
+        return response()->json([
+            'status' => true,
+            'data' => [
+                'message' => 'Doctors fetched successfully',
+                'test_series_image_path' => 'storage/doctor/',
+                'doctors' => $doctors,
+            ]
+        ], 200);
+
+  
+    } catch (Exception $e) {
+        Log::error('Doctor fetch error: ' . $e->getMessage());
+        
+        return response()->json([
+            'status' => true,
+            'data' => [
+                'message' => 'An unexpected error occurred',
+                'error' => config('app.debug') ? $e->getMessage() : null
+            ]
+        ], 500);
+    }
+}
+
+/**
+ * @OA\Get(
+ *     path="/api/user/get_singledoctor_detail/{doctor_id}",
+ *     summary="Get single doctor details",
+ *     description="Fetches detailed information of a doctor including schedule slots, location, and hospital.",
+ *     operationId="getSingleDoctorDetails",
+ *     tags={"Doctor"},
+ *     @OA\Parameter(
+ *         name="doctor_id",
+ *         in="path",
+ *         required=true,
+ *         description="Doctor ID",
+ *         @OA\Schema(type="integer", example=12)
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Doctor details fetched successfully",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="data", type="object",
+ *                 @OA\Property(property="message", type="string", example="Doctor details fetched successfully"),
+ *                 @OA\Property(property="image_path", type="string", example="storage/doctor/"),
+ *                 @OA\Property(property="doctor", type="object",
+ *                     description="Doctor detail object"
+ *                 ),
+ *                 @OA\Property(property="schedule_list", type="array",
+ *                     @OA\Items(
+ *                         type="object",
+ *                         @OA\Property(property="id", type="integer", example=1),
+ *                         @OA\Property(property="date", type="string", format="date", example="2025-05-15"),
+ *                         @OA\Property(property="start_time", type="string", example="09:00"),
+ *                         @OA\Property(property="end_time", type="string", example="13:00"),
+ *                         @OA\Property(property="slot_duration", type="integer", example=30),
+ *                         @OA\Property(property="max_slot", type="integer", example=10),
+ *                         @OA\Property(property="shift", type="string", example="Morning"),
+ *                         @OA\Property(property="status", type="string", example="active")
+ *                     )
+ *                 )
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Invalid doctor ID format",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="Invalid doctor ID format")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Doctor not found",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="Doctor not found")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Unexpected server error",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="data", type="object",
+ *                 @OA\Property(property="message", type="string", example="An unexpected error occurred"),
+ *                 @OA\Property(property="error", type="string", nullable=true)
+ *             )
+ *         )
+ *     )
+ * )
+ */
+
+public function get_doctor_details($doctor_id)
+{
+    try {
+        // Validate doctor_id
+        if (!is_numeric($doctor_id)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Invalid doctor ID format'
+            ], 400);
+        }
+
+        $doctor = User::from('users as doctors')
+            ->leftJoin('state', 'doctors.state', '=', 'state.id')
+            ->leftJoin('city', 'doctors.city', '=', 'city.id')
+            ->leftJoin('users as hospitals', function($join) {
+                $join->on('doctors.hospital_id', '=', 'hospitals.id')
+                     ->where('hospitals.type', 'hospital');
+            })
+            ->where('doctors.id', $doctor_id)
+            ->where('doctors.type', '4') // Ensure it's a doctor
+            ->select([
+                'doctors.id',
+                'doctors.name',
+                'doctors.mobile_no',
+                'doctors.email',
+                'doctors.qualification',
+                'doctors.experience',
+                'doctors.price',
+                'doctors.short_description',
+                'doctors.address',
+                'doctors.pincode',
+                'doctors.image',
+                'state.name as state_name',
+                'city.name as city_name',
+                'hospitals.name as hospital_name',
+                'hospitals.id as hospital_id'
+            ])
+            ->first();
+
+        if (!$doctor) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Doctor not found'
+            ], 404);
+        }
+
+        $DoctorSlot = DoctorSlot::select(
+            'id', 
+            'date', 
+            'start_time', 
+            'end_time', 
+            'slot_duration', 
+            'max_slot', 
+            'shift', 
+            'status'
+        )
+        ->where('doctor_id', $doctor_id)
+        ->whereDate('date', '>=', Carbon::today())
+        ->orderBy('date', 'asc') 
+        ->get();
+        return response()->json([
+            'status' => true,
+            'data' => [
+                'message' => 'Doctor details fetched successfully',
+                'image_path' => 'storage/doctor/',
+                'doctor' => $doctor,
+                'schedule_list' => $DoctorSlot
+            ]
+        ], 200);
+
+    } catch (Exception $e) {
+        Log::error('Get doctor details error: ' . $e->getMessage());
+        
+        return response()->json([
+            'status' => true,
+            'data' => [
+                'message' => 'An unexpected error occurred',
+                'error' => config('app.debug') ? $e->getMessage() : null
+            ]
+        ], 500);
+    }
+}
+
+
+
+/**
+ * @OA\Get(
+ *     path="/api/user/get_all_hospitals/{doctor_id}",
+ *     summary="Get list of all active hospitals",
+ *     description="Returns a paginated list of hospitals with their details, including state and city names.",
+ *     operationId="getAllHospitals",
+ *     tags={"Hospital"},
+ *     @OA\Parameter(
+ *         name="doctor_id",
+ *         in="path",
+ *         required=true,
+ *         description="Doctor ID (not used in logic, but passed in URL)",
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Hospital list fetched successfully",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="data", type="object",
+ *                 @OA\Property(property="message", type="string", example="Hospital fetched successfully"),
+ *                 @OA\Property(property="test_series_image_path", type="string", example="storage/hospital/"),
+ *                 @OA\Property(
+ *                     property="hospital_list",
+ *                     type="object",
+ *                     description="Paginated hospital list"
+ *                     
+ *                 )
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Unexpected error",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="data", type="object",
+ *                 @OA\Property(property="message", type="string", example="An unexpected error occurred"),
+ *                 @OA\Property(property="error", type="string", nullable=true)
+ *             )
+ *         )
+ *     )
+ * )
+ */
+
+public function get_AllHospital(Request $request)  
+{
+    try {
+        // Validate input
+      
+
+        $hospitals = User::from('users as hospitals')
+            ->leftJoin('state', 'hospitals.state', '=', 'state.id')
+            ->leftJoin('city', 'hospitals.city', '=', 'city.id')
+            ->where('hospitals.status', '1')
+            ->where('hospitals.type', '3')
+            ->select([
+                'hospitals.id',
+                'hospitals.user_id',
+                'hospitals.role_id',
+                'hospitals.category_id',
+                'hospitals.name',
+                'hospitals.type',
+                'hospitals.mobile_no',
+                'hospitals.email',
+                'hospitals.pincode',
+                'hospitals.address',
+                'hospitals.experience',
+                'hospitals.price',
+                'hospitals.qualification',
+                'hospitals.device_id',
+                'hospitals.short_description',
+                'hospitals.status',
+                'hospitals.image',
+                'state.name as state_name',
+                'city.name as city_name'
+                
+            ])
+            ->paginate(15);
+
+        return response()->json([
+            'status' => true,
+            'data' => [
+                'message' => 'Hospital fetched successfully',
+                'test_series_image_path' => 'storage/hospital/',
+                'hospital_list' => $hospitals,
+            ]
+        ], 200);
+
+    } catch (Exception $e) {
+        Log::error('hospital fetch error: ' . $e->getMessage());
+        
+
+        return response()->json([
+            'status' => true,
+            'data' => [
+                'message' => 'An unexpected error occurred',
+                'error' => config('app.debug') ? $e->getMessage() : null
+            ]
+        ], 500);
+      
+    }
+}
 //end tag
     
 }
