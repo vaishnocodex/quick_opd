@@ -7,6 +7,8 @@ use App\Http\Controllers\VendorController;
 use App\Http\Controllers\WebController;
 use App\Http\Controllers\DoctorSlotController;
 use App\Http\Controllers\WebUserController;
+use App\Http\Controllers\DoctorController;
+use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Artisan;
 
 use Illuminate\Support\Facades\Auth;
@@ -47,8 +49,12 @@ Route::get('contact-us/', function () {
 Route::get('abt/', function () {
   return view('website.home2');
 });
+
+Route::get('/payment/gateway', [PaymentController::class, 'gateway'])->name('payment.gateway');
+
 //-------------------------------------Custom Routes
 Route::post('/login/admin',[VendorController::class,'loginAdmin'])->name("login.admin");
+Route::post('/login/doctor',[DoctorController::class,'Login_Doctor'])->name("login.doctor");
 
 
 Route::post('/getStateCity',[AjaxController::class,'getStateCity'])->name("getStateCity");
@@ -106,6 +112,15 @@ Route::middleware(['auth', 'user-access:user'])->group(function () {
 
 });
   
+
+Route::middleware(['auth', 'user-access:doctor'])->group(function () {
+    Route::get('/doctor/home', [DoctorController::class, 'doctorHome'])->name('doctor.home');
+    // Route::get('/doctor/profile', [WebUserController::class, 'DoctorProfile'])->name('doctor.profile');
+    // Route::post('/doctor/update-profile', [WebUserController::class, 'UpdateDoctorProfile'])->name('doctor.update-profile');
+    // Route::post('/doctor/update-password', [WebUserController::class, 'UpdateDoctorPassword'])->name('doctor.update-password');
+    // Route::get('/doctor/appointment', [WebUserController::class, 'DoctorAppointment'])->name('doctor.appointment');
+
+});
 /*------------------------------------------
 --------------------------------------------
 All Admin Routes List  

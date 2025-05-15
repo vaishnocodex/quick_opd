@@ -32,6 +32,11 @@ Route::middleware('auth:sanctum')->get('/user/get_doctor_byhospital/{hsopital_id
 Route::middleware('auth:sanctum')->get('/user/get_doctor_bysymptom/{symptom_id}', [UserApiController::class, 'Doctor_get_by_Symptom']);
 Route::middleware('auth:sanctum')->get('/user/get_singledoctor_detail/{doctor_id}', [UserApiController::class, 'get_doctor_details']);
 Route::middleware('auth:sanctum')->get('/user/get_all_hospitals', [UserApiController::class, 'get_AllHospital']);
+Route::middleware('auth:sanctum')->post('/user/doctor-add-to-cart', [UserApiController::class, 'DoctoraddToCartAPP']);
+Route::middleware('auth:sanctum')->post('/user/doctor-order-submit', [UserApiController::class, 'submitPayment']);
+
+//user order list
+Route::middleware('auth:sanctum')->get('/user/get-user-orders', [UserApiController::class, 'getUserOrders']);
 
 //forget password
 Route::post('/user/forgot-password', [UserApiController::class, 'forgotPassword']);
