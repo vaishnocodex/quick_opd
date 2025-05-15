@@ -79,7 +79,7 @@ class VendorController extends Controller
         }
           
     }
-
+   
     public function AdminHome()
     {
         return view('admin.home');
@@ -153,7 +153,8 @@ class VendorController extends Controller
                 $array['image'] = $firmImage;
    
            }
-                $array['category_id'] = implode(',', $rest->category_id); 
+           $array['category_id'] = $rest->category_id ? implode(',', $rest->category_id) : '';
+         
                 $array['password'] = Hash::make($rest->password);
                 $array['pass_hint'] =$rest->password;
                 $array['name'] =$rest->name;
@@ -225,7 +226,7 @@ class VendorController extends Controller
                 $array['image'] = $firmImage;
    
            }
-                $array['category_id'] = implode(',', $rest->category_id); 
+                $array['category_id'] = $rest->category_id ? implode(',', $rest->category_id) : '';
                 $array['password'] = Hash::make($rest->password);
                 $array['pass_hint'] =$rest->password;
                 $array['name'] =$rest->name;
@@ -324,7 +325,7 @@ class VendorController extends Controller
                 $array['image'] = $firmImage;
    
            }
-                $array['category_id'] = implode(',', $rest->category_id); 
+               $array['category_id'] = $rest->category_id ? implode(',', $rest->category_id) : ''; 
                 $array['password'] = Hash::make($rest->password);
                 $array['pass_hint'] =$rest->password;
                 $array['name'] =$rest->name;
@@ -396,7 +397,7 @@ class VendorController extends Controller
                 $array['image'] = $firmImage;
    
            }
-                $array['category_id'] = implode(',', $rest->category_id); 
+                $array['category_id'] = $rest->category_id ? implode(',', $rest->category_id) : ''; 
                 $array['password'] = Hash::make($rest->password);
                 $array['pass_hint'] =$rest->password;
                 $array['name'] =$rest->name;
@@ -588,8 +589,9 @@ class VendorController extends Controller
             $array['user_id'] = $rest->hospital;
             $array['role_id'] ='4';
             $array['type'] ='4';
-            $array['category_id'] = implode(',', $rest->category_id); 
-            $array['symptom_id'] = implode(',', $rest->symptom_id); 
+            $array['category_id'] = $rest->category_id ? implode(',', $rest->category_id) : '';
+            $array['symptom_id'] = $rest->symptom_id ? implode(',', $rest->symptom_id) : '';
+        
             $array['name'] =$rest->name;
                 $array['mobile_no'] =$rest->mobile;
                 $array['password'] = Hash::make($rest->password);
@@ -665,8 +667,8 @@ class VendorController extends Controller
    
            }
             $array['user_id'] = $rest->hospital;
-            $array['category_id'] = implode(',', $rest->category_id); 
-            $array['symptom_id'] = implode(',', $rest->symptom_id); 
+            $array['category_id'] = $rest->category_id ? implode(',', $rest->category_id) : '';
+            $array['symptom_id'] = $rest->symptom_id ? implode(',', $rest->symptom_id) : '';
             $array['name'] =$rest->name;
                 $array['mobile_no'] =$rest->mobile;
                 $array['password'] = Hash::make($rest->password);

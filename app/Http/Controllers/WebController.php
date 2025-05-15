@@ -529,6 +529,9 @@ public function Payment_SubmitPage(Request $request)
         if ($request->payment_option === "cash") {
             return redirect()->route('thank-you')->with('success', 'Appointment booked. Pay at hospital.');
         } else {
+
+
+            
             return redirect()->route('payment.gateway', ['order_id' => $order->id]);
         }
     }
