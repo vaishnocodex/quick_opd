@@ -177,7 +177,7 @@
                             <div class="sidebar-submenu">
                                 <ul>
                                     <li>
-                                        <a href="{{ route('admin.doctor') }}" class="{{ Route::currentRouteName()=="admin.doctor"?"current-page":"" }}">All doctor</a>
+                                        <a href="{{ route('hospital.doctor') }}" class="{{ Route::currentRouteName()=="admin.doctor"?"current-page":"" }}">All doctor</a>
                                     </li>
                                     <li>
                                         <a href="{{ route('hospital.new.doctor') }}" class="{{ Route::currentRouteName()=="admin.new.doctor"?"current-page":"" }}">Add doctor</a>

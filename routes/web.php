@@ -201,7 +201,10 @@ Route::post('/admin/radiology/update', [VendorController::class, 'UpdateHospital
 
 Route::post('/login/hospital',[HospitalController::class,'Login_Hospital'])->name("login.hospital");
 Route::get('/hospital/new/doctor/{id?}', [HospitalController::class, 'NewDoctor'])->name('hospital.new.doctor');
-  Route::post('/hospital/doctor/add', [HospitalController::class, 'AddDoctor'])->name('hospital.doctor.add');
+Route::post('/hospital/doctor/add', [HospitalController::class, 'AddDoctor'])->name('hospital.doctor.add');
+Route::get('/hospital/doctor/{id?}', [HospitalController::class, 'ShowDoctor'])->name('hospital.doctor');
+Route::get('/hospital/edit/doctor/{id?}', [HospitalController::class, 'NewDoctor'])->name('hospital.edit.doctor');
+Route::post('/hospital/doctor/update', [HospitalController::class, 'UpdateDoctor'])->name('hospital.doctor.update');
 
 
 /*------------------------------------------
