@@ -104,7 +104,7 @@
             </div>
 
             <!-- Sidebar brand end  -->
-              
+
             <!-- Sidebar content start -->
             <div class="sidebar-content">
 
@@ -118,9 +118,9 @@
                             </a>
 
                         </li>
-                        
-                      
-                   
+
+
+
                      <li class="sidebar-dropdown{{ Route::currentRouteName()=="javascript:void(0)"?"active":"" }}">
                             <a href="javascript:void(0)">
                                 <i class="icon-users"></i>
@@ -142,7 +142,7 @@
                                     </li>
                                 </ul>
                             </div>
-                        </li>  
+                        </li>
                         <li class="sidebar-dropdown{{ Route::currentRouteName()=="javascript:void(0)"?"active":"" }}">
                             <a href="javascript:void(0)">
                                 <i class="icon-users"></i>
@@ -155,7 +155,7 @@
                                     </li>
                                 </ul>
                             </div>
-                        </li>   
+                        </li>
                         <li class="sidebar-dropdown{{ Route::currentRouteName()=="javascript:void(0)"?"active":"" }}">
                             <a href="javascript:void(0)">
                                 <i class="icon-users"></i>
@@ -168,7 +168,7 @@
                                     </li>
                                 </ul>
                             </div>
-                        </li> 
+                        </li>
                         <li class="sidebar-dropdown{{ Route::currentRouteName()=="javascript:void(0)"?"active":"" }}">
                             <a href="javascript:void(0)">
                                 <i class="icon-users"></i>
@@ -180,12 +180,12 @@
                                         <a href="{{ route('admin.doctor') }}" class="{{ Route::currentRouteName()=="admin.doctor"?"current-page":"" }}">All doctor</a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('admin.new.doctor') }}" class="{{ Route::currentRouteName()=="admin.new.doctor"?"current-page":"" }}">Add doctor</a>
+                                        <a href="{{ route('hospital.new.doctor') }}" class="{{ Route::currentRouteName()=="admin.new.doctor"?"current-page":"" }}">Add doctor</a>
                                     </li>
-                                   
+
                                 </ul>
                             </div>
-                        </li>   
+                        </li>
 
                         <li class="sidebar-dropdown{{ Route::currentRouteName()=="javascript:void(0)"?"active":"" }}">
                             <a href="javascript:void(0)">
@@ -199,7 +199,7 @@
                                     </li>
                                 </ul>
                             </div>
-                        </li>   
+                        </li>
                     </ul>
                 </div>
                 <!-- sidebar menu end -->
@@ -224,7 +224,7 @@
                     </a>
                 </div>
                 <div>
-                    <h4>Admin </h4>
+                    <h4>Hospital </h4>
                 </div>
                 <div class="header-items">
                     <!-- Custom search start -->
@@ -272,7 +272,7 @@
 
     </div>
     <!-- Page wrapper end -->
-   
+
     <script src="{{ asset('backend') }}/js/jquery.min.js"></script>
     <script src="{{ asset('backend') }}/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('backend') }}/js/moment.js"></script>
@@ -337,7 +337,7 @@
     <script>
 $(function(){
     $('.idm').keypress(function(e) {
- 
+
 if(isNaN(this.value+""+String.fromCharCode(e.charCode))) return false;
 })
 .on("cut copy paste",function(e){
@@ -358,7 +358,7 @@ e.preventDefault();
             });
 
 
-            
+
 
 
         });

@@ -1,4 +1,4 @@
-@extends('admin.master')
+@extends('hospital.master')
 @section('content')
 <div class="main-container">
   <style>
@@ -8,21 +8,21 @@
       .fnt{
           font: 400 0.656rem 'Open Sans', sans-serif!important;
       }
-      
+
   </style>
     <!-- Page header start -->
     <div class="page-header">
 
         <!-- Breadcrumb start -->
         <ol class="breadcrumb">
-        
-       
-            <li class="breadcrumb-item">Welcome to, Admin Panel</li> 
-            
+
+
+            <li class="breadcrumb-item">Welcome to, Admin Panel</li>
+
         </ol>
-       
+
     </div>
-    
+
     <!-- Page header end -->
     @php
         //$dashboard=webhelper::getDashboardStats();
@@ -30,9 +30,9 @@
     @endphp
     <!-- Row start -->
     <div class="row gutters ">
-       
+
     <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
-           
+
             <div class="info-stats2 customheight">
                 <div class="info-icon warning">
                     <i class="icon-user"></i>
@@ -42,7 +42,7 @@
                     <p class="fnt">Total Today Appointment </p>
                 </div>
             </div>
-           
+
         </div>
         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
             <div class="info-stats2 customheight">
@@ -88,7 +88,7 @@
                 </div>
             </div>
         </div>
-           
+
     </div>
     <!-- Row end -->
 </div>
