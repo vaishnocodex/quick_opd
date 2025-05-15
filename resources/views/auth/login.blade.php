@@ -7,7 +7,7 @@ $firm=webhelper::getFirm();
 @endphp
 <div class="container">
    
-                    <form method="POST" action="{{ route('login') }}">
+                    <form method="POST" action="{{ route('login.admin') }}">
                         @csrf
                         <div class="row justify-content-md-center">
                             <div class="col-xl-4 col-lg-5 col-md-6 col-sm-12">

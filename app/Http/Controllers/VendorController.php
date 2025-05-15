@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Exception;
 use App\Models\DoctorSchedule;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
@@ -22,11 +23,240 @@ class VendorController extends Controller
 {
     //
 
+
+  /*category section */ 
+  public function showRadiologyCat(Request $rest)
+  {
+   
+
+      if($rest->id)
+      {
+          $arr["category_id"]=$rest->id;
+      }
+      else{
+          $arr["category_id"]=null;
+      }
+      $arr['categories'] = DB::table('category')->where('type','radiology')->get();
+      $cats = DB::table('category')
+      //->where(['parent'=>0])
+      ->where('type','radiology')->get();
+      $arr['catall'] = $cats;
+      $arr['heading_title'] = 'Radiology';
+      $arr['cat_type'] = 'radiology';
+
+      return view('admin.category')->with($arr);
+  }
+    public function loginAdmin(Request $request)
+    {   
+        $input = $request->all();
+     
+        $this->validate($request, [
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+       $check_user= User::where('email',$input['email'])->where('type','1')->first();
+        if(!$check_user){
+            return redirect()->back()->with('error','Email-Address And Password Are Wrong.');
+           
+
+        }
+
+        
+
+        if(auth()->attempt(array('email' => $input['email'], 'password' => $input['password'])))
+        {
+            if (auth()->user()->type == 'admin') {
+                return redirect()->route('admin.home');
+            }else if (auth()->user()->type == 'manager') {
+                return redirect()->route('manager.home');
+            }else{
+                return redirect()->route('home');
+            }
+        }else{
+            return redirect()->route('login')
+                ->with('error','Invalid Password.');
+        }
+          
+    }
+
     public function AdminHome()
     {
         return view('admin.home');
     } 
 
+    //-----------------Radiology CRUD Operation Start
+    public function ShowRAdiology(Request $rest){
+        if($rest->id){
+            $arr["staff_id"]=$rest->id;
+            $decrypted = Crypt::decrypt($rest->id);
+            $user= DB::table('users')->where('id',$decrypted)->where('role_id','3')->first();
+            $arr['data'] =$user;
+            $arr['state_data'] = DB::table('state')->where('fcountryid', 101)->get();
+            $arr['city_data'] = DB::table('city')->where('fstateid', $user->state)->get();
+            $arr['category_data'] = DB::table('category')->where('type','category')->get();
+            $arr['symptom_data'] = DB::table('category')->where('type','symptom')->get();
+            return view('admin.edit_hospital')->with($arr);
+        }
+        else{
+            $arr["staff_id"]=null;
+        }
+
+        $data = DB::table('users as a')
+        ->select(['a.*', 'b.name as state_name', 'c.name as city_name'])
+        ->leftJoin('state as b', 'a.state', '=', 'b.id')
+        ->leftJoin('city as c', 'a.city', '=', 'c.id')
+        ->where('a.type', '3')
+        ->where('a.hospital_type', 'radiology')
+        //->where('a.user_id', '0')->where('a.status', 1)
+        ->orderBy('a.id', 'DESC')
+        ->get();
+       
+        $arr['state_data'] = DB::table('state')->where('fcountryid', 101)->get();
+        $arr['category_data'] = DB::table('category')->where('type','radiology')->get();
+        $arr['symptom_data'] = DB::table('category')->where('type','symptom')->get();
+        $arr['All_staff'] = $data;
+       // $staff = DB::table('users')->where('id','2')->get();
+        //dd($staff);
+        return view('admin.radiology')->with($arr);
+    }
+
+    public function AddRadiology(Request $rest)
+    {
+
+        $this->validate($rest, [
+            // 'name' => 'required|string|unique:category,name',
+            'name' => 'required|string',
+            'mobile' => 'required|string',
+            'password' => 'required',
+            'email' => 'required|string',
+           
+
+        ]);
+        
+        $checkemail = DB::table('users')->where('email', $rest->email)->where('type','2')->where('hospital_type','radiology')->count();
+       if ($checkemail > 0) {
+            session()->flash('msgVendor', 'Email Address already exist.');
+            return redirect()->back()->withInput();
+            //return redirect()->route('admin.hospital');
+        }
+
+        $chkm = DB::table('users')->where('mobile_no', $rest->mobile)->where('type','2')->where('hospital_type','radiology')->count();
+       if ($chkm > 0) {
+            session()->flash('msgVendor', 'This Mobile No. already exist.');
+            return redirect()->back()->withInput();
+           // return redirect()->route('admin.hospital');
+        }else{
+            if ($rest->image) {
+                $firmImage = time() . rand(1000000, 9999999) . '.' . $rest->image->extension();
+                $rest->image->move(public_path('storage/hospital'), $firmImage);
+                $array['image'] = $firmImage;
+   
+           }
+                $array['category_id'] = implode(',', $rest->category_id); 
+                $array['password'] = Hash::make($rest->password);
+                $array['pass_hint'] =$rest->password;
+                $array['name'] =$rest->name;
+                $array['mobile_no'] =$rest->mobile;
+                $array['user_id'] =0;
+                $array['email'] =$rest->email;
+                $array['state'] =$rest->state;
+                $array['city'] =$rest->city;
+                $array['pincode'] =$rest->pincode;
+                $array['address'] =$rest->address;
+                $array['status'] =1;
+                $array['role_id'] ='3';
+                $array['type'] ='3';
+                $array['hospital_type'] =$rest->hospital_type;
+                 $array['created_at'] = Carbon::now();
+             
+                
+                    $ins=DB::table('users')->insert($array);
+                
+
+                if ($ins) {
+
+                    session()->flash('msgVendor', 'Radiology Added Successfully.');
+                      
+                    return redirect()->route('admin.radiology');
+                } else {
+
+                session()->flash('errorVendor', 'Unable to add try after some time .');
+                       
+                return redirect()->route('admin.radiology');
+                }
+
+         
+
+        }
+
+
+
+
+
+    }
+    public function Update_Radiology(Request $rest)
+    {
+
+        $this->validate($rest, [
+            // 'name' => 'required|string|unique:category,name',
+            'name' => 'required|string',
+            'mobile' => 'required|string',
+            'password' => 'required',
+            'email' => 'required|string',
+           
+
+        ]);
+        $update_id=$rest->update_id;
+        $checkemail = DB::table('users')->where('id','!=', $update_id)->where('email', $rest->email)->where('type','2')->where('hospital_type','radiology')->count();
+       if ($checkemail > 0) {
+            session()->flash('msgVendor', 'Email Address already exist.');
+            return redirect()->back();
+        }
+
+        $chkm = DB::table('users')->where('id','!=', $update_id)->where('mobile_no', $rest->mobile)->where('type','2')->where('hospital_type','radiology')->count();
+       if ($chkm > 0) {
+            session()->flash('msgVendor', 'This Mobile No. already exist.');
+            return redirect()->back();
+        }else{
+            if ($rest->image) {
+                $firmImage = time() . rand(1000000, 9999999) . '.' . $rest->image->extension();
+                $rest->image->move(public_path('storage/hospital'), $firmImage);
+                $array['image'] = $firmImage;
+   
+           }
+                $array['category_id'] = implode(',', $rest->category_id); 
+                $array['password'] = Hash::make($rest->password);
+                $array['pass_hint'] =$rest->password;
+                $array['name'] =$rest->name;
+                $array['mobile_no'] =$rest->mobile;
+                $array['user_id'] =0;
+                $array['email'] =$rest->email;
+                $array['state'] =$rest->state;
+                $array['city'] =$rest->city;
+                $array['pincode'] =$rest->pincode;
+                $array['address'] =$rest->address;
+                $array['status'] =1;
+                 $array['updated_at'] = Carbon::now();
+               
+                 $ins = DB::table('users')->where('id', $update_id)->update($array);
+            
+
+                if ($ins) {
+
+                    session()->flash('msgVendor', 'Radilogy detail Update Successfully.');
+                      
+                    return redirect()->route('admin.radiology');
+                } else {
+
+                session()->flash('errorVendor', 'Unable to update try after some time .');
+                       
+                return redirect()->route('admin.radiology');
+                }
+
+        }
+
+    }
     //-----------------Hospital CRUD Operation Start
     public function ShowHospital(Request $rest){
         if($rest->id){
@@ -293,7 +523,7 @@ class VendorController extends Controller
             $decrypted = Crypt::decrypt($rest->id);
             $user= DB::table('users')->where('id',$decrypted)->where('role_id','4')->first();
             $arr['data'] =$user;
-            $arr['hospital_data'] = DB::table('users')->where('type', 2)->get();
+            $arr['hospital_data'] = DB::table('users')->where('type', 3)->get();
             $arr['state_data'] = DB::table('state')->where('fcountryid', 101)->get();
             $arr['city_data'] = DB::table('city')->where('fstateid', $user->state)->get();
             $arr['category_data'] = DB::table('category')->where('type','category')->get();
@@ -471,26 +701,7 @@ class VendorController extends Controller
         }
 
     }
-       /*category section */ 
-       public function showRadiologyCat(Request $rest)
-       {
-           if($rest->id)
-           {
-               $arr["category_id"]=$rest->id;
-           }
-           else{
-               $arr["category_id"]=null;
-           }
-           $arr['categories'] = DB::table('category')->where('type','radiology')->get();
-           $cats = DB::table('category')
-           //->where(['parent'=>0])
-           ->where('type','radiology')->get();
-           $arr['catall'] = $cats;
-           $arr['heading_title'] = 'Radiology';
-           $arr['cat_type'] = 'radiology';
-   
-           return view('admin.category')->with($arr);
-       }
+     
        public function showSymptom(Request $rest)
        {
            if($rest->id)
@@ -673,7 +884,7 @@ class VendorController extends Controller
                 if($request->type=="category"){
                     return redirect()->route('admin.category');
                 }elseif($request->type=="radiology"){
-                    return redirect()->route('admin.radiology.category');
+                    return redirect()->route('admin.radiology-category');
                 }
                 else{
                     return redirect()->route('admin.symptom');

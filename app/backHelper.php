@@ -5,7 +5,11 @@ use Illuminate\Support\Facades\DB;
 class backHelper
 {
 
+   public static function Check_RadiologySubacategory_Count($id){
 
+       $platinum = DB::table('category')->where('parent',$id)->get();
+       return $platinum;
+   }
     public static function Get_SpecilastName($specialist_id)
     {
         if ($specialist_id) {

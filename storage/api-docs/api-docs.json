@@ -1595,6 +1595,513 @@
                     }
                 }
             }
+        },
+        "/api/user/get_doctor_bycategory/{category_id}": {
+            "get": {
+                "tags": [
+                    "Doctor"
+                ],
+                "summary": "Get doctors by specialist category",
+                "description": "Fetches a paginated list of doctors by category ID with hospital, city, and state details.",
+                "operationId": "getDoctorsBySpecialistCategory",
+                "parameters": [
+                    {
+                        "name": "category_id",
+                        "in": "path",
+                        "description": "Category ID for which doctors are to be fetched",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Doctors fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Doctors fetched successfully"
+                                                },
+                                                "test_series_image_path": {
+                                                    "type": "string",
+                                                    "example": "storage/doctor/"
+                                                },
+                                                "doctors": {
+                                                    "description": "Paginated list of doctors with related hospital, city, and state info",
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unexpected error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "An unexpected error occurred"
+                                                },
+                                                "error": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/get_doctor_byhospital/{hospital_id}": {
+            "get": {
+                "tags": [
+                    "Doctor"
+                ],
+                "summary": "Get doctors by hospital ID",
+                "description": "Fetches a paginated list of doctors that belong to a specific hospital, including city and state information.",
+                "operationId": "getDoctorsByHospital",
+                "parameters": [
+                    {
+                        "name": "hospital_id",
+                        "in": "path",
+                        "description": "Hospital ID to fetch associated doctors",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Doctors fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Doctors fetched successfully"
+                                                },
+                                                "test_series_image_path": {
+                                                    "type": "string",
+                                                    "example": "storage/doctor/"
+                                                },
+                                                "doctors": {
+                                                    "description": "Paginated list of doctors from the specified hospital",
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unexpected error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "An unexpected error occurred"
+                                                },
+                                                "error": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/get_doctor_bysymptom/{symptom_id}": {
+            "get": {
+                "tags": [
+                    "Doctor"
+                ],
+                "summary": "Get doctors by symptom ID",
+                "description": "Fetches a paginated list of doctors based on a symptom ID. Includes hospital, city, and state information.",
+                "operationId": "getDoctorsBySymptom",
+                "parameters": [
+                    {
+                        "name": "symptom_id",
+                        "in": "path",
+                        "description": "Symptom ID to filter doctors",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Doctors fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Doctors fetched successfully"
+                                                },
+                                                "test_series_image_path": {
+                                                    "type": "string",
+                                                    "example": "storage/doctor/"
+                                                },
+                                                "doctors": {
+                                                    "description": "Paginated list of doctors matching the symptom",
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unexpected error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "An unexpected error occurred"
+                                                },
+                                                "error": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/get_singledoctor_detail/{doctor_id}": {
+            "get": {
+                "tags": [
+                    "Doctor"
+                ],
+                "summary": "Get single doctor details",
+                "description": "Fetches detailed information of a doctor including schedule slots, location, and hospital.",
+                "operationId": "getSingleDoctorDetails",
+                "parameters": [
+                    {
+                        "name": "doctor_id",
+                        "in": "path",
+                        "description": "Doctor ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 12
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Doctor details fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Doctor details fetched successfully"
+                                                },
+                                                "image_path": {
+                                                    "type": "string",
+                                                    "example": "storage/doctor/"
+                                                },
+                                                "doctor": {
+                                                    "description": "Doctor detail object",
+                                                    "type": "object"
+                                                },
+                                                "schedule_list": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "date": {
+                                                                "type": "string",
+                                                                "format": "date",
+                                                                "example": "2025-05-15"
+                                                            },
+                                                            "start_time": {
+                                                                "type": "string",
+                                                                "example": "09:00"
+                                                            },
+                                                            "end_time": {
+                                                                "type": "string",
+                                                                "example": "13:00"
+                                                            },
+                                                            "slot_duration": {
+                                                                "type": "integer",
+                                                                "example": 30
+                                                            },
+                                                            "max_slot": {
+                                                                "type": "integer",
+                                                                "example": 10
+                                                            },
+                                                            "shift": {
+                                                                "type": "string",
+                                                                "example": "Morning"
+                                                            },
+                                                            "status": {
+                                                                "type": "string",
+                                                                "example": "active"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid doctor ID format",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invalid doctor ID format"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Doctor not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Doctor not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unexpected server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "An unexpected error occurred"
+                                                },
+                                                "error": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/get_all_hospitals": {
+            "get": {
+                "tags": [
+                    "Hospital"
+                ],
+                "summary": "Get list of all active hospitals",
+                "description": "Returns a paginated list of hospitals with their details, including state and city names.",
+                "operationId": "getAllHospitals",
+                "parameters": [
+                    {
+                        "name": "doctor_id",
+                        "in": "path",
+                        "description": "Doctor ID (not used in logic, but passed in URL)",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Hospital list fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Hospital fetched successfully"
+                                                },
+                                                "test_series_image_path": {
+                                                    "type": "string",
+                                                    "example": "storage/hospital/"
+                                                },
+                                                "hospital_list": {
+                                                    "description": "Paginated hospital list",
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unexpected error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "An unexpected error occurred"
+                                                },
+                                                "error": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "tags": [
@@ -1617,6 +2124,14 @@
         {
             "name": "Locations",
             "description": "Locations"
+        },
+        {
+            "name": "Doctor",
+            "description": "Doctor"
+        },
+        {
+            "name": "Hospital",
+            "description": "Hospital"
         }
     ],
     "components": {
