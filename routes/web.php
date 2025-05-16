@@ -205,6 +205,8 @@ Route::post('/hospital/doctor/add', [HospitalController::class, 'AddDoctor'])->n
 Route::get('/hospital/doctor/{id?}', [HospitalController::class, 'ShowDoctor'])->name('hospital.doctor');
 Route::get('/hospital/edit/doctor/{id?}', [HospitalController::class, 'NewDoctor'])->name('hospital.edit.doctor');
 Route::post('/hospital/doctor/update', [HospitalController::class, 'UpdateDoctor'])->name('hospital.doctor.update');
+Route::get('/hospital/doctor-schedule/{doctor_id?}', [HospitalController::class, 'DoctorScheduleList'])->name('hospital.doctor-schedule');
+Route::post('/hospital-doctor-slots/generate', [DoctorSlotController::class, 'hospital_generateSlots'])->name('hospital-doctor-slots.generate');
 
 
 /*------------------------------------------

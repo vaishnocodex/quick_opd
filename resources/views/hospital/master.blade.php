@@ -121,7 +121,7 @@
 
 
 
-                     <li class="sidebar-dropdown{{ Route::currentRouteName()=="javascript:void(0)"?"active":"" }}">
+                     {{-- <li class="sidebar-dropdown{{ Route::currentRouteName()=="javascript:void(0)"?"active":"" }}">
                             <a href="javascript:void(0)">
                                 <i class="icon-users"></i>
                                 <span class="menu-text">Manage Master </span>
@@ -168,7 +168,7 @@
                                     </li>
                                 </ul>
                             </div>
-                        </li>
+                        </li> --}}
                         <li class="sidebar-dropdown{{ Route::currentRouteName()=="javascript:void(0)"?"active":"" }}">
                             <a href="javascript:void(0)">
                                 <i class="icon-users"></i>
@@ -187,7 +187,7 @@
                             </div>
                         </li>
 
-                        <li class="sidebar-dropdown{{ Route::currentRouteName()=="javascript:void(0)"?"active":"" }}">
+                        {{-- <li class="sidebar-dropdown{{ Route::currentRouteName()=="javascript:void(0)"?"active":"" }}">
                             <a href="javascript:void(0)">
                                 <i class="icon-users"></i>
                                 <span class="menu-text">Ledger </span>
@@ -199,7 +199,7 @@
                                     </li>
                                 </ul>
                             </div>
-                        </li>
+                        </li> --}}
                     </ul>
                 </div>
                 <!-- sidebar menu end -->

@@ -257,4 +257,20 @@ class HospitalController extends Controller
             }
         }
     }
+
+        public function DoctorScheduleList(Request $request){
+
+        $decrypted = Crypt::decrypt($request->doctor_id);
+        $data=DB::table("doctor_slots")->where('doctor_id',$decrypted)->orderBy('date', 'desc')->get();
+        $last_slot=DB::table("doctor_slots")->where('doctor_id',$decrypted)->orderBy('date', 'desc')->first();
+        $future_dates = DB::table("doctor_slots")
+        ->where('doctor_id', $decrypted)
+        ->whereDate('date', '>', now()) // Only future dates
+        ->pluck('date')
+        ->toArray();
+        $doctor_data=DB::table("users")->where('id',$decrypted)->first();
+
+        return view('hospital.schedule.add_doctor_slot', compact('data', 'decrypted','doctor_data','last_slot','future_dates'));
+
+    }
 }
