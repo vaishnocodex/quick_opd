@@ -124,22 +124,22 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Duty Start Time:</label>
-                                    <input type="time" name="start_time" value="{{$last_slot->start_time ?? ""}}"
-                                        class="form-control">
+                                    <input type="time" name="start_time" id="start_time"
+                                        value="{{$last_slot->start_time ?? ""}}" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Duty End Time:</label>
-                                    <input type="time" name="end_time" value="{{$last_slot->end_time ?? ""}}"
-                                        class="form-control">
+                                    <input type="time" name="end_time" id="end_time"
+                                        value="{{$last_slot->end_time ?? ""}}" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Max Bookings:</label>
-                                    <input type="number" name="max_slot" value="{{ $last_slot->max_slot ?? ""}}"
-                                        class="form-control" required>
+                                    <input type="number" name="max_slot" id="max_slot"
+                                        value="{{ $last_slot->max_slot ?? ""}}" class="form-control" required>
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -169,6 +169,8 @@
 
 <script>
     function Add_slot(){
+         $('#id_value').val('');
+    $('#max_slot').val(0);
 
         $('#slotForm')[0].reset();
         $('#slotModal').modal('show');
