@@ -11,8 +11,10 @@ use App\Models\Category;
 use App\Models\State; 
 use App\Models\City;
 use App\Models\Slider;
-
-
+use App\Models\Transaction;
+use App\Models\Cart;
+use App\Models\Order;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
@@ -2172,6 +2174,399 @@ public function get_AllHospital(Request $request)
         ], 500);
       
     }
+}
+/**
+ * @OA\Post(
+ *     path="/api/user/doctor-add-to-cart",
+ *     summary="Add doctor appointment to cart",
+ *     tags={"User"},
+ *     security={{"bearerAuth": {}}},
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             required={"doctor_id", "booking_date"},
+ *             @OA\Property(property="doctor_id", type="integer", example=1, description="Doctor's unique ID"),
+ *             @OA\Property(property="booking_date", type="string", format="date", example="2025-05-20", description="Booking date for the doctor appointment")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Doctor appointment added to cart successfully",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="data", type="object", 
+ *                 @OA\Property(property="message", type="string", example="Doctor appointment added to cart successfully"),
+ *                 @OA\Property(property="cart", type="object", 
+ *                     @OA\Property(property="id", type="integer", example=1),
+ *                     @OA\Property(property="user_id", type="integer", example=1),
+ *                     @OA\Property(property="doctor_id", type="integer", example=1),
+ *                     @OA\Property(property="price", type="number", example=100)
+ *                 )
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=422,
+ *         description="Validation failed",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="data", type="object", 
+ *                 @OA\Property(property="message", type="string", example="Validation failed"),
+ *                 @OA\Property(property="errors", type="object")
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Failed to add to cart",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="data", type="object", 
+ *                 @OA\Property(property="message", type="string", example="Failed to add to cart"),
+ *                 @OA\Property(property="error", type="string", example="Error message here")
+ *             )
+ *         )
+ *     )
+ * )
+ */
+public function DoctoraddToCartAPP(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'doctor_id' => 'required',
+        'booking_date' => 'required|date|after_or_equal:today',
+       
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'status' => false,
+            'data' => [
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ]
+        ], 422);
+     
+    }
+
+    try {
+        $user = $request->user(); // Authenticated user
+
+        $doctor = User::findOrFail($request->doctor_id);
+
+
+    // Cart data (from your form or request)
+    $cartData = [
+        'user_id' => $user->id,
+        'hospital_id' => $doctor->user_id,
+        'doctor_id' => $request->doctor_id,
+        'p_name' => $doctor->name,
+        'booking_date' => $request->booking_date,
+        'qty' => '1',
+        'price' => $doctor->price,
+        'gst' => '0',
+        'total' => $doctor->price,
+        'type' => 'doctor',
+        'created_at' => now(),
+    ];
+        // Insert the data into the cart table
+        $cart = Cart::create($cartData);
+        
+        return response()->json([
+            'status' => true,
+            'data' => [
+               'message' => 'Doctor appointment added to cart successfully',
+               'cart' => $cart
+            ]
+        ], 200);
+     
+
+    } catch (\Exception $e) {
+
+        return response()->json([
+            'status' => false,
+            'data' => [
+                'message' => 'Failed to add to cart',
+                'error' => $e->getMessage()
+            ]
+        ], 500);
+     
+    }
+}
+
+/**
+ * @OA\Post(
+ *     path="/api/user/doctor-order-submit",
+ *     summary="Submit payment for doctor appointment",
+ *     tags={"User"},
+ *     security={{"bearerAuth": {}}},
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             required={"cart_id", "payment_option", "full_name", "gender", "age", "mobile", "email"},
+ *             @OA\Property(property="cart_id", type="integer", example=1, description="Cart ID to submit payment for"),
+ *             @OA\Property(property="payment_option", type="string", enum={"cash", "online"}, example="online", description="Payment option for the appointment"),
+ *             @OA\Property(property="full_name", type="string", example="John Doe", description="Full name of the person making the appointment"),
+ *             @OA\Property(property="father_name", type="string", example="John Senior", description="Father's name (optional)"),
+ *             @OA\Property(property="gender", type="string", enum={"male", "female", "other"}, example="male", description="Gender of the person making the appointment"),
+ *             @OA\Property(property="age", type="integer", example=30, description="Age of the person making the appointment"),
+ *             @OA\Property(property="mobile", type="string", example="1234567890", description="Mobile number of the person making the appointment"),
+ *             @OA\Property(property="email", type="string", example="johndoe@example.com", description="Email of the person making the appointment")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=201,
+ *         description="Order created successfully",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="data", type="object", 
+ *                 @OA\Property(property="message", type="string", example="Order created successfully. Proceed to payment."),
+ *                 @OA\Property(property="order_id", type="integer", example=1),
+ *                 @OA\Property(property="order_number", type="string", example="ORD20250514001"),
+ *                 @OA\Property(property="amount", type="number", example=100),
+ *                 @OA\Property(property="payment_status", type="string", example="pending"),
+ *                 @OA\Property(property="payment_redirect", type="string", example="https://paymentgateway.com/...")
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=422,
+ *         description="Validation failed",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="data", type="object", 
+ *                 @OA\Property(property="message", type="string", example="Validation failed"),
+ *                 @OA\Property(property="errors", type="object")
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=403,
+ *         description="Unauthorized access to cart",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="data", type="object", 
+ *                 @OA\Property(property="message", type="string", example="Unauthorized access to cart.")
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Failed to process order",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="data", type="object", 
+ *                 @OA\Property(property="message", type="string", example="Order processing failed"),
+ *                 @OA\Property(property="error", type="string", example="Error message here")
+ *             )
+ *         )
+ *     )
+ * )
+ */
+public function submitPayment(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'cart_id' => 'required',
+        'payment_option' => 'required|in:cash,online',
+        'full_name' => 'required|string',
+        'father_name' => 'nullable|string',
+        'gender' => 'required|in:male,female,other',
+        'age' => 'required|numeric|min:0',
+        'mobile' => 'required|digits:10',
+        'email' => 'required|email',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'status' => false,
+            'data' => [
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ]
+        ], 422);
+    }
+
+    try {
+        $user = $request->user();
+        $cart = Cart::findOrFail($request->cart_id);
+
+        // Ensure the cart belongs to the authenticated user
+        if ($cart->user_id !== $user->id) {
+            return response()->json([
+                'status' => false,
+                'data' => [
+                    'message' => 'Unauthorized access to cart.'
+                ]
+            ], 403);
+        }
+
+        $order_id = $this->generateUniqueOrderId();
+
+        $orderData = [
+            'user_id' => $user->id,
+            'hospital_id' => $cart->hospital_id,
+            'order_id' => $order_id,
+            'doctor_id' => $cart->doctor_id,
+            'type' => $cart->type,
+            'booking_date' => $cart->booking_date,
+            'time_slot' => $cart->time_slot,
+            'total_amount' => $cart->price,
+            'discount' => 0,
+            'status' => 0,
+            'payment_type' => $request->payment_option,
+            'payment_status' => 'pending',
+            'appointment_for' => $request->appointment_for ?? 'self',
+            'pa_name' => $request->full_name,
+            'father_name' => $request->father_name,
+            'gender' => $request->gender,
+            'age' => $request->age,
+            'contact_no' => $request->mobile,
+            'email' => $request->email,
+        ];
+
+        $order = Order::create($orderData);
+
+        Transaction::create([
+            'hospital_id' => $order->hospital_id,
+            'user_id' => $order->user_id,
+            'order_id' => $order->order_id,
+            'debit' => 0,
+            'credit' => $cart->price,
+            'amount' => $cart->price,
+            'gst' => 0,
+            'type' => $request->payment_option,
+            'remark' => 'Appointment booking',
+            'date' => now()->format('Y-m-d'),
+            'status' => 0,
+        ]);
+
+        $cart->delete();
+
+        $response = [
+            'status' => true,
+            'data' => [
+                'message' => $request->payment_option === 'online'
+                    ? 'Order created successfully. Proceed to payment.'
+                    : 'Appointment booked. Pay at hospital.',
+                'order_id' => $order->id,
+                'order_number' => $order->order_id,
+                'amount' => $order->total_amount,
+                'payment_status' => 'pending',
+            ]
+        ];
+
+        if ($request->payment_option === 'online') {
+            $response['data']['payment_redirect'] = route('payment.gateway', ['order_id' => $order->order_id]);
+        }
+
+        return response()->json($response, 201);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => false,
+            'data' => [
+                'message' => 'Order processing failed',
+                'error' => app()->isProduction() ? 'Something went wrong.' : $e->getMessage()
+            ]
+        ], 500);
+    }
+}
+/**
+ * @OA\Get(
+ *     path="/api/user/get-user-orders",
+ *     summary="Get all orders of the authenticated user",
+ *     tags={"User"},
+ *     security={{"bearerAuth": {}}},
+ *     @OA\Response(
+ *         response=200,
+ *         description="Orders fetched successfully",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="data", type="object",
+ *                 @OA\Property(property="message", type="string", example="Orders fetched successfully"),
+ *                 @OA\Property(property="orders", type="array",
+ *                     @OA\Items(
+ *                         type="object",
+ *                         @OA\Property(property="order_id", type="string", example="ORD123456"),
+ *                         @OA\Property(property="doctor_name", type="string", example="Dr. John Doe"),
+ *                         @OA\Property(property="hospital_name", type="string", example="City Hospital"),
+ *                         @OA\Property(property="booking_date", type="string", format="date", example="2025-05-20"),
+ *                         @OA\Property(property="status", type="integer", example=1),
+ *                         @OA\Property(property="total_amount", type="number", example=100),
+ *                         @OA\Property(property="payment_status", type="string", example="pending"),
+ *                         @OA\Property(property="payment_type", type="string", example="online")
+ *                     )
+ *                 )
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="No orders found for this user",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="data", type="object",
+ *                 @OA\Property(property="message", type="string", example="No orders found for this user"),
+ *                 @OA\Property(property="orders", type="array", example=[])
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Order processing failed",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="data", type="object",
+ *                 @OA\Property(property="message", type="string", example="Order processing failed"),
+ *                 @OA\Property(property="error", type="string", example="Error message here")
+ *             )
+ *         )
+ *     )
+ * )
+ */
+public function getUserOrders(Request $request)
+{
+    try {
+        // Get the authenticated user
+        $user = $request->user();
+
+        // Fetch orders along with hospital and doctor info
+        $orders = Order::getOrdersWithUsers($user->id);
+
+        if ($orders->isEmpty()) {
+            return response()->json([
+                'status' => false,
+                'data' => [
+                    'message' => 'No orders found for this user',
+                    'orders' => []
+                ]
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => true,
+            'data' => [
+                'message' => 'Orders fetched successfully',
+                'orders' => $orders,
+            ]
+        ], 200);
+           
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => false,
+            'data' => [
+                'message' => 'Order processing failed',
+                'error' => app()->isProduction() ? 'Something went wrong.' : $e->getMessage()
+            ]
+        ], 500);
+    }
+}
+protected function generateUniqueOrderId()
+{
+    do {
+        $orderId = 'ORD' . now()->format('Ymd') . strtoupper(Str::random(5));
+    } while (Order::where('order_id', $orderId)->exists());
+
+    return $orderId;
 }
 //end tag
     

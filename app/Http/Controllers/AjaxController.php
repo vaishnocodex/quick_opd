@@ -17,11 +17,13 @@ use backHelper;
 use Log;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\RedirectResponse;
-
+use App\Models\User; 
 
 class AjaxController extends Controller
 {
     //
+
+    
     public function logout(Request $request)
     {
         Auth::logout();

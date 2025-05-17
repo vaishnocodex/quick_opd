@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\PartnerRegOtp;
 use App\Models\Category;
-use App\Models\State; 
+use App\Models\State;
 use App\Models\City;
 use App\Models\Slider;
 use App\Models\DoctorSlot;
@@ -36,26 +36,26 @@ class WebController extends Controller
             'password' => 'required|min:6',
             'agree_terms_and_policy' => 'required',
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json(['status' => 'error', 'errors' => $validator->errors()], 422);
         }
-    
+
         // Get Last 10 Digits of Mobile Number
         $lastTenDigits = substr($request->phone, -10);
-    
+
         // Check if Mobile Number Exists
         $user_check = User::where('mobile_no', $lastTenDigits)->where('type', '0')->first();
         if ($user_check) {
             return response()->json(['status' => false, 'message' => 'Mobile Number already exists']);
         }
-    
+
         // Check if Email Exists
         $user_check = User::where('email', $request->email)->where('type', '0')->first();
         if ($user_check) {
             return response()->json(['status' => false, 'message' => 'Email Address already exists']);
         }
-    
+
         // Create New User
         $user = new User();
         $user->name = $request->name;
@@ -65,10 +65,10 @@ class WebController extends Controller
         $user->password = Hash::make($request->password);
         $user->pass_hint = $request->password;
         $user->save();
-    
+
         // Authenticate User
         Auth::login($user);
-    
+
         // Redirect to Dashboard
         return response()->json([
             'status' => true,
@@ -78,29 +78,42 @@ class WebController extends Controller
     }
     public function login_User_Submit(Request $request)
     {
-       
+
+        // dd($request->all());
+
         // Find the user by mobile number
         if (Auth::check()){
             Auth::logout();
 
         }
-        $user = User::where('mobile_no', $request->username)->where('type','0')->first();
+        // $user = User::where('mobile_no', $request->username)->where('type','0')->first();
+        // if (!$user) {
+        //     return redirect()->route('login.user')->with('error', 'User not found.');
+        // }
+        // if (!Hash::check($request->password, $user->password)) {
+        //     return redirect()->route('login.user')->with('error', 'Incorrect password.');
+        // }
 
-        if (!$user) {
-            return redirect()->route('login.user')->with('error', 'User not found.');
-        }
+           $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
 
-        if (!Hash::check($request->password, $user->password)) {
-            return redirect()->route('login.user')->with('error', 'Incorrect password.');
-        }
+    $user = User::where('email', $request->email)->first();
+
+    if (!$user || !Hash::check($request->password, $user->password)) {
+        return redirect()->route('login.user')->with('error', 'Incorrect email or password.');
+    }
+
+
 
         // Log in the user manually
         Auth::login($user);
-      
+
         //return redirect()->intended('welcome');
         // Retrieve intended URL or default to home
         $redirectTo = session('url.intended', route('welcome'));
-      
+
         // Clear session value
         session()->forget('url.intended');
 
@@ -110,79 +123,79 @@ class WebController extends Controller
             : redirect()->route('welcome');
     }
 
-    public function User_Login(Request $request)  
-    {  
-      
+    public function User_Login(Request $request)
+    {
+
           $arr['category'] =  Category::where('status', '1')->where('parent', '0')->where('type', 'category')->get();
-        
+
             return view('website.user_login')->with($arr);
-    
+
     }
-    public function User_Register(Request $request)  
-    {  
-      
+    public function User_Register(Request $request)
+    {
+
           $arr['category'] =  Category::where('status', '1')->where('parent', '0')->where('type', 'category')->get();
-        
+
             return view('website.register_user')->with($arr);
-    
+
     }
-    public function Home_View(Request $request)  
-    {  
-      
+    public function Home_View(Request $request)
+    {
+
           $arr['category'] =  Category::where('status', '1')->where('parent', '0')->where('type', 'category')->get();
            $arr['symptom']  = Category::where('status', '1')->where('parent', '0')->where('type', 'symptom')->get();
 
            $arr['states'] = State::select('id', 'name')->where('fcountryid',101)->get();
            $arr['slider'] = Slider::where('status',1)->get();
-           $arr['radiology_category'] = Category::where('status', '1')  
+           $arr['radiology_category'] = Category::where('status', '1')
             ->where('parent', '0')
-            ->where('type', 'radiology')->orderBy('id', 'desc') 
-            ->take(10)  
-            ->get();  
-        
+            ->where('type', 'radiology')->orderBy('id', 'desc')
+            ->take(10)
+            ->get();
+
             return view('website.home')->with($arr);
-    
+
     }
-    public function Radiology_Subcategory(Request $request)  
-    {  
+    public function Radiology_Subcategory(Request $request)
+    {
         $decrypted = Crypt::decrypt($request->id);
         $arr['category'] =  Category::where('status', '1')->where('id', $decrypted)->get();
 
-        $arr['radiology_category'] = Category::where('status', '1')  
+        $arr['radiology_category'] = Category::where('status', '1')
         ->where('parent', $decrypted)
-        ->where('type', 'radiology')->orderBy('id', 'desc') 
-       //->take(10)  
-        ->get(); 
+        ->where('type', 'radiology')->orderBy('id', 'desc')
+       //->take(10)
+        ->get();
            $arr['heading'] = "Subcategory of";
 
             return view('website.radiology_subcat')->with($arr);
-    
+
     }
-    public function Home_View3(Request $request)  
-    {  
-      
+    public function Home_View3(Request $request)
+    {
+
           $arr['category'] =  Category::where('status', '1')->where('parent', '0')->where('type', 'category')->get();
            $arr['symptom']  = Category::where('status', '1')->where('parent', '0')->where('type', 'symptom')->get();
 
            $arr['states'] = State::select('id', 'name')->where('fcountryid',101)->get();
            $arr['slider'] = Slider::where('status',1)->get();
-           $arr['radiology_category'] = Category::where('status', '1')  
+           $arr['radiology_category'] = Category::where('status', '1')
             ->where('parent', '0')
-            ->where('type', 'category')  
-            ->where('is_top', '1')  
-            ->orderBy('id', 'desc') 
-            ->take(10)  
-            ->get();  
-        
+            ->where('type', 'category')
+            ->where('is_top', '1')
+            ->orderBy('id', 'desc')
+            ->take(10)
+            ->get();
+
             return view('website.oldhoe')->with($arr);
-    
+
     }
-    public function All_Hospital(Request $request)  
-    {       
-         
-        
+    public function All_Hospital(Request $request)
+    {
+
+
         $arr['hospital'] = DB::table('users as hospital')
-        
+
         ->leftJoin('city', 'hospital.city', '=', 'city.id')
         ->leftJoin('state', 'hospital.state', '=', 'state.id')
         ->where('hospital.status', '1')
@@ -191,18 +204,18 @@ class WebController extends Controller
             'hospital.*','city.name as city_name','state.name as state_name'
         )
         ->get();
-        
+
           $arr['category'] =  Category::where('status', '1')->where('parent', '0')->where('type', 'category')->get();
            $arr['symptom']  = Category::where('status', '1')->where('parent', '0')->where('type', 'symptom')->get();
 
            $arr['states'] = State::select('id', 'name')->where('fcountryid',101)->get();
            $arr['slider'] = Slider::where('status',1)->get();
             return view('website.all_hospital')->with($arr);
-    
+
     }
 
-    public function All_Specialist_Doctor(Request $request)  
-    {       
+    public function All_Specialist_Doctor(Request $request)
+    {
          $decrypted = Crypt::decrypt($request->id);
          $arr['hospital'] =  User::where('status', '1')->where('type', '3')->get();
           $arr['doctor'] =  User::where('status', '1')->where('type', '4')->get();
@@ -212,11 +225,11 @@ class WebController extends Controller
            $arr['states'] = State::select('id', 'name')->where('fcountryid',101)->get();
            $arr['slider'] = Slider::where('status',1)->get();
             return view('website.all_doctor')->with($arr);
-    
+
     }
 
-    public function AllHospital_Doctor(Request $request)  
-    {       
+    public function AllHospital_Doctor(Request $request)
+    {
          $decrypted = Crypt::decrypt($request->id);
          $arr['hospital'] =  User::where('status', '1')->where('type', '3')->get();
 
@@ -232,19 +245,19 @@ class WebController extends Controller
              'city.name as city_name'
          )
          ->get();
-        
+
           $arr['category'] =  Category::where('status', '1')->where('parent', '0')->where('type', 'category')->get();
            $arr['symptom']  = Category::where('status', '1')->where('parent', '0')->where('type', 'symptom')->get();
 
            $arr['states'] = State::select('id', 'name')->where('fcountryid',101)->get();
            $arr['slider'] = Slider::where('status',1)->get();
             return view('website.all_doctor')->with($arr);
-    
+
     }
 
-    
-    public function SingleDoctorDetail(Request $request)  
-    {       
+
+    public function SingleDoctorDetail(Request $request)
+    {
          $decrypted = Crypt::decrypt($request->id);
          $cdate = Carbon::today()->format('Y-m-d'); // today's date
          $futureDate = Carbon::today()->addDays(6)->format('Y-m-d');
@@ -263,15 +276,15 @@ class WebController extends Controller
          )
          ->first();
          $slots= DoctorSlot::whereBetween('date', [$cdate,$futureDate])->get();
-        
+
          $arr['slots'] =$slots;
           $arr['similar_doctor'] =  User::where('status', '1')->where('type', '4')->get();
             return view('website.doctor_detail')->with($arr);
-    
+
     }
 
-    public function SingleRadiologyDetail(Request $request)  
-    {       
+    public function SingleRadiologyDetail(Request $request)
+    {
          $decrypted = Crypt::decrypt($request->id);
          $cdate = Carbon::today()->format('Y-m-d'); // today's date
          $futureDate = Carbon::today()->addDays(6)->format('Y-m-d');
@@ -290,16 +303,16 @@ class WebController extends Controller
          )
          ->first();
          $slots= DoctorSlot::where('doctor_id',$decrypted)->whereBetween('date', [$cdate,$futureDate])->get();
-        
+
          $arr['slots'] =$slots;
           $arr['similar_doctor'] =  User::where('status', '1')->where('type', '4')->get();
             return view('website.radiology_detail')->with($arr);
-    
+
     }
 
-    public function All_Doctor(Request $request)  
-    {  
-      
+    public function All_Doctor(Request $request)
+    {
+
           $arr['hospital'] =  User::where('status', '1')->where('type', '2')->get();
           $arr['doctor'] = DB::table('users as doctor')
           ->leftJoin('users as hospital', 'doctor.user_id', '=', 'hospital.id')
@@ -320,11 +333,11 @@ class WebController extends Controller
            $arr['heading'] = "All Doctors";
 
             return view('website.all_doctor')->with($arr);
-    
+
     }
-    public function All_Radiology(Request $request)  
-    {  
-      
+    public function All_Radiology(Request $request)
+    {
+
           $arr['hospital'] =  User::where('status', '1')->where('type', '2')->get();
           $arr['radiology'] = DB::table('users as doctor')
           ->leftJoin('users as hospital', 'doctor.user_id', '=', 'hospital.id')
@@ -346,11 +359,11 @@ class WebController extends Controller
            $arr['heading'] = "All Radiology";
 
             return view('website.radiology_list')->with($arr);
-    
+
     }
 
-    public function Radiology_ServiceList(Request $request)  
-    {  
+    public function Radiology_ServiceList(Request $request)
+    {
         $decrypted = Crypt::decrypt($request->id);
         //dd($decrypted);
          $radiology_singlelist=  User::where('id', $decrypted)->where('status', '1')->first();
@@ -372,10 +385,10 @@ class WebController extends Controller
            $arr['heading'] = "All Doctors";
 
             return view('website.radiology_service_list')->with($arr);
-    
+
     }
 
-  // DoctorController.php  
+  // DoctorController.php
 public function checkAvailability(Request $request)
 {
     // Get doctor id and selected date
@@ -390,47 +403,47 @@ public function checkAvailability(Request $request)
             $order_count = Order::where('doctor_id', $doctorId)->where('booking_date', $selectedDate)->count('id');
             $total_bookings_have =$cart_count+$order_count;
             if($total_bookings_have<$total_booking){
-               
+
                 $isAvailable=1;
 
             }else{
                 $isAvailable=0;
 
             }
-              
+
 
         }else{
             $isAvailable=0;
         }
-  
+
     // Return the availability status
     return response()->json(['isAvailable' => $isAvailable]);
 }
-public function CheckoutPage(Request $request)  
-{       
+public function CheckoutPage(Request $request)
+{
      $cartId = Crypt::decrypt($request->id);
 
 
-       
+
         $cart = Cart::findOrFail($cartId);
-        
+
         $arr['doctor'] = User::where('id', $cart->doctor_id)
                            ->where('status', '1')
                            ->where('type', '4')
                            ->firstOrFail();
-        
+
         // You might also want to pass the cart data to the view
         $arr['cart'] = $cart;
      $arr['hospital'] =  User::where('status', '1')->where('type', '2')->get();
-    
+
         return view('website.checkout')->with($arr);
 
 }
 public function addToCart(Request $request)
-{   
-    
+{
+
     $sessionId = Session::get('session_id');
-  
+
     if (!$sessionId) {
         $newId = Str::uuid();
         Session::put('session_id', $newId);
@@ -448,7 +461,7 @@ public function addToCart(Request $request)
     }
     // Check if the user is authenticated
     $userId = Auth::check() ? Auth::user()->id : null;
-   
+
     // Cart data (from your form or request)
     $cartData = [
         'user_id' => $userId,
@@ -466,7 +479,7 @@ public function addToCart(Request $request)
     ];
         // Insert the data into the cart table
         $cart = Cart::create($cartData);
-       
+
         // Redirect to the checkout page with the cart ID
         return redirect()->route('booking.checkout', ['id' => Crypt::encrypt($cart->id)]);
 
@@ -475,7 +488,7 @@ public function addToCart(Request $request)
 }
 
 public function Payment_SubmitPage(Request $request)
-{   
+{
     $cart_id = $request->cart_id;
     $user_id= Auth::user()->id;
     $cart_table = Cart::where('id', $cart_id)->first();
@@ -487,13 +500,13 @@ public function Payment_SubmitPage(Request $request)
     $orderData = [
         'user_id'         => $user_id, // use logged-in user or fallback
         'hospital_id'     => $cart_table->hospital_id,
-        'order_id'       => $order_id, 
-        'doctor_id'       => $cart_table->doctor_id, 
+        'order_id'       => $order_id,
+        'doctor_id'       => $cart_table->doctor_id,
         'type'            => $cart_table->type,
-        'booking_date'    => $cart_table->booking_date, 
-        'time_slot'       => $cart_table->time_slot, 
-        'total_amount'    => $cart_table->price, 
-        'discount'       => '0', 
+        'booking_date'    => $cart_table->booking_date,
+        'time_slot'       => $cart_table->time_slot,
+        'total_amount'    => $cart_table->price,
+        'discount'       => '0',
         'status'          => '0',
         'payment_type'    => $request->payment_option,
         'payment_status'  => 'pending',
@@ -509,7 +522,7 @@ public function Payment_SubmitPage(Request $request)
     $order = Order::create($orderData);
 
     if ($order) {
-        $cdate = date_create()->format('Y-m-d'); 
+        $cdate = date_create()->format('Y-m-d');
             // Insert into transaction table
             Transaction::create([
                 'hospital_id' => $order->hospital_id,
@@ -529,6 +542,9 @@ public function Payment_SubmitPage(Request $request)
         if ($request->payment_option === "cash") {
             return redirect()->route('thank-you')->with('success', 'Appointment booked. Pay at hospital.');
         } else {
+
+
+
             return redirect()->route('payment.gateway', ['order_id' => $order->id]);
         }
     }
@@ -546,5 +562,5 @@ function generateUniqueOrderId()
 
     return $orderId;
 }
- //=======>End page   
+ //=======>End page
 }
