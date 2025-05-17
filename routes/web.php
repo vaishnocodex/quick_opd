@@ -197,9 +197,10 @@ Route::post('/admin/radiology/update', [VendorController::class, 'UpdateHospital
 
 
 //Route::post('/login/admin',[VendorController::class,'loginAdmin'])->name("login.admin");
-
-
 Route::post('/login/hospital',[HospitalController::class,'Login_Hospital'])->name("login.hospital");
+
+
+Route::middleware(['auth', 'user-access:hospital'])->group(function () {
 Route::get('/hospital/new/doctor/{id?}', [HospitalController::class, 'NewDoctor'])->name('hospital.new.doctor');
 Route::post('/hospital/doctor/add', [HospitalController::class, 'AddDoctor'])->name('hospital.doctor.add');
 Route::get('/hospital/doctor/{id?}', [HospitalController::class, 'ShowDoctor'])->name('hospital.doctor');
@@ -209,6 +210,8 @@ Route::get('/hospital/doctor-schedule/{doctor_id?}', [HospitalController::class,
 Route::post('/hospital-doctor-slots/generate', [DoctorSlotController::class, 'hospital_generateSlots'])->name('hospital-doctor-slots.generate');
 Route::get('/hospital/order/list/', [HospitalController::class, 'orders'])->name('hospital.orders.list');
 
+
+});
 
 /*------------------------------------------
 --------------------------------------------
