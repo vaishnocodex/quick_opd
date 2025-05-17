@@ -21,13 +21,10 @@ $staff=backHelper::get_staff($staff_id);
             <div class="card">
                 <div class="card-body">
                     @include('admin.message')
-
-                    <hr>
-                    <div class="row gutters mt-4">
-                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                            <div class="table-container">
-                                <div class="t-header" style="text-align: center; font-size: 18px;">All Appointment</div>
-                                <form method="GET" action="{{ url()->current() }}" id="filterForm">
+                   
+                       <div class="table-container">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                   <form method="GET" action="{{ url()->current() }}" id="filterForm">
                                     <div class="row mb-3">
 
                                         <div class="col-md-4">
@@ -56,8 +53,12 @@ $staff=backHelper::get_staff($staff_id);
                                         </div>
                                     </div>
                                 </form>
+                                </div>
+                            </div>
 
-
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="table-container">
+                                <div class="t-header" style="text-align: center; font-size: 18px;">All Appointment</div>
                                 <div class="table-responsive">
                                     <div id="copy-print-csv_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
 
@@ -143,8 +144,7 @@ $staff=backHelper::get_staff($staff_id);
 
                             </div>
                         </div>
-                    </div>
-
+                  
                 </div>
             </div>
         </div>

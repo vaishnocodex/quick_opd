@@ -209,7 +209,7 @@
                         <li class="sidebar-dropdown {{ Route::currentRouteName() == 'admin.doctor' ? 'active' : '' }}">
                             <a href="javascript:void(0)">
                                 <i class="icon-users"></i>
-                                <span class="menu-text">Appointment</span>
+                                <span class="menu-text">Online Appointment</span>
                             </a>
                             <div class="sidebar-submenu"
                                 style="{{ Route::currentRouteName() == 'admin.doctor' ? 'display: block;' : '' }}">
@@ -223,7 +223,32 @@
                                 </ul>
                             </div>
                         </li>
-
+                        <li class="sidebar-dropdown {{ Route::currentRouteName() == 'admin.doctor' ? 'active' : '' }}">
+                            <a href="javascript:void(0)">
+                                <i class="icon-users"></i>
+                                <span class="menu-text">Offline Appointment</span>
+                            </a>
+                            <div class="sidebar-submenu"
+                                style="{{ Route::currentRouteName() == 'admin.doctor' ? 'display: block;' : '' }}">
+                                <ul>
+                                    <li>
+                                        <a href="{{ route('hospital.orders.list') }}" class="{{ Route::currentRouteName() == 'hospital.orders.list' ? 'current-page' : '' }}">
+                                            Pending Appointment
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('hospital.orders.list') }}" class="{{ Route::currentRouteName() == 'hospital.orders.list' ? 'current-page' : '' }}">
+                                            Approved 
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('hospital.orders.list') }}" class="{{ Route::currentRouteName() == 'hospital.orders.list' ? 'current-page' : '' }}">
+                                            Cancelled 
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
 
                     </ul>
                 </div>
