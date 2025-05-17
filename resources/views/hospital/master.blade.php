@@ -1,12 +1,13 @@
 <!doctype html>
 <html lang="en">
+
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-           @php
-            $firm=backHelper::get_fimddetails();
-            @endphp
+    @php
+    $firm=backHelper::get_fimddetails();
+    @endphp
     <!-- Meta -->
     <meta name="description" content="Admin dashboard">
     <meta name="author" content="ParkerThemes">
@@ -32,8 +33,13 @@
     <link rel="stylesheet" href="{{ asset('backend') }}/vendor/datatables/dataTables.bs4-custom.css">
     <link rel="stylesheet" href="{{ asset('backend') }}/vendor/datatables/buttons.bs.css">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.2/dropzone.css" integrity="sha512-7uSoC3grlnRktCWoO4LjHMjotq8gf9XDFQerPuaph+cqR7JC9XKGdvN+UwZMC14aAaBDItdRj3DcSDs4kMWUgg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.16/css/bootstrap-multiselect.min.css" integrity="sha512-wHTuOcR1pyFeyXVkwg3fhfK46QulKXkLq1kxcEEpjnAPv63B/R49bBqkJHLvoGFq6lvAEKlln2rE1JfIPeQ+iw==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.2/dropzone.css"
+        integrity="sha512-7uSoC3grlnRktCWoO4LjHMjotq8gf9XDFQerPuaph+cqR7JC9XKGdvN+UwZMC14aAaBDItdRj3DcSDs4kMWUgg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.16/css/bootstrap-multiselect.min.css"
+        integrity="sha512-wHTuOcR1pyFeyXVkwg3fhfK46QulKXkLq1kxcEEpjnAPv63B/R49bBqkJHLvoGFq6lvAEKlln2rE1JfIPeQ+iw=="
+        crossorigin="anonymous" />
 
     <style>
         .multiselect-container.dropdown-menu.show {
@@ -56,18 +62,19 @@
 <body>
     <style>
         @media only screen and (max-width: 600px) {
-        .page-wrapper .sidebar-wrapper .sidebar-content {
-            position: relative;
-            height: calc(100% - 187px) !important;
-        }
-        .page-wrapper .sidebar-wrapper{
-            height: 116vh !important;
-        }
-    }
-    .page-wrapper .sidebar-wrapper{
-        height: 100vh ;
-    }
+            .page-wrapper .sidebar-wrapper .sidebar-content {
+                position: relative;
+                height: calc(100% - 187px) !important;
+            }
 
+            .page-wrapper .sidebar-wrapper {
+                height: 116vh !important;
+            }
+        }
+
+        .page-wrapper .sidebar-wrapper {
+            height: 100vh;
+        }
     </style>
 
     <!-- Loading starts -->
@@ -94,34 +101,36 @@
                 <a href="javasript:void(0)" class="logo">{{$firm->name}}</a>
 
                 <div class="profile-actions" style="padding-top: 23px;">
-                <a href="javascript:void(0)" onClick="logoutfrm()" class="red" data-toggle="tooltip" data-placement="top" title="" data-original-title="Logout">
-                    <i class="icon-power1" style="color: red;font-size: 21px;"></i>
-                </a>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                    @csrf
-                  </form>
+                    <a href="javascript:void(0)" onClick="logoutfrm()" class="red" data-toggle="tooltip"
+                        data-placement="top" title="" data-original-title="Logout">
+                        <i class="icon-power1" style="color: red;font-size: 21px;"></i>
+                    </a>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                        @csrf
+                    </form>
                 </div>
             </div>
 
             <!-- Sidebar brand end  -->
-              
+
             <!-- Sidebar content start -->
             <div class="sidebar-content">
 
                 <!-- sidebar menu start -->
                 <div class="sidebar-menu">
                     <ul>
-                        <li class="{{ Route::currentRouteName()=="admin.home"?"active":"" }}">
+                        <li class="{{ Route::currentRouteName()==" admin.home"?"active":"" }}">
                             <a href="{{route('admin.home')}}">
                                 <i class="icon-home2"></i>
                                 <span class="menu-text">Dashboard</span>
                             </a>
 
                         </li>
-                        
-                      
-                   
-                     <li class="sidebar-dropdown{{ Route::currentRouteName()=="javascript:void(0)"?"active":"" }}">
+
+
+
+                        {{-- <li class="sidebar-dropdown{{ Route::currentRouteName()==" javascript:void(0)"?"active":""
+                            }}">
                             <a href="javascript:void(0)">
                                 <i class="icon-users"></i>
                                 <span class="menu-text">Manage Master </span>
@@ -129,21 +138,26 @@
                             <div class="sidebar-submenu">
                                 <ul>
                                     <li>
-                                        <a href="{{ route('admin.category') }}" class="{{ Route::currentRouteName()=="admin.category"?"current-page":"" }}">Add Category </a>
+                                        <a href="{{ route('admin.category') }}" class="{{ Route::currentRouteName()=="
+                                            admin.category"?"current-page":"" }}">Add Category </a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('admin.radiology-category') }}" class="{{ Route::currentRouteName()=="admin.radiology.category"?"current-page":"" }}">Radiology Category </a>
+                                        <a href="{{ route('admin.radiology-category') }}"
+                                            class="{{ Route::currentRouteName()=="
+                                            admin.radiology.category"?"current-page":"" }}">Radiology Category </a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('admin.symptom') }}" class="{{ Route::currentRouteName()=="admin.symptom"?"current-page":"" }}">Add Symptom </a>
+                                        <a href="{{ route('admin.symptom') }}" class="{{ Route::currentRouteName()=="
+                                            admin.symptom"?"current-page":"" }}">Add Symptom </a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('admin.slider') }}" class="{{ Route::currentRouteName()=="admin.slider"?"current-page":"" }}">Add Slider </a>
+                                        <a href="{{ route('admin.slider') }}" class="{{ Route::currentRouteName()=="
+                                            admin.slider"?"current-page":"" }}">Add Slider </a>
                                     </li>
                                 </ul>
                             </div>
-                        </li>  
-                        <li class="sidebar-dropdown{{ Route::currentRouteName()=="javascript:void(0)"?"active":"" }}">
+                        </li>
+                        <li class="sidebar-dropdown{{ Route::currentRouteName()==" javascript:void(0)"?"active":"" }}">
                             <a href="javascript:void(0)">
                                 <i class="icon-users"></i>
                                 <span class="menu-text">Manage Hospital </span>
@@ -151,12 +165,13 @@
                             <div class="sidebar-submenu">
                                 <ul>
                                     <li>
-                                        <a href="{{ route('admin.hospital') }}" class="{{ Route::currentRouteName()=="admin.hospital"?"current-page":"" }}">Add Hospital</a>
+                                        <a href="{{ route('admin.hospital') }}" class="{{ Route::currentRouteName()=="
+                                            admin.hospital"?"current-page":"" }}">Add Hospital</a>
                                     </li>
                                 </ul>
                             </div>
-                        </li>   
-                        <li class="sidebar-dropdown{{ Route::currentRouteName()=="javascript:void(0)"?"active":"" }}">
+                        </li>
+                        <li class="sidebar-dropdown{{ Route::currentRouteName()==" javascript:void(0)"?"active":"" }}">
                             <a href="javascript:void(0)">
                                 <i class="icon-users"></i>
                                 <span class="menu-text">Manage Radiology </span>
@@ -164,12 +179,13 @@
                             <div class="sidebar-submenu">
                                 <ul>
                                     <li>
-                                        <a href="{{ route('admin.radiology') }}" class="{{ Route::currentRouteName()=="admin.hospital"?"current-page":"" }}">Add Radiology</a>
+                                        <a href="{{ route('admin.radiology') }}" class="{{ Route::currentRouteName()=="
+                                            admin.hospital"?"current-page":"" }}">Add Radiology</a>
                                     </li>
                                 </ul>
                             </div>
-                        </li> 
-                        <li class="sidebar-dropdown{{ Route::currentRouteName()=="javascript:void(0)"?"active":"" }}">
+                        </li> --}}
+                        <li class="sidebar-dropdown{{ Route::currentRouteName()==" javascript:void(0)"?"active":"" }}">
                             <a href="javascript:void(0)">
                                 <i class="icon-users"></i>
                                 <span class="menu-text">Manage Doctor </span>
@@ -177,29 +193,38 @@
                             <div class="sidebar-submenu">
                                 <ul>
                                     <li>
-                                        <a href="{{ route('admin.doctor') }}" class="{{ Route::currentRouteName()=="admin.doctor"?"current-page":"" }}">All doctor</a>
+                                        <a href="{{ route('hospital.doctor') }}" class="{{ Route::currentRouteName()=="
+                                            admin.doctor"?"current-page":"" }}">All doctor</a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('admin.new.doctor') }}" class="{{ Route::currentRouteName()=="admin.new.doctor"?"current-page":"" }}">Add doctor</a>
+                                        <a href="{{ route('hospital.new.doctor') }}"
+                                            class="{{ Route::currentRouteName()==" admin.new.doctor"?"current-page":""
+                                            }}">Add doctor</a>
                                     </li>
-                                   
+
                                 </ul>
                             </div>
-                        </li>   
+                        </li>
 
-                        <li class="sidebar-dropdown{{ Route::currentRouteName()=="javascript:void(0)"?"active":"" }}">
+                        <li class="sidebar-dropdown {{ Route::currentRouteName() == 'admin.doctor' ? 'active' : '' }}">
                             <a href="javascript:void(0)">
                                 <i class="icon-users"></i>
-                                <span class="menu-text">Ledger </span>
+                                <span class="menu-text">Appointment</span>
                             </a>
-                             <div class="sidebar-submenu">
+                            <div class="sidebar-submenu"
+                                style="{{ Route::currentRouteName() == 'admin.doctor' ? 'display: block;' : '' }}">
                                 <ul>
                                     <li>
-                                        <a href="#" class="{{ Route::currentRouteName()=="admin.doctor"?"current-page":"" }}">Balance Sheet</a>
+                                        <a href="{{ route('hospital.orders.list') }}"
+                                            class="{{ Route::currentRouteName() == 'hospital.orders.list' ? 'current-page' : '' }}">
+                                            List
+                                        </a>
                                     </li>
                                 </ul>
                             </div>
-                        </li>   
+                        </li>
+
+
                     </ul>
                 </div>
                 <!-- sidebar menu end -->
@@ -224,7 +249,7 @@
                     </a>
                 </div>
                 <div>
-                    <h4>Admin </h4>
+                    <h4>Hospital </h4>
                 </div>
                 <div class="header-items">
                     <!-- Custom search start -->
@@ -236,7 +261,8 @@
 
                         <li class="dropdown user-settings">
                             <a href="javascript:void(0)" id="userSettings" aria-haspopup="true">
-                                <img src="{{ asset('storage/firms/').'/'.$firm->logo }}" style="width: 50px;" class="d-none profile-thumb" alt="User Thumb">
+                                <img src="{{ asset('storage/firms/').'/'.$firm->logo }}" style="width: 50px;"
+                                    class="d-none profile-thumb" alt="User Thumb">
                             </a>
 
                         </li>
@@ -247,7 +273,7 @@
             <!-- Header end -->
 
             <!-- Main container start -->
-                @yield('content')
+            @yield('content')
             <!-- Main container end -->
 
             <!-- Container fluid start -->
@@ -272,11 +298,14 @@
 
     </div>
     <!-- Page wrapper end -->
-   
+
     <script src="{{ asset('backend') }}/js/jquery.min.js"></script>
     <script src="{{ asset('backend') }}/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('backend') }}/js/moment.js"></script>
-    {{--  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.16/js/bootstrap-multiselect.min.js" integrity="sha512-ljeReA8Eplz6P7m1hwWa+XdPmhawNmo9I0/qyZANCCFvZ845anQE+35TuZl9+velym0TKanM2DXVLxSJLLpQWw==" crossorigin="anonymous"></script>  --}}
+    {{-- <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.16/js/bootstrap-multiselect.min.js"
+        integrity="sha512-ljeReA8Eplz6P7m1hwWa+XdPmhawNmo9I0/qyZANCCFvZ845anQE+35TuZl9+velym0TKanM2DXVLxSJLLpQWw=="
+        crossorigin="anonymous"></script> --}}
 
     <!-- *************
 			************ Vendor Js Files *************
@@ -316,28 +345,30 @@
 
     {{-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script> --}}
 
-<!-- Bootstrap Select JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.14/js/bootstrap-select.min.js"></script>
+    <!-- Bootstrap Select JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.14/js/bootstrap-select.min.js"></script>
 
-<script>
-    $(document).ready(function(){
+    <script>
+        $(document).ready(function(){
       $('.selectpicker11').selectpicker();
     });
-  </script>
+    </script>
     <script src="{{ asset('backend') }}/vendor/datatables/buttons.print.min.js"></script>
 
 
     <!-- Main JS -->
     <script src="{{ asset('backend') }}/js/main.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.2/dropzone.js" integrity="sha512-4p9OjnfBk18Aavg91853yEZCA7ywJYcZpFt+YB+p+gLNPFIAlt2zMBGzTxREYh+sHFsttK0CTYephWaY7I3Wbw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.2/dropzone.js"
+        integrity="sha512-4p9OjnfBk18Aavg91853yEZCA7ywJYcZpFt+YB+p+gLNPFIAlt2zMBGzTxREYh+sHFsttK0CTYephWaY7I3Wbw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
         //Dropzone Configuration
       Dropzone.autoDiscover = false;
     </script>
     <script>
-$(function(){
+        $(function(){
     $('.idm').keypress(function(e) {
- 
+
 if(isNaN(this.value+""+String.fromCharCode(e.charCode))) return false;
 })
 .on("cut copy paste",function(e){
@@ -358,7 +389,7 @@ e.preventDefault();
             });
 
 
-            
+
 
 
         });
@@ -366,7 +397,9 @@ e.preventDefault();
 
 
     @include('admin.custom')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.16/js/bootstrap-multiselect.js" integrity="sha512-5EvDL79fM8WJcOk77QpsZ8DawGlSfbOZ/ycRPz0bxRgtiOFEMj8taAoqmm7AR4p2N+A6VBLg/Ar30L8qbPw1pQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.16/js/bootstrap-multiselect.js"
+        integrity="sha512-5EvDL79fM8WJcOk77QpsZ8DawGlSfbOZ/ycRPz0bxRgtiOFEMj8taAoqmm7AR4p2N+A6VBLg/Ar30L8qbPw1pQ=="
+        crossorigin="anonymous"></script>
 </body>
 
 <!-- Mirrored from bootstrap.gallery/tycoon/design-light-version/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 22 Jun 2021 06:08:54 GMT -->
