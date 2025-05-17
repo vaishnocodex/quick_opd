@@ -24,10 +24,10 @@ class VendorController extends Controller
     //
 
 
-  /*category section */ 
+  /*category section */
   public function showRadiologyCat(Request $rest)
   {
-   
+
 
       if($rest->id)
       {
@@ -47,9 +47,9 @@ class VendorController extends Controller
       return view('admin.category')->with($arr);
   }
     public function loginAdmin(Request $request)
-    {   
+    {
         $input = $request->all();
-     
+
         $this->validate($request, [
             'email' => 'required|email',
             'password' => 'required',
@@ -58,11 +58,11 @@ class VendorController extends Controller
        $check_user= User::where('email',$input['email'])->where('type','1')->first();
         if(!$check_user){
             return redirect()->back()->with('error','Email-Address And Password Are Wrong.');
-           
+
 
         }
 
-        
+
 
         if(auth()->attempt(array('email' => $input['email'], 'password' => $input['password'])))
         {
@@ -77,13 +77,13 @@ class VendorController extends Controller
             return redirect()->route('login')
                 ->with('error','Invalid Password.');
         }
-          
+
     }
-   
+
     public function AdminHome()
     {
         return view('admin.home');
-    } 
+    }
 
     //-----------------Radiology CRUD Operation Start
     public function ShowRAdiology(Request $rest){
@@ -111,7 +111,7 @@ class VendorController extends Controller
         //->where('a.user_id', '0')->where('a.status', 1)
         ->orderBy('a.id', 'DESC')
         ->get();
-       
+
         $arr['state_data'] = DB::table('state')->where('fcountryid', 101)->get();
         $arr['category_data'] = DB::table('category')->where('type','radiology')->get();
         $arr['symptom_data'] = DB::table('category')->where('type','symptom')->get();
@@ -130,10 +130,10 @@ class VendorController extends Controller
             'mobile' => 'required|string',
             'password' => 'required',
             'email' => 'required|string',
-           
+
 
         ]);
-        
+
         $checkemail = DB::table('users')->where('email', $rest->email)->where('type','2')->where('hospital_type','radiology')->count();
        if ($checkemail > 0) {
             session()->flash('msgVendor', 'Email Address already exist.');
@@ -151,10 +151,10 @@ class VendorController extends Controller
                 $firmImage = time() . rand(1000000, 9999999) . '.' . $rest->image->extension();
                 $rest->image->move(public_path('storage/hospital'), $firmImage);
                 $array['image'] = $firmImage;
-   
+
            }
            $array['category_id'] = $rest->category_id ? implode(',', $rest->category_id) : '';
-         
+
                 $array['password'] = Hash::make($rest->password);
                 $array['pass_hint'] =$rest->password;
                 $array['name'] =$rest->name;
@@ -170,24 +170,24 @@ class VendorController extends Controller
                 $array['type'] ='3';
                 $array['hospital_type'] =$rest->hospital_type;
                  $array['created_at'] = Carbon::now();
-             
-                
+
+
                     $ins=DB::table('users')->insert($array);
-                
+
 
                 if ($ins) {
 
                     session()->flash('msgVendor', 'Radiology Added Successfully.');
-                      
+
                     return redirect()->route('admin.radiology');
                 } else {
 
                 session()->flash('errorVendor', 'Unable to add try after some time .');
-                       
+
                 return redirect()->route('admin.radiology');
                 }
 
-         
+
 
         }
 
@@ -205,7 +205,7 @@ class VendorController extends Controller
             'mobile' => 'required|string',
             'password' => 'required',
             'email' => 'required|string',
-           
+
 
         ]);
         $update_id=$rest->update_id;
@@ -224,7 +224,7 @@ class VendorController extends Controller
                 $firmImage = time() . rand(1000000, 9999999) . '.' . $rest->image->extension();
                 $rest->image->move(public_path('storage/hospital'), $firmImage);
                 $array['image'] = $firmImage;
-   
+
            }
                 $array['category_id'] = $rest->category_id ? implode(',', $rest->category_id) : '';
                 $array['password'] = Hash::make($rest->password);
@@ -239,19 +239,19 @@ class VendorController extends Controller
                 $array['address'] =$rest->address;
                 $array['status'] =1;
                  $array['updated_at'] = Carbon::now();
-               
+
                  $ins = DB::table('users')->where('id', $update_id)->update($array);
-            
+
 
                 if ($ins) {
 
                     session()->flash('msgVendor', 'Radilogy detail Update Successfully.');
-                      
+
                     return redirect()->route('admin.radiology');
                 } else {
 
                 session()->flash('errorVendor', 'Unable to update try after some time .');
-                       
+
                 return redirect()->route('admin.radiology');
                 }
 
@@ -283,7 +283,7 @@ class VendorController extends Controller
         ->where('a.user_id', '0')->where('a.status', 1)
         ->orderBy('a.id', 'DESC')
         ->get();
-       
+
         $arr['state_data'] = DB::table('state')->where('fcountryid', 101)->get();
         $arr['category_data'] = DB::table('category')->where('type','category')->get();
         $arr['symptom_data'] = DB::table('category')->where('type','symptom')->get();
@@ -292,7 +292,7 @@ class VendorController extends Controller
         //dd($staff);
         return view('admin.hospital')->with($arr);
     }
-    
+
     public function AddHospital(Request $rest)
     {
 
@@ -302,10 +302,10 @@ class VendorController extends Controller
             'mobile' => 'required|string',
             'password' => 'required',
             'email' => 'required|string',
-           
+
 
         ]);
-        
+
         $checkemail = DB::table('users')->where('email', $rest->email)->where('type','2')->count();
        if ($checkemail > 0) {
             session()->flash('msgVendor', 'Email Address already exist.');
@@ -323,9 +323,9 @@ class VendorController extends Controller
                 $firmImage = time() . rand(1000000, 9999999) . '.' . $rest->image->extension();
                 $rest->image->move(public_path('storage/hospital'), $firmImage);
                 $array['image'] = $firmImage;
-   
+
            }
-               $array['category_id'] = $rest->category_id ? implode(',', $rest->category_id) : ''; 
+               $array['category_id'] = $rest->category_id ? implode(',', $rest->category_id) : '';
                 $array['password'] = Hash::make($rest->password);
                 $array['pass_hint'] =$rest->password;
                 $array['name'] =$rest->name;
@@ -341,24 +341,24 @@ class VendorController extends Controller
                 $array['type'] ='3';
                 $array['hospital_type'] =$rest->hospital_type;
                  $array['created_at'] = Carbon::now();
-             
-                
+
+
                     $ins=DB::table('users')->insert($array);
-                
+
 
                 if ($ins) {
 
                     session()->flash('msgVendor', 'Hospital Added Successfully.');
-                      
+
                     return redirect()->route('admin.hospital');
                 } else {
 
                 session()->flash('errorVendor', 'Unable to add try after some time .');
-                       
+
                 return redirect()->route('admin.hospital');
                 }
 
-         
+
 
         }
 
@@ -376,7 +376,7 @@ class VendorController extends Controller
             'mobile' => 'required|string',
             'password' => 'required',
             'email' => 'required|string',
-           
+
 
         ]);
         $update_id=$rest->update_id;
@@ -395,9 +395,9 @@ class VendorController extends Controller
                 $firmImage = time() . rand(1000000, 9999999) . '.' . $rest->image->extension();
                 $rest->image->move(public_path('storage/hospital'), $firmImage);
                 $array['image'] = $firmImage;
-   
+
            }
-                $array['category_id'] = $rest->category_id ? implode(',', $rest->category_id) : ''; 
+                $array['category_id'] = $rest->category_id ? implode(',', $rest->category_id) : '';
                 $array['password'] = Hash::make($rest->password);
                 $array['pass_hint'] =$rest->password;
                 $array['name'] =$rest->name;
@@ -410,19 +410,19 @@ class VendorController extends Controller
                 $array['address'] =$rest->address;
                 $array['status'] =1;
                  $array['updated_at'] = Carbon::now();
-               
+
                  $ins = DB::table('users')->where('id', $update_id)->update($array);
-            
+
 
                 if ($ins) {
 
                     session()->flash('msgVendor', 'Hospital detail Update Successfully.');
-                      
+
                     return redirect()->route('admin.hospital');
                 } else {
 
                 session()->flash('errorVendor', 'Unable to update try after some time .');
-                       
+
                 return redirect()->route('admin.hospital');
                 }
 
@@ -437,7 +437,7 @@ class VendorController extends Controller
             'mobile' => 'required|string',
             'password' => 'required',
             'email' => 'required|string',
-           
+
 
         ]);
         $decrypted = Crypt::decrypt($rest->id);
@@ -446,7 +446,7 @@ class VendorController extends Controller
             session()->flash('msgVendor', 'This Mobile No. already exist.');
             return redirect()->route('admin.hospital');
         }else{
-            
+
                 $array['password'] = Hash::make($rest->password);
                 $array['pass_hint'] =$rest->password;
                 $array['name'] =$rest->name;
@@ -461,23 +461,23 @@ class VendorController extends Controller
                 $array['role_id'] ='2';
                 $array['type'] ='2';
                 $array['updated_at'] = Carbon::now();
-               
+
                     $ins = DB::table('users')->where('id', $decrypted)->update($array);
-               
+
 
                 if ($ins) {
 
                 session()->flash('msgVendor', 'Hospital Updated Successfully.');
-                    
+
                     return redirect()->route('admin.hospital');
                 } else {
 
                     session()->flash('errorVendor', 'Unable to Update try after some time .');
-                  
+
                     return redirect()->route('admin.hospital');
                 }
 
-           
+
 
         }
 
@@ -510,12 +510,12 @@ class VendorController extends Controller
         //->where('a.user_id', '0')->where('a.status', 1)
         ->orderBy('a.id', 'DESC')
         ->get();
-       
+
         $arr['state_data'] = DB::table('state')->where('fcountryid', 101)->get();
         $arr['hospital_data'] = DB::table('users')->where('type', 2)->get();
 
         $arr['All_staff'] = $data;
-       
+
         return view('admin.all_doctor')->with($arr);
     }
     public function NewDoctor(Request $rest){
@@ -543,14 +543,14 @@ class VendorController extends Controller
         //->where('a.user_id', '0')->where('a.status', 1)
         ->orderBy('a.id', 'DESC')
         ->get();
-       
+
         $arr['state_data'] = DB::table('state')->where('fcountryid', 101)->get();
         $arr['hospital_data'] = DB::table('users')->where('type', 2)->get();
         $arr['category_data'] = DB::table('category')->where('type','category')->get();
         $arr['symptom_data'] = DB::table('category')->where('type','symptom')->get();
 
         $arr['All_staff'] = $data;
-       
+
         return view('admin.add_doctor')->with($arr);
     }
     public function AddDoctor(Request $rest)
@@ -562,10 +562,10 @@ class VendorController extends Controller
             'mobile' => 'required|string',
             'password' => 'required',
             'email' => 'required|string',
-           
+
 
         ]);
-        
+
         $checkemail = DB::table('users')->where('email', $rest->email)->where('type','4')->count();
        if ($checkemail > 0) {
             session()->flash('msgVendor', 'Email Address already exist.');
@@ -579,19 +579,19 @@ class VendorController extends Controller
             return redirect()->back()->withInput();
            // return redirect()->route('admin.doctor');
         }else{
-               
+
             if ($rest->image) {
                 $firmImage = time() . rand(1000000, 9999999) . '.' . $rest->image->extension();
                 $rest->image->move(public_path('storage/doctor'), $firmImage);
                 $array['image'] = $firmImage;
-   
+
            }
             $array['user_id'] = $rest->hospital;
             $array['role_id'] ='4';
             $array['type'] ='4';
             $array['category_id'] = $rest->category_id ? implode(',', $rest->category_id) : '';
             $array['symptom_id'] = $rest->symptom_id ? implode(',', $rest->symptom_id) : '';
-        
+
             $array['name'] =$rest->name;
                 $array['mobile_no'] =$rest->mobile;
                 $array['password'] = Hash::make($rest->password);
@@ -599,8 +599,8 @@ class VendorController extends Controller
                 $array['qualification'] =$rest->qualification;
                 $array['experience'] =$rest->experience;
                 $array['description'] =$rest->description;
-                
-               
+
+
                 $array['email'] =$rest->email;
                 $array['state'] =$rest->state;
                 $array['city'] =$rest->city;
@@ -608,24 +608,24 @@ class VendorController extends Controller
                 $array['address'] =$rest->address;
                 $array['status'] =1;
                 $array['created_at'] = Carbon::now();
-             
-                
+
+
                     $ins=DB::table('users')->insert($array);
-                
+
 
                 if ($ins) {
 
                     session()->flash('msgVendor', 'doctor Added Successfully.');
-                      
+
                     return redirect()->route('admin.doctor');
                 } else {
 
                 session()->flash('errorVendor', 'Unable to add try after some time .');
-                       
+
                 return redirect()->route('admin.doctor');
                 }
 
-         
+
 
         }
 
@@ -643,10 +643,10 @@ class VendorController extends Controller
             'mobile' => 'required|string',
             'password' => 'required',
             'email' => 'required|string',
-           
+
 
         ]);
-        
+
         $update_id=$rest->update_id;
         $checkemail = DB::table('users')->where('id','!=', $update_id)->where('email', $rest->email)->where('type','4')->count();
        if ($checkemail > 0) {
@@ -659,12 +659,12 @@ class VendorController extends Controller
             session()->flash('msgVendor', 'This Mobile No. already exist.');
             return redirect()->back();
         }else{
-               
+
             if ($rest->image) {
                 $firmImage = time() . rand(1000000, 9999999) . '.' . $rest->image->extension();
                 $rest->image->move(public_path('storage/doctor'), $firmImage);
                 $array['image'] = $firmImage;
-   
+
            }
             $array['user_id'] = $rest->hospital;
             $array['category_id'] = $rest->category_id ? implode(',', $rest->category_id) : '';
@@ -683,27 +683,27 @@ class VendorController extends Controller
                 $array['description'] =$rest->description;
                 $array['status'] =1;
                 $array['updated_at'] = Carbon::now();
-                  
+
                     $ins = DB::table('users')->where('id', $update_id)->update($array);
 
                 if ($ins) {
 
                     session()->flash('msgVendor', 'doctor detail update Successfully.');
-                      
+
                     return redirect()->route('admin.doctor');
                 } else {
 
                 session()->flash('errorVendor', 'Unable to update try after some time .');
-                       
+
                 return redirect()->route('admin.doctor');
                 }
 
-         
+
 
         }
 
     }
-     
+
        public function showSymptom(Request $rest)
        {
            if($rest->id)
@@ -718,7 +718,7 @@ class VendorController extends Controller
            $arr['catall'] = $cats;
            $arr['heading_title'] = 'Symptom';
            $arr['cat_type'] = 'symptom';
-   
+
            return view('admin.category')->with($arr);
        }
        public function showCategory(Request $rest)
@@ -746,7 +746,7 @@ class VendorController extends Controller
            ]);
            try {
                $decrypted = Crypt::decrypt($id);
-   
+
                $array = $request->except(['_token','parent']);
                if ($request->image) {
                    $categoryImage = time() . rand(1000, 9999) . '.' . $request->image->extension();
@@ -761,7 +761,7 @@ class VendorController extends Controller
                {
                    $array['parent']=0;
                }
-   
+
                $upd = DB::table('category')->where('id', $decrypted)->update($array);
                if ($upd) {
                    session()->flash('msgVendor', 'Catgeory Updated Successfully .');
@@ -771,7 +771,7 @@ class VendorController extends Controller
                    return redirect()->route('admin.category.edit', ['id' => $id]);
                }
            } catch (Exception $e) {
-   
+
                session()->flash('errorVendor', 'Unable to Update try after some time .');
                return redirect()->route('admin.category.edit', ['id' => $id]);
            }
@@ -796,14 +796,14 @@ class VendorController extends Controller
        {
            $decrypted = Crypt::decrypt($id);
            $get = DB::table('category')->find($decrypted);
-   
-   
+
+
            if ($get->status == 0)
                $status = 1;
            else
                $status = 0;
-   
-   
+
+
            $rslt = DB::table('category')->where('id', $decrypted)->update(['status' => $status]);
            if ($rslt) {
                Session()->flash('msgVendor', 'Status changed successfully');
@@ -815,7 +815,7 @@ class VendorController extends Controller
        }
        public function categorySearch(Request $rest){
         if (!$rest->keyword) {
-           
+
             $cats = DB::table('category')
             ->where('fuserid', Auth::user()->id)
             ->where(['parent'=>0,'status'=>1])
@@ -849,8 +849,8 @@ class VendorController extends Controller
             'image' => 'image',
 
         ]);
-    
-        
+
+
           if ($request->image) {
              $firmImage = time() . rand(1000000, 9999999) . '.' . $request->image->extension();
              $request->image->move(public_path('storage/category'), $firmImage);
@@ -872,7 +872,7 @@ class VendorController extends Controller
             $ins=DB::table('category')->insert($array);
         }
         else{
-            
+
             $ins = DB::table('category')->where('id', $request->id)->update($array);
         }
 
@@ -891,7 +891,7 @@ class VendorController extends Controller
                 else{
                     return redirect()->route('admin.symptom');
                 }
-            
+
         } else {
             if ($request->id=='') {
                 session()->flash('errorVendor', 'Unable to add try after some time .');
@@ -921,21 +921,21 @@ class VendorController extends Controller
         }
     }
 
-  //========================================================================= Slider 
-           
+  //========================================================================= Slider
+
   function showSlider()
   {
 
 
       $arr['slider']=DB::table('slider')->get();
-      
+
       return view('admin.slider',$arr);
-  }     
-         
+  }
+
   function AddSlider(Request $request)
   {
 
-  
+
 
       if ($request->img) {
         $firmImage = time() . rand(1000000, 9999999) . '.' . $request->img->extension();
@@ -950,11 +950,11 @@ class VendorController extends Controller
       session()->flash('msgVendor', 'Slider added successfully.');
       }else{
       session()->flash('errorVendor', 'Unable to Add Please try after some time.');
-          
+
       }
       return redirect()->back();
   }
-  
+
       function DeleteSlider(Request $request)
   {
       try
@@ -964,7 +964,7 @@ class VendorController extends Controller
 
       if($del)
       {
-         
+
            Session()->flash('msgVendor', 'Slider deleted successfully.');
       }
       else
@@ -980,7 +980,7 @@ class VendorController extends Controller
   }
 
 
-  
+
 
 //==========================================================================
 
@@ -1041,7 +1041,7 @@ class VendorController extends Controller
     }
 
     public function DoctorScheduleList(Request $request){
-        
+
         $decrypted = Crypt::decrypt($request->doctor_id);
         $data=DB::table("doctor_slots")->where('doctor_id',$decrypted)->orderBy('date', 'desc')->get();
         $last_slot=DB::table("doctor_slots")->where('doctor_id',$decrypted)->orderBy('date', 'desc')->first();
@@ -1051,7 +1051,6 @@ class VendorController extends Controller
         ->pluck('date')
         ->toArray();
         $doctor_data=DB::table("users")->where('id',$decrypted)->first();
-
 
         return view('admin.add_doctor_slot', compact('data', 'decrypted','doctor_data','last_slot','future_dates'));
 

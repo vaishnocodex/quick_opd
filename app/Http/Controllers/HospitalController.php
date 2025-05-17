@@ -58,6 +58,45 @@ class HospitalController extends Controller
         return view('doctor.home');
     }
 
+    function orders(Request $request)
+    {
+        $doctor_id = request('doctor')??  "";
+        $date = request('date');
+        $orders = DB::table('orders as a')
+            ->where('a.hospital_id', Auth::user()->id)
+            ->when($doctor_id, function ($query, $doctor_id) {
+                $query->where('a.doctor_id', $doctor_id);
+            })
+            ->when($date, fn($q) => $q->whereDate('a.booking_date', $date))
+            ->select([
+                'a.*',
+                'b.name as patient_name',
+                'b.mobile_no as patient_mobile',
+                'b.address as patient_address',
+                'c.name as hospital_name',
+                'c.mobile_no as hospital_mobile',
+                'c.address as hospital_address',
+                'd.name as doctor_name',
+                'd.mobile_no as doctor_mobile',
+                'd.address as doctor_address',
+            ])
+            ->leftJoin('users as b', function ($join) {
+                $join->on('a.user_id', '=', 'b.id')->where('b.type', 0);
+            })
+            ->leftJoin('users as c', function ($join) {
+                $join->on('a.hospital_id', '=', 'c.id')->where('c.type', 3);
+            })
+            ->leftJoin('users as d', function ($join) {
+                $join->on('a.doctor_id', '=', 'd.id')->where('d.type', 4);
+            })
+            ->orderByDesc('a.id')
+            ->get();
+
+        $doctors = DB::table('users')->where('type','4')->where('user_id',Auth::user()->id)->get();
+
+        return view('hospital.order.index', compact('orders','doctors','doctor_id'));
+    }
+
     public function NewDoctor(Request $rest)
     {
         if ($rest->id) {
@@ -258,19 +297,19 @@ class HospitalController extends Controller
         }
     }
 
-        public function DoctorScheduleList(Request $request){
+    public function DoctorScheduleList(Request $request)
+    {
 
         $decrypted = Crypt::decrypt($request->doctor_id);
-        $data=DB::table("doctor_slots")->where('doctor_id',$decrypted)->orderBy('date', 'desc')->get();
-        $last_slot=DB::table("doctor_slots")->where('doctor_id',$decrypted)->orderBy('date', 'desc')->first();
+        $data = DB::table("doctor_slots")->where('doctor_id', $decrypted)->orderBy('date', 'desc')->get();
+        $last_slot = DB::table("doctor_slots")->where('doctor_id', $decrypted)->orderBy('date', 'desc')->first();
         $future_dates = DB::table("doctor_slots")
-        ->where('doctor_id', $decrypted)
-        ->whereDate('date', '>', now()) // Only future dates
-        ->pluck('date')
-        ->toArray();
-        $doctor_data=DB::table("users")->where('id',$decrypted)->first();
+            ->where('doctor_id', $decrypted)
+            ->whereDate('date', '>', now()) // Only future dates
+            ->pluck('date')
+            ->toArray();
+        $doctor_data = DB::table("users")->where('id', $decrypted)->first();
 
-        return view('hospital.schedule.add_doctor_slot', compact('data', 'decrypted','doctor_data','last_slot','future_dates'));
-
+        return view('hospital.schedule.add_doctor_slot', compact('data', 'decrypted', 'doctor_data', 'last_slot', 'future_dates'));
     }
 }

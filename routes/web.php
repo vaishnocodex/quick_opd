@@ -16,12 +16,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 
-Route::post('user/logout', function (Request $request) {
+Route::get('user/logout', function (Request $request) {
   Auth::logout();
 
   $request->session()->invalidate(); // Invalidate the session
   $request->session()->regenerateToken(); // Prevent CSRF attacks
-  return redirect('/user/login'); // Redirect user to login page
+  return redirect('login/user/'); // Redirect user to login page
 })->name('user.logout');
 
 
@@ -207,6 +207,7 @@ Route::get('/hospital/edit/doctor/{id?}', [HospitalController::class, 'NewDoctor
 Route::post('/hospital/doctor/update', [HospitalController::class, 'UpdateDoctor'])->name('hospital.doctor.update');
 Route::get('/hospital/doctor-schedule/{doctor_id?}', [HospitalController::class, 'DoctorScheduleList'])->name('hospital.doctor-schedule');
 Route::post('/hospital-doctor-slots/generate', [DoctorSlotController::class, 'hospital_generateSlots'])->name('hospital-doctor-slots.generate');
+Route::get('/hospital/order/list/', [HospitalController::class, 'orders'])->name('hospital.orders.list');
 
 
 /*------------------------------------------

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\PartnerRegOtp;
 use App\Models\Category;
-use App\Models\State; 
+use App\Models\State;
 use App\Models\City;
 use App\Models\Slider;
 use Illuminate\Support\Str;
@@ -17,6 +17,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+
 
 
 class WebUserController extends Controller
@@ -25,18 +27,45 @@ class WebUserController extends Controller
 
 
 
-    public function UserDashboard(Request $request)  
-    {       
-        
-           $arr['hospital'] =  User::where('status', '1')->where('type', '2')->get();
-           $arr['doctor'] =  User::where('status', '1')->where('type', '3')->get();
-           $arr['category'] =  Category::where('status', '1')->where('parent', '0')->where('type', 'category')->get();
-           $arr['symptom']  = Category::where('status', '1')->where('parent', '0')->where('type', 'symptom')->get();
+    public function UserDashboard(Request $request)
+    {
 
-           $arr['states'] = State::select('id', 'name')->where('fcountryid',101)->get();
-           $arr['slider'] = Slider::where('status',1)->get();
-            return view('website.user.dashboard')->with($arr);
-    
+        $arr['hospital'] =  User::where('status', '1')->where('type', '2')->get();
+        $arr['doctor'] =  User::where('status', '1')->where('type', '3')->get();
+        $arr['category'] =  Category::where('status', '1')->where('parent', '0')->where('type', 'category')->get();
+        $arr['symptom']  = Category::where('status', '1')->where('parent', '0')->where('type', 'symptom')->get();
+        $arr['states'] = State::select('id', 'name')->where('fcountryid', 101)->get();
+        $arr['slider'] = Slider::where('status', 1)->get();
+
+
+
+       $arr['orders'] = DB::table('orders as a')
+       ->where('a.user_id', Auth::user()->id)
+       ->select([
+        'a.*',
+        'b.name as patient_name',
+        'b.mobile_no as patient_mobile',
+        'b.address as patient_address',
+        'c.name as hospital_name',
+        'c.mobile_no as hospital_mobile',
+        'c.address as hospital_address',
+        'd.name as doctor_name',
+        'd.mobile_no as doctor_mobile',
+        'd.address as doctor_address',
+    ])
+    ->leftJoin('users as b', function ($join) {
+        $join->on('a.user_id', '=', 'b.id')->where('b.type', 0);
+    })
+    ->leftJoin('users as c', function ($join) {
+        $join->on('a.hospital_id', '=', 'c.id')->where('c.type', 3);
+    })
+    ->leftJoin('users as d', function ($join) {
+        $join->on('a.doctor_id', '=', 'd.id')->where('d.type', 4);
+    })
+    ->orderByDesc('a.id')
+    ->get();
+
+        return view('website.user.dashboard')->with($arr);
     }
 
     public function User_Update_Password(Request $request)
