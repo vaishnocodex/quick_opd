@@ -237,7 +237,7 @@ $staff=backHelper::get_staff($staff_id);
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Discount (%):</label>
-                                <input type="number" name="discount" class="form-control" step="0.01" min="0" max="100">
+                                <input type="number" name="discount" value="0" class="form-control" step="0.01" min="0" max="100">
                             </div>
                         </div>
 
@@ -286,7 +286,7 @@ $staff=backHelper::get_staff($staff_id);
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Father's Name:</label>
-                                <input type="text" name="father_name" class="form-control">
+                                <input type="text" name="father_name" class="form-control" required>
                             </div>
                         </div>
 
@@ -324,7 +324,7 @@ $staff=backHelper::get_staff($staff_id);
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Email:</label>
-                                <input type="email" name="email" class="form-control">
+                                <input type="email" name="email" class="form-control" required>
                             </div>
                         </div>
                     </div>
