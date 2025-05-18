@@ -60,7 +60,7 @@ class HospitalController extends Controller
 
     function orders(Request $request)
     {
-        $doctor_id = request('doctor')??  "";
+        $doctor_id = request('doctor') ??  "";
         $date = request('date');
         $orders = DB::table('orders as a')
             ->where('a.hospital_id', Auth::user()->id)
@@ -92,9 +92,11 @@ class HospitalController extends Controller
             ->orderByDesc('a.id')
             ->get();
 
-        $doctors = DB::table('users')->where('type','4')->where('user_id',Auth::user()->id)->get();
+        $doctors = DB::table('users')->where('type', '4')->where('user_id', Auth::user()->id)->get();
+        $patient = DB::table('users')->where('type', '0')->get();
 
-        return view('hospital.order.index', compact('orders','doctors','doctor_id'));
+
+        return view('hospital.order.index', compact('orders', 'doctors', 'doctor_id','patient'));
     }
 
     public function NewDoctor(Request $rest)
@@ -187,6 +189,7 @@ class HospitalController extends Controller
             $array['pincode'] = $rest->pincode;
             $array['address'] = $rest->address;
             $array['status'] = 1;
+            $array['price']  = $rest->price;
             $array['created_at'] = Carbon::now();
             $ins = DB::table('users')->insert($array);
 
@@ -279,6 +282,7 @@ class HospitalController extends Controller
             $array['experience'] = $rest->experience;
             $array['description'] = $rest->description;
             $array['status'] = 1;
+            $array['price']  = $rest->price;
             $array['updated_at'] = Carbon::now();
 
             $ins = DB::table('users')->where('id', $update_id)->update($array);
