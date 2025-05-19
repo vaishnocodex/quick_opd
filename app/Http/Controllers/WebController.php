@@ -200,7 +200,8 @@ class WebController extends Controller
         ->leftJoin('state', 'hospital.state', '=', 'state.id')
         ->where('hospital.status', '1')
         ->where('hospital.type', '3')
-        ->select(
+        ->where('hospital.hospital_type', 'hospital')
+        ->select(   
             'hospital.*','city.name as city_name','state.name as state_name'
         )
         ->get();
@@ -239,6 +240,7 @@ class WebController extends Controller
         // ->where('doctor.id', $decrypted)
          ->where('doctor.status', '1')
          ->where('doctor.type', '4')
+         ->where('hospital.hospital_type', 'hospital')
          ->select(
              'doctor.*',
              'hospital.name as hospital_name',
@@ -288,24 +290,28 @@ class WebController extends Controller
          $decrypted = Crypt::decrypt($request->id);
          $cdate = Carbon::today()->format('Y-m-d'); // today's date
          $futureDate = Carbon::today()->addDays(6)->format('Y-m-d');
-         $arr['hospital'] =  User::where('status', '1')->where('type', '3')->get();
+          $radiology_service=User::where('id', $decrypted)->first();
+
+
+         $arr['hospital'] =  User::where('id', $radiology_service->user_id)->where('type', '3')->get();
 
          $arr['doctor'] = DB::table('users as doctor')
          ->leftJoin('users as hospital', 'doctor.user_id', '=', 'hospital.id')
          ->leftJoin('city', 'doctor.city', '=', 'city.id')
          ->where('doctor.id', $decrypted)
          ->where('doctor.status', '1')
-         ->where('doctor.type', '4')
+         ->where('doctor.type', '5')
          ->select(
              'doctor.*',
              'hospital.name as hospital_name',
              'city.name as city_name'
          )
          ->first();
-         $slots= DoctorSlot::where('doctor_id',$decrypted)->whereBetween('date', [$cdate,$futureDate])->get();
+         $slots= DoctorSlot::where('doctor_id',$radiology_service->user_id)->whereBetween('date', [$cdate,$futureDate])->get();
 
          $arr['slots'] =$slots;
-          $arr['similar_doctor'] =  User::where('status', '1')->where('type', '4')->get();
+         $arr['radiology_service'] =$radiology_service;
+          $arr['similar_doctor'] =  User::where('status', '1')->where('type', '5')->get();
             return view('website.radiology_detail')->with($arr);
 
     }
@@ -372,7 +378,7 @@ class WebController extends Controller
           ->leftJoin('city', 'doctor.city', '=', 'city.id')
           ->where('doctor.user_id', $radiology_singlelist->id)
           ->where('doctor.status', '1')
-          ->where('doctor.type', '4')
+          ->where('doctor.type', '5')
           ->select(
               'doctor.*',
               'hospital.name as hospital_name',
@@ -419,22 +425,64 @@ public function checkAvailability(Request $request)
     // Return the availability status
     return response()->json(['isAvailable' => $isAvailable]);
 }
-public function CheckoutPage(Request $request)
+
+public function check_ServiceAvailability(Request $request)
 {
+    // Get doctor id and selected date
+   
+    $radiology_id = $request->doctor_id;
+    $selectedDate = $request->selected_date;
+   $radiology_singlelist=  User::where('id', $radiology_id)->first();
+
+
+    // Check if the doctor is available on the selected date
+    $getdetail = DoctorSlot::where('doctor_id', $radiology_singlelist->user_id)->where('date', $selectedDate)->where('status','available')->first();
+        if($getdetail){
+          $total_booking=$getdetail->max_slot;
+            $cart_count = Cart::where('doctor_id', $radiology_singlelist->user_id)->where('booking_date', $selectedDate)->count('id');
+            $order_count = Order::where('doctor_id', $radiology_singlelist->user_id)->where('booking_date', $selectedDate)->count('id');
+            $total_bookings_have =$cart_count+$order_count;
+            if($total_bookings_have<$total_booking){
+
+                $isAvailable=1;
+
+            }else{
+                $isAvailable=0;
+
+            }
+
+
+        }else{
+            $isAvailable=0;
+        }
+
+    // Return the availability status
+    return response()->json(['isAvailable' => $isAvailable]);
+}
+public function CheckoutPage(Request $request)
+{ 
      $cartId = Crypt::decrypt($request->id);
 
-
+    
 
         $cart = Cart::findOrFail($cartId);
-
-        $arr['doctor'] = User::where('id', $cart->doctor_id)
+        if($cart->type=='doctor'){
+             $doctor_detail = User::where('id', $cart->doctor_id)
                            ->where('status', '1')
                            ->where('type', '4')
                            ->firstOrFail();
+        }else{
+      $doctor_detail= User::where('id', $cart->doctor_id)
+                                ->where('status', '1')
+                                ->where('type', '5')
+                                ->firstOrFail();
+        }
+       
 
         // You might also want to pass the cart data to the view
+         $arr['doctor'] = $doctor_detail;
         $arr['cart'] = $cart;
-     $arr['hospital'] =  User::where('status', '1')->where('type', '2')->get();
+     $arr['hospital'] =  User::where('id', $doctor_detail->user_id)->where('type', '3')->first();
 
         return view('website.checkout')->with($arr);
 
@@ -487,6 +535,56 @@ public function addToCart(Request $request)
     return redirect()->route('website.checkout');  // Adjust based on your route
 }
 
+
+public function Radiology_AddToCart(Request $request)
+{
+
+    $sessionId = Session::get('session_id');
+
+    if (!$sessionId) {
+        $newId = Str::uuid();
+        Session::put('session_id', $newId);
+    //    return response("Session created: $newId");
+    }
+
+    //return response("Session exists: $sessionId");
+
+
+    $doctor_table =  User::where('id',$request->doctor_id)->where('status', '1')->where('type', '5')->first();
+
+    $check_cart =  Cart::where('session_id', $sessionId)->count('id');
+    if($check_cart){
+        Cart::where('session_id', $sessionId)->delete();
+    }
+    // Check if the user is authenticated
+    $userId = Auth::check() ? Auth::user()->id : null;
+
+    // Cart data (from your form or request)
+    $cartData = [
+        'user_id' => $userId,
+        'session_id' => $sessionId,
+        'p_name' => $doctor_table->name,
+        'hospital_id' => $doctor_table->user_id,
+        'doctor_id' => $doctor_table->id,
+        'booking_date' => $request->attribute_weight_1907920428,
+        'qty' => '1',
+        'price' => $doctor_table->price,
+        'gst' => '0',
+        'total' => $doctor_table->price,
+        'type' => 'radiology',
+        'created_at' => now(),
+    ];
+        // Insert the data into the cart table
+        $cart = Cart::create($cartData);
+
+        // urlRedirect to the checkout page with the cart ID
+       $urlurl=  redirect()->route('booking.checkout', ['id' => Crypt::encrypt($cart->id)]);
+     
+         return $urlurl;
+
+    // Redirect or return response
+    return redirect()->route('website.checkout');  // Adjust based on your route
+}
 public function Payment_SubmitPage(Request $request)
 {
     $cart_id = $request->cart_id;
@@ -544,7 +642,7 @@ public function Payment_SubmitPage(Request $request)
         } else {
 
 
-
+             return redirect()->route('thank-you')->with('success', 'Appointment booked.');
             return redirect()->route('payment.gateway', ['order_id' => $order->id]);
         }
     }
@@ -552,7 +650,70 @@ public function Payment_SubmitPage(Request $request)
     return back()->with('error', 'Something went wrong while processing your order.');
 }
 
+public function RadiologyPayment_SubmitPage(Request $request)
+{
+    $cart_id = $request->cart_id;
+    $user_id= Auth::user()->id;
+    $cart_table = Cart::where('id', $cart_id)->first();
 
+    if (!$cart_table) {
+        return back()->with('error', 'Cart not found');
+    }
+     $order_id= $this->generateUniqueOrderId();
+    $orderData = [
+        'user_id'         => $user_id, // use logged-in user or fallback
+        'hospital_id'     => $cart_table->hospital_id,
+        'order_id'       => $order_id,
+        'doctor_id'       => $cart_table->doctor_id,
+        'type'            => $cart_table->type,
+        'booking_date'    => $cart_table->booking_date,
+        'time_slot'       => $cart_table->time_slot,
+        'total_amount'    => $cart_table->price,
+        'discount'       => '0',
+        'status'          => '0',
+        'payment_type'    => $request->payment_option,
+        'payment_status'  => 'pending',
+        'appointment_for' => 'self',
+        'pa_name'         => $request->full_name,
+        'father_name'     => $request->father_name,
+        'gender'          => $request->gender,
+        'age'             => $request->age,
+        'contact_no'      => $request->mobile,
+        'email'           => $request->email,
+    ];
+
+    $order = Order::create($orderData);
+
+    if ($order) {
+        $cdate = date_create()->format('Y-m-d');
+            // Insert into transaction table
+            Transaction::create([
+                'hospital_id' => $order->hospital_id,
+                'user_id'     => $order->user_id,
+                'order_id'    => $order->order_id,
+                'debit'       => 0,
+                'credit'      => $cart_table->price,
+                'amount'      => $cart_table->price,
+                'gst'         => 0,
+                'type'        => 'radiology',
+                'remark'      => 'radiology booking',
+                'date'        => $cdate,
+                'status'      => 0,
+            ]);
+        Cart::where('id', $cart_id)->delete();
+
+        if ($request->payment_option === "cash") {
+            return redirect()->route('thank-you')->with('success', 'Appointment booked. Pay at hospital.');
+        } else {
+
+         return redirect()->route('thank-you')->with('success', 'Appointment booked.');
+
+            return redirect()->route('payment.gateway', ['order_id' => $order->id]);
+        }
+    }
+
+    return back()->with('error', 'Something went wrong while processing your order.');
+}
 function generateUniqueOrderId()
 {
     do {

@@ -257,58 +257,24 @@
 
                     <div class="logo logo-width-1 d-block d-lg-none">
                         <a href="{{route('welcome')}}">
-                            <img src="{{ asset('website') }}/logo/logo.svg" data-bb-lazy="false" style="max-height: 55px" loading="lazy"
-                                alt="Quick OPD">
+                            <img src="{{ asset('website') }}/logo/logo.svg" data-bb-lazy="false" style="max-height: 55px" loading="lazy" alt="Quick OPD">
                         </a>
                     </div>
 
                     <div class="header-nav d-none d-lg-flex">
-                        <div class="main-categories-wrap d-none d-lg-block">
+                        <div class="d-none">
                             <a class="categories-button-active" href="{{route('welcome')}}">
                                 <span class="fi-rs-apps"></span> <span class="et">Home1 </span> 
                               
                             </a>
-                            {{-- <div class="categories-dropdown-wrap categories-dropdown-active-large font-heading">
-
-                                <div class="d-flex categories-dropdown-inner">
-                                    <ul>
-                                        <li>
-                                            <a href="product-categories/milks-and-dairies.html">
-                                                <img src="{{ asset('website') }}/assets/storage/product-categories/icon-1.png"
-                                                    alt="Milks and Dairies" width="30" height="30">
-                                                Milks and Dairies
-                                            </a>
-                                        </li>
-                                       
-                                    </ul>
-                                    <ul class="end">
-                                        <li>
-                                            <a href="product-categories/wines-drinks.html">
-                                                <img src="{{ asset('website') }}/assets/storage/product-categories/icon-6.png"
-                                                    alt="Wines &amp; Drinks" width="30" height="30">
-                                                Wines &amp; Drinks
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="product-categories/fresh-seafood.html">
-                                                <img src="{{ asset('website') }}/assets/storage/product-categories/icon-7.png" alt="Fresh Seafood"
-                                                    width="30" height="30">
-                                                Fresh Seafood
-                                            </a>
-                                        </li>
-                                     
-                                    </ul>
-
-                                </div>
-                               
-                            </div> --}}
+                        
                         </div>
 
                         <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block font-heading">
                             <nav>
                                 <ul>
-                                    {{-- <li><a href="" class="active" target="_self">
-                                            <i class="fi-rs-home me-1"></i> Home </a> </li> --}}
+                                    <li><a href="{{route('welcome')}}   " class="active" target="_self">
+                                            <i class="fi-rs-home me-1"></i> Home </a> </li>
                                         <li><a href="{{route('all.doctor')}}" target="_self">  All Doctors  </a> </li>
                                         <li><a href="{{route('all.hospital')}}" target="_self">  All Hospitals  </a> </li>
                                 
@@ -457,7 +423,7 @@
                                         loading="lazy" alt="Quick OPD">
                                 </a>
 
-                                <p class="font-lg text-heading">Short content here</p>
+                                <p class="font-lg text-heading">{{$firm_detail->description}}</p>
                             </div>
                             <ul class="contact-infor">
                                 <li>
@@ -478,7 +444,7 @@
                                             </clipPath>
                                         </defs>
                                     </svg>&nbsp;
-                                    <strong>Address:</strong>&nbsp;<span>Test Address</span>
+                                    <strong>Address:</strong>&nbsp;<span>{{$firm_detail->address}}</span>
                                 </li>
                                 <li>
                                     <svg width="17" height="17" viewBox="0 0 17 17" fill="none"
@@ -537,97 +503,59 @@
                     </div>
                     <div class="footer-link-widget col wow animate__animated animate__fadeInUp"
                         data-wow-delay=".3s">
-                        <h4 class="widget-title">Company</h4>
+                     <h4 class="widget-title">Company</h4>
+                    <ul class="footer-list">
+                        <li><a href="#" title="About Us"><span class="menu-title">About Us</span></a></li>
+                        <li><a href="{{route('contact.us')}}" title="Contact Us"><span class="menu-title">Contact Us</span></a></li>
+                        <li><a href="team.html" title="Our Team"><span class="menu-title">Our Team</span></a></li>
+                        <li><a href="careers.html" title="Careers"><span class="menu-title">Careers</span></a></li>
+                    </ul>
+
+                    </div>
+                    <div class="footer-link-widget col wow animate__animated animate__fadeInUp"
+                        data-wow-delay=".3s">
+                        <h4 class="widget-title">Services</h4>
                         <ul class="footer-list mb-sm-5 mb-md-0">
-                            <ul class="footer-list wow fadeIn animated mb-sm-5 mb-md-0">
-                                <li class="">
-                                    <a href="about-us.html" title="About us">
-
-                                        <span class="menu-title">About us</span>
-                                    </a>
-                                </li>
-                                <li class="">
-                                    <a href="#" title="Affiliate">
-
-                                        <span class="menu-title">Affiliate</span>
-                                    </a>
-                                </li>
-                                
-                                <li class="">
-                                    <a href="contact.html" title="Contact us">
-
-                                        <span class="menu-title">Contact us</span>
-                                    </a>
-                                </li>
-                            </ul>
+                         <ul class="footer-list">
+                            <li><a href="{{route('all.doctor')}}" title="Book a Doctor"><span class="menu-title">Book a Doctor</span></a></li>
+                            <li><a href="#" title="Radiology Services"><span class="menu-title">Radiology Services</span></a></li>
+                            <li><a href="health-checkups.html" title="Health Checkups"><span class="menu-title">Health Checkups</span></a></li>
+                            <li><a href="{{route('welcome')}}" title="Home Visit"><span class="menu-title">Home Visit</span></a></li>
+                        </ul>
 
                         </ul>
                     </div>
                     <div class="footer-link-widget col wow animate__animated animate__fadeInUp"
                         data-wow-delay=".3s">
-                        <h4 class="widget-title">Categories</h4>
+                        <h4 class="widget-title">Support</h4>
                         <ul class="footer-list mb-sm-5 mb-md-0">
                             <ul class="footer-list wow fadeIn animated mb-sm-5 mb-md-0">
-                                <li class="">
-                                    <a href="product-categories/milks-and-dairies.html" title="Milks and Dairies">
-
-                                        <span class="menu-title">Cat1</span>
-                                    </a>
-                                </li>
-                                <li class="">
-                                    <a href="product-categories/clothing-beauty.html" title="Clothing &amp; beauty">
-
-                                        <span class="menu-title">Cat1</span>
-                                    </a>
-                                </li>
-                               
-                            </ul>
-
-                        </ul>
-                    </div>
-                    <div class="footer-link-widget col wow animate__animated animate__fadeInUp"
-                        data-wow-delay=".3s">
-                        <h4 class="widget-title">Information</h4>
-                        <ul class="footer-list mb-sm-5 mb-md-0">
-                            <ul class="footer-list wow fadeIn animated mb-sm-5 mb-md-0">
-                                <li class="">
-                                    <a href="contact.html" title="Contact Us">
-
-                                        <span class="menu-title">Contact Us</span>
-                                    </a>
-                                </li>
-                                <li class="">
-                                    <a href="about-us.html" title="About Us">
-
-                                        <span class="menu-title">About Us</span>
-                                    </a>
-                                </li>
+                             <li><a href="faq.html" title="FAQ"><span class="menu-title">FAQ</span></a></li>
                                 <li class="">
                                     <a href="cookie-policy.html" title="Cookie Policy">
-
                                         <span class="menu-title">Cookie Policy</span>
                                     </a>
                                 </li>
                                 <li class="">
-                                    <a href="terms-conditions.html" title="Terms &amp; Conditions">
+                                    <a href="#" title="Terms &amp; Conditions">
 
                                         <span class="menu-title">Terms &amp; Conditions</span>
                                     </a>
                                 </li>
                                 <li class="">
-                                    <a href="returns-exchanges.html" title="Returns &amp; Exchanges">
+                                    <a href="#" title="Returns &amp; Exchanges">
 
                                         <span class="menu-title">Returns &amp; Exchanges</span>
                                     </a>
                                 </li>
                                 <li class="">
-                                    <a href="shipping-delivery.html" title="Shipping &amp; Delivery">
+                                    <a href="#" title="Shipping &amp; Delivery">
 
                                         <span class="menu-title">Shipping &amp; Delivery</span>
                                     </a>
                                 </li>
                                 <li class="">
-                                    <a href="privacy-policy.html" title="Privacy Policy">
+                                    <a href="#" title="Privacy Policy">
 
                                         <span class="menu-title">Privacy Policy</span>
                                     </a>
@@ -666,7 +594,7 @@
                 <div class="col-xl-4 col-lg-6 text-center d-none d-xl-block">
                     <div class="hotline d-lg-inline-flex w-full align-items-center justify-content-center">
                         <img src="{{ asset('website') }}/assets/themes/nest/imgs/theme/icons/phone-call.svg" alt="hotline" />
-                        <p>1900 - 888 <span>24/7 Support Center</span></p>
+                        <p>{{$firm_detail->mobile}} <span>24/7 Support Center</span></p>
                     </div>
                 </div>
                 <div class="col-lg-6 text-end d-none d-md-block col-xl-4">

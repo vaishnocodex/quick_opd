@@ -65,8 +65,16 @@
                                 <div class="product-img-action-wrap">
                                     <div class="product-img product-img-zoom">
                                         <a href="{{ route('doctor.detail', ['id'=>Crypt::encrypt($item->id)]) }}">
-                                            <img class="default-img" src="{{ asset('storage/doctor').'/'.$item->image }}" alt="{{$item->name}}" style="height: 200px;">
-                                            <img class="hover-img" src="{{ asset('storage/doctor').'/'.$item->image }}" alt="{{$item->name}}" style="height: 200px;">
+                                          <img class="default-img" 
+                                            src="{{ file_exists(public_path('storage/doctor/' . $item->image)) && $item->image ? asset('storage/doctor/' . $item->image) : asset('storage/no_image.jpeg') }}" 
+                                            alt="{{ $item->name }}" 
+                                            style="height: 200px;">
+
+                                        <img class="hover-img" 
+                                            src="{{ file_exists(public_path('storage/doctor/' . $item->image)) && $item->image ? asset('storage/doctor/' . $item->image) : asset('storage/no_image.jpeg') }}" 
+                                            alt="{{ $item->name }}" 
+                                            style="height: 200px;">
+
                                         </a>
                                     </div>  
                                    

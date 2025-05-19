@@ -41,7 +41,12 @@
                 </div>
             </div>
         </div>
-        <form method="POST" action="{{route('booking-payment-submit')}}">
+          @if ($cart=='doctor') 
+
+            <form method="POST" action="{{route('booking-payment-submit')}}">
+                @else
+            <form method="POST" action="{{route('radiology-booking-payment-submit')}}">
+            @endif
             @csrf
             <input type="hidden" name="cart_id" value="{{ $cart->id ?? '' }}">
             
@@ -88,7 +93,8 @@
                         <div class="divider-2 mb-30"></div>
         
                         <div class="table-responsive order_table checkout">
-                            <table class="table no-border">
+                            @if ($cart=='doctor')
+                                    <table class="table no-border">
                                 <tbody>
                                     @if(isset($doctor))
                                     <tr>
@@ -108,6 +114,29 @@
                                     @endif
                                 </tbody>
                             </table>
+                            @else
+                                <table class="table no-border">
+                                <tbody>
+                                    @if(isset($doctor))
+                                    <tr>
+                                        <td class="image product-thumbnail">
+                                            <img src="{{ asset('storage/doctor').'/'.$doctor->image }}" alt="{{ $doctor->name }}">
+                                        </td>
+                                        <td>
+                                            <h6 class="w-160 mb-5">
+                                                <a href="#" class="text-heading">{{ $doctor->name }}</a>
+                                            </h6>
+                                            <p class="text-muted">Radiology Name: {{ $hospital->name}}</p>
+                                        </td>
+                                        <td>
+                                            <h4 class="text-brand">₹{{ number_format($doctor->price, 2) }}</h4>
+                                        </td>
+                                    </tr>
+                                    @endif
+                                </tbody>
+                            </table>
+                            @endif
+                        
                         </div>
                     </div>
         

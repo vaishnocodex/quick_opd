@@ -105,7 +105,7 @@
                         data-placement="top" title="" data-original-title="Logout">
                         <i class="icon-power1" style="color: red;font-size: 21px;"></i>
                     </a>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                    <form id="logout-form" action="{{ route('hospital.logout') }}" method="POST" class="d-none">
                         @csrf
                     </form>
                 </div>
@@ -117,6 +117,8 @@
             <div class="sidebar-content">
 
                 <!-- sidebar menu start -->
+                 {{-- ============================Hospital Routes================================== --}}
+                 @if(Auth::guard('hospital')->user()->hospital_type=='hospital')
                 <div class="sidebar-menu">
                     <ul>
                         <li class="{{ Route::currentRouteName()==" admin.home"?"active":"" }}">
@@ -126,65 +128,8 @@
                             </a>
 
                         </li>
-
-
-
-                        {{-- <li class="sidebar-dropdown{{ Route::currentRouteName()==" javascript:void(0)"?"active":""
-                            }}">
-                            <a href="javascript:void(0)">
-                                <i class="icon-users"></i>
-                                <span class="menu-text">Manage Master </span>
-                            </a>
-                            <div class="sidebar-submenu">
-                                <ul>
-                                    <li>
-                                        <a href="{{ route('admin.category') }}" class="{{ Route::currentRouteName()=="
-                                            admin.category"?"current-page":"" }}">Add Category </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ route('admin.radiology-category') }}"
-                                            class="{{ Route::currentRouteName()=="
-                                            admin.radiology.category"?"current-page":"" }}">Radiology Category </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ route('admin.symptom') }}" class="{{ Route::currentRouteName()=="
-                                            admin.symptom"?"current-page":"" }}">Add Symptom </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ route('admin.slider') }}" class="{{ Route::currentRouteName()=="
-                                            admin.slider"?"current-page":"" }}">Add Slider </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li class="sidebar-dropdown{{ Route::currentRouteName()==" javascript:void(0)"?"active":"" }}">
-                            <a href="javascript:void(0)">
-                                <i class="icon-users"></i>
-                                <span class="menu-text">Manage Hospital </span>
-                            </a>
-                            <div class="sidebar-submenu">
-                                <ul>
-                                    <li>
-                                        <a href="{{ route('admin.hospital') }}" class="{{ Route::currentRouteName()=="
-                                            admin.hospital"?"current-page":"" }}">Add Hospital</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li class="sidebar-dropdown{{ Route::currentRouteName()==" javascript:void(0)"?"active":"" }}">
-                            <a href="javascript:void(0)">
-                                <i class="icon-users"></i>
-                                <span class="menu-text">Manage Radiology </span>
-                            </a>
-                            <div class="sidebar-submenu">
-                                <ul>
-                                    <li>
-                                        <a href="{{ route('admin.radiology') }}" class="{{ Route::currentRouteName()=="
-                                            admin.hospital"?"current-page":"" }}">Add Radiology</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li> --}}
+                       
+                      
                         <li class="sidebar-dropdown{{ Route::currentRouteName()==" javascript:void(0)"?"active":"" }}">
                             <a href="javascript:void(0)">
                                 <i class="icon-users"></i>
@@ -252,8 +197,15 @@
 
                     </ul>
                 </div>
+              
                 <!-- sidebar menu end -->
+             {{-- ============================Hospital Routes End================================== --}}
+             {{-- ============================Radiology Routes End================================== --}}
+             @else
+               @include('hospital.radiology_sidebar')
 
+              @endif
+             {{-- ============================Radiology Routes End================================== --}}
             </div>
             <!-- Sidebar content end -->
 
@@ -274,7 +226,7 @@
                     </a>
                 </div>
                 <div>
-                    <h4>Hospital </h4>
+                    <h4>{{Auth::guard('hospital')->user()->hospital_type}}  </h4>
                 </div>
                 <div class="header-items">
                     <!-- Custom search start -->
