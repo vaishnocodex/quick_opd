@@ -58,7 +58,7 @@
            
         </div>
         
-         @php if(Auth::user()->role=='1'){ @endphp 
+         @php if(Auth::guard('admin')->user()->role_id==1){ @endphp 
         <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12">
             
             <div class="info-stats2 customheight">

@@ -149,14 +149,20 @@
                                 </div>
                             </div>
 
-                            <div class="col-xl-8 col-lg-8 col-md-8 col-sm-6 col-12">
-                                <div class="form-group">
-                                    <label for="map">Select Hospital Location <span style="color:red">*</span></label>
-                                    <input type="hidden" id="latitude" name="latitude" value="{{ old('latitude') }}" readonly />
-                                    <input type="hidden" id="longitude" name="longitude" value="{{ old('longitude') }}" readonly />
-                                    <div id="map"></div>
-                                </div>
+                          <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="latitude">Latitude</label>
+                                <input type="text" class="form-control" name="latitude" id="latitude" value="{{ old('latitude') }}" placeholder="Enter Latitude" />
                             </div>
+                        </div>
+
+                        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="longitude">Longitude</label>
+                                <input type="text" class="form-control" name="longitude" id="longitude" value="{{ old('longitude') }}" placeholder="Enter Longitude" />
+                            </div>
+                        </div>
+
 
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                 <button type="submit" class="btn btn-primary">Add Doctor</button>

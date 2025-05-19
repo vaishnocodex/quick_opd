@@ -1,24 +1,31 @@
 <?php
-  
+
 namespace App\Http\Middleware;
-  
+
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserAccess
 {
     /**
      * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next, $userType): Response
+    public function handle(Request $request, Closure $next, $guard, $userType): Response
     {
-        if(auth()->user()->type == $userType){
-            return $next($request);
+        
+        if (!Auth::guard($guard)->check()) {
+            return redirect()->route("{$userType}.login")
+                ->with('error', 'Please login to access this page.');
         }
-          
-        return response()->json(['You do not have permission to access for this page.']);
+      
+        // Logged in but wrong role
+        if (Auth::guard($guard)->user()->type !== $userType) {
+            return redirect()->route("{$userType}.login")
+                ->with('error', 'Please login to access this page.');
+        }
+         return $next($request);
+       // return response()->json(['error' => 'You do not have permission to access this page.'], 403);
     }
 }

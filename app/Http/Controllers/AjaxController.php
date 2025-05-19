@@ -18,11 +18,28 @@ use Log;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\RedirectResponse;
 use App\Models\User; 
+use App\Models\Contact; 
 
 class AjaxController extends Controller
 {
     //
+ public function submit(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'mobile' => 'required',
+            'subject' => 'required',
+            'message' => 'required',
+        ]);
 
+        // Save to database
+        Contact::create($validated);
+
+        
+
+        return back()->with('success', 'Your message has been sent successfully!');
+    }
     
     public function logout(Request $request)
     {
@@ -32,6 +49,17 @@ class AjaxController extends Controller
 
        // return response()->json(['message' => 'Logged out successfully.']);
        return redirect()->route('login.user');
+
+
+    }
+      public function logoutHospital(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+       // return response()->json(['message' => 'Logged out successfully.']);
+       return redirect()->route('hospital.login');
 
 
     }

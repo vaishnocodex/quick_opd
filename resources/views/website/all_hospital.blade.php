@@ -59,7 +59,7 @@
                                 <div class="vendor-img-action-wrap">
                                     <div class="vendor-img">
                                         <a href="{{ route('hospital.all-doctor', ['id'=>Crypt::encrypt($item->id)]) }}">
-                                            <img class="default-img" src="{{ asset('storage/hospital/').'/'.$item->image }}"
+                                            <img class="default-img" src="{{ file_exists(public_path('storage/doctor/' . $item->image)) && $item->image ? asset('storage/hospital/' . $item->image) : asset('storage/no_image.jpeg') }}" alt="{{$item->name}}"
                                                 alt="{{$item->name}}"  />
                                         </a>
                                     </div>
@@ -71,8 +71,8 @@
                                                 <span class="text-muted">Since 2025</span>
                                             </div> --}}
                                             <h4 class="mb-5 text-truncate"><a href="{{ route('hospital.all-doctor', ['id'=>Crypt::encrypt($item->id)]) }}">{{$item->name}}</a></h4>
-                                            <p>(14 Doctors)</p>
-                                            {{-- <div class="product-rate-cover">
+                                            <p>({{backHelper::Get_CountDoctor($item->id)}} Doctors)</p>
+                                            {{-- <div class="product-rate-cover">   
                                                 <div class="product-rate d-inline-block">
                                                     <div class="product-rating" style="width: 57.985611510791%"></div>
                                                 </div>

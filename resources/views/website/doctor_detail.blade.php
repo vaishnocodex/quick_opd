@@ -108,7 +108,8 @@
                                         <div class="product-image-slider">
                                             <figure class="border-radius-10">
                                                 <a href="{{ asset('storage/doctor').'/'.$doctor->image }}">
-                                                    <img src="{{ asset('storage/doctor').'/'.$doctor->image }}" alt="{{$doctor->name}}">
+                                                   <img  src="{{ file_exists(public_path('storage/doctor/' . $doctor->image)) && $doctor->image ? asset('storage/doctor/' . $doctor->image) : asset('storage/no_image.jpeg') }}"
+                                                            alt="{{ $doctor->name }}">
                                                 </a>
                                             </figure>
                                             {{-- <figure class="border-radius-10">
@@ -281,9 +282,10 @@
                                             data-wow-delay="0.1s">
                                             <div class="product-img-action-wrap">
                                                 <div class="product-img product-img-zoom">
-                                                    <a href="{{ route('doctor.detail', ['id'=>Crypt::encrypt($item->id)]) }}">
-                                                        <img class="default-img" src="{{ asset('storage/doctor').'/'.$item->image }}" alt="{{$item->name}}" style="height: 200px;">
-                                                        <img class="hover-img" src="{{ asset('storage/doctor').'/'.$item->image }}" alt="{{$item->name}}" style="height: 200px;">
+                                                     <a href="{{ route('doctor.detail', ['id'=>Crypt::encrypt($item->id)]) }}">
+                                                       <img class="default-img" src="{{ file_exists(public_path('storage/doctor/' . $item->image)) && $item->image ? asset('storage/doctor/' . $item->image) : asset('storage/no_image.jpeg') }}"
+                                                            alt="{{ $item->name }}" style="height: 200px;">
+                                                        <img class="hover-img" src="{{ file_exists(public_path('storage/doctor/' . $item->image)) && $item->image ? asset('storage/doctor/' . $item->image) : asset('storage/no_image.jpeg') }}" alt="{{$item->name}}" style="height: 200px;">
                                                     </a>
                                                 </div>
                                                 <div class="product-badges product-badges-position product-badges-mrg">
