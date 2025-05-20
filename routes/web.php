@@ -19,9 +19,9 @@ use Illuminate\Http\Request;
 Route::get('user/logout', function (Request $request) {
   Auth::logout();
 
-  $request->session()->invalidate(); 
-  $request->session()->regenerateToken(); 
-  return redirect('login/user/'); 
+  $request->session()->invalidate();
+  $request->session()->regenerateToken();
+  return redirect('login/user/');
 })->name('user.logout');
 
 
@@ -115,7 +115,7 @@ Route::middleware(['auth', 'CustomerMiddleware:user'])->group(function () {
   Route::post('/radiology-booking-payment-submit', [WebController::class, 'RadiologyPayment_SubmitPage'])->name('radiology-booking-payment-submit');
   Route::post('/booking-payment-submit', [WebController::class, 'Payment_SubmitPage'])->name('booking-payment-submit');
   Route::get('booking/checkout/{id?}',[WebController::class,'CheckoutPage'])->name('booking.checkout');
-  
+
 
 
     Route::get('home/', [HomeController::class, 'index'])->name('home');
@@ -126,7 +126,7 @@ Route::middleware(['auth', 'CustomerMiddleware:user'])->group(function () {
 
 });
 
-//=========================================================//Doctor routes
+//=========================================================//Doctor routes files
 Route::middleware(['auth', 'user-access:doctor'])->group(function () {
     Route::get('/doctor/home', [DoctorController::class, 'doctorHome'])->name('doctor.home');
     // Route::get('/doctor/profile', [WebUserController::class, 'DoctorProfile'])->name('doctor.profile');
