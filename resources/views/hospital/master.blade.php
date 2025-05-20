@@ -127,64 +127,6 @@
 
                         </li>
 
-
-
-                        {{-- <li class="sidebar-dropdown{{ Route::currentRouteName()==" javascript:void(0)"?"active":""
-                            }}">
-                            <a href="javascript:void(0)">
-                                <i class="icon-users"></i>
-                                <span class="menu-text">Manage Master </span>
-                            </a>
-                            <div class="sidebar-submenu">
-                                <ul>
-                                    <li>
-                                        <a href="{{ route('admin.category') }}" class="{{ Route::currentRouteName()=="
-                                            admin.category"?"current-page":"" }}">Add Category </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ route('admin.radiology-category') }}"
-                                            class="{{ Route::currentRouteName()=="
-                                            admin.radiology.category"?"current-page":"" }}">Radiology Category </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ route('admin.symptom') }}" class="{{ Route::currentRouteName()=="
-                                            admin.symptom"?"current-page":"" }}">Add Symptom </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ route('admin.slider') }}" class="{{ Route::currentRouteName()=="
-                                            admin.slider"?"current-page":"" }}">Add Slider </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li class="sidebar-dropdown{{ Route::currentRouteName()==" javascript:void(0)"?"active":"" }}">
-                            <a href="javascript:void(0)">
-                                <i class="icon-users"></i>
-                                <span class="menu-text">Manage Hospital </span>
-                            </a>
-                            <div class="sidebar-submenu">
-                                <ul>
-                                    <li>
-                                        <a href="{{ route('admin.hospital') }}" class="{{ Route::currentRouteName()=="
-                                            admin.hospital"?"current-page":"" }}">Add Hospital</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li class="sidebar-dropdown{{ Route::currentRouteName()==" javascript:void(0)"?"active":"" }}">
-                            <a href="javascript:void(0)">
-                                <i class="icon-users"></i>
-                                <span class="menu-text">Manage Radiology </span>
-                            </a>
-                            <div class="sidebar-submenu">
-                                <ul>
-                                    <li>
-                                        <a href="{{ route('admin.radiology') }}" class="{{ Route::currentRouteName()=="
-                                            admin.hospital"?"current-page":"" }}">Add Radiology</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li> --}}
                         <li class="sidebar-dropdown{{ Route::currentRouteName()==" javascript:void(0)"?"active":"" }}">
                             <a href="javascript:void(0)">
                                 <i class="icon-users"></i>
@@ -220,6 +162,60 @@
                                             List
                                         </a>
                                     </li>
+                                </ul>
+                            </div>
+                        </li>
+
+                             <li class="sidebar-dropdown {{ Route::currentRouteName() == 'admin.doctor' ? 'active' : '' }}">
+                            <a href="javascript:void(0)">
+                                <i class="icon-users"></i>
+                                <span class="menu-text">Online Appointment</span>
+                            </a>
+                            <div class="sidebar-submenu"
+                                style="{{ Route::currentRouteName() == 'admin.doctor' ? 'display: block;' : '' }}">
+                                <ul>
+                                    <li>
+                                        <a href="{{ route('hospital.orders.list') }}"
+                                            class="{{ Route::currentRouteName() == 'hospital.orders.list' ? 'current-page' : '' }}">
+                                            List
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="sidebar-dropdown {{ Route::currentRouteName() == 'admin.doctor' ? 'active' : '' }}">
+                            <a href="javascript:void(0)">
+                                <i class="icon-users"></i>
+                                <span class="menu-text">Offline Appointment</span>
+                            </a>
+                            <div class="sidebar-submenu"
+                                style="{{ Route::currentRouteName() == 'admin.doctor' ? 'display: block;' : '' }}">
+                                <ul>
+                                    <li>
+                                        <a href="{{ route('hospital.appointment.list', ['type' => 'Pending']) }}" class="{{ Route::currentRouteName() == 'hospital.appointment.list' ? 'current-page' : '' }}">
+                                            Pending Appointment
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('hospital.appointment.list', ['type' => 'Approved']) }}" class="{{ Route::currentRouteName() == 'hospital.appointment.list' ? 'current-page' : '' }}">
+                                            Approved
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('hospital.appointment.list', ['type' => 'Cancelled']) }}" class="{{ Route::currentRouteName() == 'hospital.appointment.list' ? 'current-page' : '' }}">
+                                            Cancelled
+                                        </a>
+                                    </li>
+
+                                      <li>
+                                        <a href="{{ route('hospital.appointment.list', ['type' => 'Completed']) }}" class="{{ Route::currentRouteName() == 'hospital.appointment.list' ? 'current-page' : '' }}">
+                                            Completed
+                                        </a>
+                                    </li>
+
+
+
+
                                 </ul>
                             </div>
                         </li>
