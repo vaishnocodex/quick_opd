@@ -14,6 +14,7 @@ use App\Http\Controllers\HospitalController;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use App\Http\Controllers\AppointmentController;
 
 
 Route::get('user/logout', function (Request $request) {
@@ -210,9 +211,20 @@ Route::get('/hospital/edit/doctor/{id?}', [HospitalController::class, 'NewDoctor
 Route::post('/hospital/doctor/update', [HospitalController::class, 'UpdateDoctor'])->name('hospital.doctor.update');
 Route::get('/hospital/doctor-schedule/{doctor_id?}', [HospitalController::class, 'DoctorScheduleList'])->name('hospital.doctor-schedule');
 Route::post('/hospital-doctor-slots/generate', [DoctorSlotController::class, 'hospital_generateSlots'])->name('hospital-doctor-slots.generate');
-Route::get('/hospital/order/list/', [HospitalController::class, 'orders'])->name('hospital.orders.list');
+Route::get('/hospital/appointment/list/', [HospitalController::class, 'orders'])->name('hospital.appointment.list');
 
 //=====radiology services
+
+
+Route::get('/hospital/appointment/', [HospitalController::class, 'appointment'])->name('hospital.appointment');
+Route::post('/appointment/update-status', [HospitalController::class, 'updateStatus'])->name('appointment.updateStatus');
+
+
+Route::get('/get-doctor-data/{id?}', [AppointmentController::class, 'doctor_data'])->name('get.doctor.data');
+Route::Post('hospital/appointment-create', [AppointmentController::class, 'create'])->name('hospital.appointment.create');
+Route::Post('hospital/patient-store', [AppointmentController::class, 'patient_store'])->name('patient.store');
+
+
 
 //=====radiology services
 Route::get('/radiology/new-service/{id?}', [HospitalController::class, 'NewRService'])->name('radiology.new-service');

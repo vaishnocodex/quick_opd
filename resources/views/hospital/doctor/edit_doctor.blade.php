@@ -48,7 +48,7 @@
 
                                 </div>
                             </div>
-                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label for="image">Image<span style="color: red">*</span></label>
                                      <input type="file" class="form-control" name="image" id="image" placeholder="Enter" @if(!$data->image) required @endif />
@@ -98,6 +98,14 @@
                                         <option value="{{$item->id}}" @if($data->city==$item->id) selected @endif>{{$item->name}}</option>
                                         @endforeach
                                     </select>
+                                </div>
+                            </div>
+
+                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label for="price">Price <span style="color:red">*</span></label>
+                                    <input type="text" required value="{{ number_format($data->price, 2) }}"
+                                        class="form-control" name="price" id="price" placeholder="Enter Price" />
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
