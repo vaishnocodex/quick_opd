@@ -12,7 +12,7 @@ $staff=backHelper::get_staff($staff_id);
     <div class="page-header">
         <!-- Breadcrumb start -->
         <ol class="breadcrumb">
-            <li class="breadcrumb-item">All Appointment</li>
+            <li class="breadcrumb-item">{{ $type_val }} Appointment</li>
         </ol>
         <!-- Breadcrumb end -->
     </div>
@@ -26,9 +26,12 @@ $staff=backHelper::get_staff($staff_id);
                     <div class="row gutters mt-4">
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                             <div class="table-container">
-                                <div class="t-header" style="text-align: center; font-size: 18px;">All Appointment</div>
+                                <div class="t-header" style="text-align: center; font-size: 18px;">{{ $type_val }}
+                                    Appointment</div>
                                 <form method="GET" action="{{ url()->current() }}" id="filterForm">
                                     <div class="row mb-3">
+
+                                        <input type="hidden" name="type" value="{{ $type_val }}">
 
                                         <div class="col-md-4">
                                             <label for="doctorFilter">Filter by Doctor:</label>
@@ -55,17 +58,6 @@ $staff=backHelper::get_staff($staff_id);
                                             <button type="submit" class="btn btn-primary m-0 rounded-0">Filter</button>
                                         </div>
 
-                                        <div class="col-md-4 d-flex align-items-end p-0">
-                                            <button type="button" class="btn btn-primary m-3" onclick="Add_slot()">
-                                                <i class="icon-add"></i> &nbsp;Add Doctor Slot
-                                            </button>
-                                        </div>
-
-                                        <div class="col-md-4 d-flex align-items-end p-0">
-                                            <button type="button" class="btn btn-primary m-3" onclick="Add_Patient()">
-                                                <i class="icon-add"></i> &nbsp;Add Patient
-                                            </button>
-                                        </div>
 
                                     </div>
                                 </form>
@@ -78,40 +70,56 @@ $staff=backHelper::get_staff($staff_id);
                                             <thead>
                                                 <tr>
                                                     <th>Actions</th>
-                                                    <th>Appointment No</th>
+                                                      <th>Appointment No</th>
                                                     <th>Booking Date</th>
                                                     <th>Paitent Details</th>
                                                     <th>Payment Detail</th>
                                                     <th>Status</th>
                                                     <th>Doctor Name</th>
-
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @foreach ($orders as $val)
                                                 <tr>
-                                                    <td>  <a href="#" class="btn btn-sm btn-primary" onclick="edit_appointment(
-        '{{ $val->id }}',
-        '{{ $val->user_id }}',
-        '{{ $val->hospital_id }}',
-        '{{ $val->doctor_id }}',
-        '{{ $val->order_id }}',
-        '{{ $val->type }}',
-        '{{ $val->booking_date }}',
-        '{{ $val->time_slot }}',
-        '{{ $val->total_amount }}',
-        '{{ $val->discount }}',
-        '{{ $val->status }}',
-        '{{ $val->payment_type }}',
-        '{{ $val->payment_status }}',
-        '{{ $val->appointment_for }}',
-        '{{ $val->pa_name }}',
-        '{{ $val->father_name }}',
-        '{{ $val->gender }}',
-        '{{ $val->age }}',
-        '{{ $val->contact_no }}',
-        '{{ $val->email }}'
-   )" data-toggle="modal" data-target="#slotModal">Edit</a></td>
+
+                                                    <td>
+
+                                                        <!-- Approve Button -->
+                                                        @if($type_val == "Pending")
+                                                        <form action="{{ route('appointment.updateStatus') }}"
+                                                            method="POST" style="display:inline;"
+                                                            onsubmit="return confirm('Are you sure you want to approve this appointment?');">
+                                                            @csrf
+                                                            <input type="hidden" name="id" value="{{ $val->id }}">
+                                                            <input type="hidden" name="type" value="approve">
+                                                            <button type="submit"
+                                                                class="btn btn-sm btn-success">Approve</button>
+                                                        </form>
+                                                        @else
+
+                                                         <form action="{{ route('appointment.updateStatus') }}"
+                                                            method="POST" style="display:inline;"
+                                                            onsubmit="return confirm('Are you sure you want to Complete this appointment?');">
+                                                            @csrf
+                                                            <input type="hidden" name="id" value="{{ $val->id }}">
+                                                            <input type="hidden" name="type" value="Complete">
+                                                            <button type="submit"
+                                                                class="btn btn-sm btn-success">Complete</button>
+                                                        </form>
+
+                                                        @endif
+
+                                                        <!-- Cancel Button -->
+                                                        <form action="{{ route('appointment.updateStatus') }}"
+                                                            method="POST" style="display:inline;"
+                                                            onsubmit="return confirm('Are you sure you want to cancel this appointment?');">
+                                                            @csrf
+                                                            <input type="hidden" name="id" value="{{ $val->id }}">
+                                                            <input type="hidden" name="type" value="cancel">
+                                                            <button type="submit"
+                                                                class="btn btn-sm btn-danger">Cancel</button>
+                                                        </form>
+                                                    </td>
                                                     <td>{{ $val->order_id }}</td>
                                                     <td>{{ $val->booking_date }}</td>
 
@@ -143,7 +151,6 @@ $staff=backHelper::get_staff($staff_id);
                                                         @endif
                                                     </td>
                                                     <td>{{ $val->doctor_name }}</td>
-
                                                 </tr>
                                                 @endforeach
                                             </tbody>
@@ -328,7 +335,7 @@ $staff=backHelper::get_staff($staff_id);
 
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Add Appointment </button>
+                    <button type="submit" class="btn btn-primary">Add Slot</button>
                 </div>
             </div>
         </form>
