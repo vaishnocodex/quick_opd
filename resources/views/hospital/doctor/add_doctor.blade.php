@@ -102,6 +102,14 @@
                                 </div>
                             </div>
 
+                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label for="price">Price <span style="color:red">*</span></label>
+                                    <input type="text" required
+                                        class="form-control" name="price" id="price" placeholder="Enter Price" />
+                                </div>
+                            </div>
+
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label for="password">Password <span style="color:red">*</span></label>
