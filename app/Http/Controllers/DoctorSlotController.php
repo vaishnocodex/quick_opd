@@ -190,6 +190,17 @@ class DoctorSlotController extends Controller
             'end_time' => 'required|after:start_time',
             'max_slot' => 'required|integer',
         ]);
+       
+         $existingSlot = DoctorSlot::where('doctor_id', $request->doctor_id)
+        ->where('date', $request->date)
+        ->first();
+
+            if ($existingSlot) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Slot already exists for this doctor on the selected date and time.'
+                ], 409);
+            }
 
         DoctorSlot::create([
             'doctor_id' => $request->doctor_id,
@@ -245,6 +256,44 @@ class DoctorSlotController extends Controller
         }
     }
 
+
+       public function RadiologySchedule(Request $request)
+    {
+
+        $request->validate([
+            'doctor_id' => 'required',
+            'date' => 'required|date',
+            'start_time' => 'required',
+            'end_time' => 'required|after:start_time',
+            'max_slot' => 'required|integer',
+        ]);
+
+        if ($request->id == null) {
+            DoctorSlot::create([
+                'doctor_id' => $request->doctor_id,
+                'date' => $request->date,
+                'start_time' => $request->start_time,
+                'end_time' => $request->end_time,
+                'slot_duration' => '0',
+                'max_slot' => $request->max_slot,
+                'shift' => 'null',
+                'status' => $request->status,
+            ]);
+            return response()->json(['success' => true, 'message' => 'Slots saved successfully!']);
+        } else {
+
+            DoctorSlot::where('id', $request->id)->update([
+                'date'         => $request->date,
+                'start_time'   => $request->start_time,
+                'end_time'     => $request->end_time,
+                'slot_duration' => '0',
+                'max_slot'     => $request->max_slot,
+                'shift'        => 'null',
+                'status'       => $request->status,
+            ]);
+            return response()->json(['success' => true, 'message' => 'Slots Update successfully!']);
+        }
+    }
 
     public function Admin_generateSlots222(Request $request)
     {

@@ -108,7 +108,9 @@
                                         <div class="product-image-slider">
                                             <figure class="border-radius-10">
                                                 <a href="{{ asset('storage/doctor').'/'.$doctor->image }}">
-                                                    <img src="{{ asset('storage/doctor').'/'.$doctor->image }}" alt="{{$doctor->name}}">
+                                                
+                                                    <img  src="{{ file_exists(public_path('storage/doctor/' . $doctor->image)) && $doctor->image ? asset('storage/doctor/' . $doctor->image) : asset('storage/no_image.jpeg') }}"
+                                                            alt="{{ $doctor->name }}">
                                                 </a>
                                             </figure>
                                             {{-- <figure class="border-radius-10">
@@ -159,7 +161,7 @@
      
                                        
 
-                                        <form  action="{{ route('booking.submit') }}" method="POST">
+                                        <form  action="{{ route('radiology-booking.submit') }}" method="POST">
                                             @csrf
                                             <div class="pr_switch_wrap">
                                                 <div class="product-attributes" data-target="haagen-dazs-caramel-cone-ice-cream.html">
@@ -247,10 +249,6 @@
                                         <div class="tab-pane fade show active" id="Description">
                                             <div class="ck-content">
                                                 <p>{{$doctor->description}}</p>
-                                              
-
-                                               
-
                                             </div>
                                             <div class="facebook-comment">
                                                 <div class="fb-comments" data-href="#" data-numposts="5" data-width="100%"></div>
@@ -282,8 +280,9 @@
                                             <div class="product-img-action-wrap">
                                                 <div class="product-img product-img-zoom">
                                                     <a href="{{ route('doctor.detail', ['id'=>Crypt::encrypt($item->id)]) }}">
-                                                        <img class="default-img" src="{{ asset('storage/doctor').'/'.$item->image }}" alt="{{$item->name}}" style="height: 200px;">
-                                                        <img class="hover-img" src="{{ asset('storage/doctor').'/'.$item->image }}" alt="{{$item->name}}" style="height: 200px;">
+                                                       <img class="default-img" src="{{ file_exists(public_path('storage/doctor/' . $item->image)) && $item->image ? asset('storage/doctor/' . $item->image) : asset('storage/no_image.jpeg') }}"
+                                                            alt="{{ $item->name }}" style="height: 200px;">
+                                                        <img class="hover-img" src="{{ file_exists(public_path('storage/doctor/' . $item->image)) && $item->image ? asset('storage/doctor/' . $item->image) : asset('storage/no_image.jpeg') }}" alt="{{$item->name}}" style="height: 200px;">
                                                     </a>
                                                 </div>
                                                 <div class="product-badges product-badges-position product-badges-mrg">
@@ -350,11 +349,11 @@
     // Handle date selection change
     $('input[name="attribute_weight_1907920428"]').on('change', function() {
         var selectedDate = $(this).val();  // Get the selected date
-        var doctorId = '{{ $doctor->id }}';  // Doctor's ID
+        var doctorId = '{{ $radiology_service->id }}';  // Doctor's ID
 
         // AJAX request to check availability
         $.ajax({
-            url: '{{ route("check.availability") }}',  // Route to check availability
+            url: '{{ route("service-check.availability") }}',  // Route to check availability
             method: 'POST',
             data: {
                 _token: '{{ csrf_token() }}',

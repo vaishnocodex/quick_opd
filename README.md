@@ -137,5 +137,14 @@ ALTER TABLE `orders` ADD `pa_name` VARCHAR(200) NULL DEFAULT NULL AFTER `appoint
 ALTER TABLE `orders` ADD `total_amount` DECIMAL NOT NULL AFTER `time_slot`, ADD `discount` DECIMAL NOT NULL DEFAULT '0' AFTER `total_amount`;
 
 
+## change column type in users 18-May-25
+ALTER TABLE `users` CHANGE `email` `email` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, CHANGE `password` `password` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL;
+ALTER TABLE `firmdetails` CHANGE `issinglevendor` `description` TEXT NULL DEFAULT NULL;
+ALTER TABLE `firmdetails` ADD `address` TEXT NULL DEFAULT NULL AFTER `location`;
+
+
+CREATE TABLE `contacts` (`id` INT NOT NULL AUTO_INCREMENT , `name` VARCHAR(400) NULL DEFAULT NULL , `mobile` VARCHAR(90) NULL DEFAULT NULL , `email` VARCHAR(100) NULL DEFAULT NULL , `subject` VARCHAR(300) NULL DEFAULT NULL , `message` TEXT NOT NULL , `status` INT NOT NULL , `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , `updated_at` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+
 
 

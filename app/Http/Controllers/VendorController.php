@@ -63,20 +63,25 @@ class VendorController extends Controller
         }
 
 
-
-        if(auth()->attempt(array('email' => $input['email'], 'password' => $input['password'])))
-        {
-            if (auth()->user()->type == 'admin') {
+        if (Auth::guard('admin')->attempt(['email' => $input['email'], 'password' => $input['password']])) {
+             Auth::shouldUse('admin');
                 return redirect()->route('admin.home');
-            }else if (auth()->user()->type == 'manager') {
-                return redirect()->route('manager.home');
-            }else{
-                return redirect()->route('home');
+            } else {
+                return redirect()->back()->with('error', 'Invalid password.');
             }
-        }else{
-            return redirect()->route('login')
-                ->with('error','Invalid Password.');
-        }
+        // if(auth()->attempt(array('email' => $input['email'], 'password' => $input['password'])))
+        // {
+        //     if (auth()->user()->type == 'admin') {
+        //         return redirect()->route('admin.home');
+        //     }else if (auth()->user()->type == 'manager') {
+        //         return redirect()->route('manager.home');
+        //     }else{
+        //         return redirect()->route('home');
+        //     }
+        // }else{
+        //     return redirect()->route('login')
+        //         ->with('error','Invalid Password.');
+        // }
 
     }
 
@@ -817,7 +822,7 @@ class VendorController extends Controller
         if (!$rest->keyword) {
 
             $cats = DB::table('category')
-            ->where('fuserid', Auth::user()->id)
+            ->where('fuserid', Auth::guard('admin')->user()->id)
             ->where(['parent'=>0,'status'=>1])
             ->get();
 
@@ -829,14 +834,14 @@ class VendorController extends Controller
             $cats = DB::table('category', 'a')
             ->leftJoin('category as b', 'a.parent', '=', 'b.id')
             ->select(['a.*', 'b.name as parentName'])
-            ->where('a.fuserid', Auth::user()->id)
+            ->where('a.fuserid', Auth::guard('admin')->user()->id)
             ->where('a.name','like','%'. $rest->keyword.'%')
             ->get();
             $arr['catall'] = $cats;
             // dd($arr);
 
         }
-        $arr['categories'] = DB::table('category')->where('fuserid', Auth::user()->id)->get();
+        $arr['categories'] = DB::table('category')->where('fuserid', Auth::guard('admin')->user()->id)->get();
         return view('admin.category')->with($arr);
 
     }
@@ -866,7 +871,7 @@ class VendorController extends Controller
         };
         $array['name'] = $request->name;
         $array['type'] = $request->type;
-        $array['fuserid'] = Auth::user()->id;
+        $array['fuserid'] = Auth::guard('admin')->user()->id;
 
         if($request->id==''){
             $ins=DB::table('category')->insert($array);
@@ -913,7 +918,7 @@ class VendorController extends Controller
         try {
             $decrypted = Crypt::decrypt($id);
             $arr['cat'] = DB::table('category')->where('id', $decrypted)->get();
-            $arr['categories'] = DB::table('category')->where('id', '!=', $decrypted)->where('fuserid',Auth::user()->id)->get();
+            $arr['categories'] = DB::table('category')->where('id', '!=', $decrypted)->where('fuserid',Auth::guard('admin')->user()->id)->get();
             return view('admin.categoryEdit')->with($arr);
         } catch (Exception $e) {
             session()->flash('errorVendor', 'Unable to update try after some time .');
