@@ -45,7 +45,17 @@ Route::get('hospital/login', function () {
     return view('auth.hospital');
 })->name('hospital.login');
 
+Route::get('privacy-policy', function(){
+   return view('website.privacy');
+})->name('privacy-policy');
 
+Route::get('faq', function(){
+   return view('website.faq');
+})->name('faq');
+
+Route::get('terms-and-conditions', function(){
+   return view('website.terms');
+})->name('terms-and-conditions');
 Route::get('/thank-you', function () {
   return view('website.thank-you');
 })->name('thank-you');
@@ -140,6 +150,22 @@ Route::middleware(['auth', 'user-access:doctor'])->group(function () {
   //=========================================================//Admin routes
   Route::middleware(['user-access:admin,admin'])->group(function () {
 
+
+    Route::get('admin/profile', function () {
+    return view('admin.profile');
+     })->name('admin.profile');
+  
+
+     //firm  details
+      Route::get('admin/firm-detail',[vendorController::class,'showFirmDetails'])->name('admin.firm-detail');
+      Route::post('admin/firmdetails',[vendorController::class,'updateFirmDetails'])->name('admin.firmdetails.update');
+    //balance sheet
+    Route::get('admin/hospital/balance-sheet', [VendorController::class, 'HospitalLedgerReport'])->name('admin.hospital.balance-sheet');
+    Route::post('/admin/hospital/balance-sheet-filter', [VendorController::class, 'HospitalLedgerReport'])->name('admin.hospital.balance-sheet-filter');
+
+    //admin detail update
+    Route::post('admin/profile-update', [VendorController::class, 'UpdateAdminDetail'])->name('admin.profile-update');
+
     Route::get('/admin/home', [VendorController::class, 'AdminHome'])->name('admin.home');
 
     Route::get('/doctor-slots/fetch', [DoctorSlotController::class, 'fetchSlots']);
@@ -168,6 +194,12 @@ Route::middleware(['auth', 'user-access:doctor'])->group(function () {
     //Route::get('/admin/doctor-schedules/{doctor_id?}', [VendorController::class, 'getDoctorSchedule'])->name('admin.doctor.schedules');
     Route::post('/admin/doctor-schedule-add', [VendorController::class, 'Add_DoctorSchedule'])->name('admin.doctor.schedule-add');
 
+   
+
+    //location update by id
+    Route::get('/admin/hospital-map-location/{id?}', [VendorController::class, 'ShowLocation'])->name('admin.hospital-map-location');
+    Route::post('/admin/update-hospital-map-location', [VendorController::class, 'Update_Hospital_location'])->name('admin.update-hospital-map-location');
+    
     //=======>Admin doctor Slot admin.doctor.slot
 
     Route::get('/admin-doctor-slots', [DoctorSlotController::class, 'AdminDoctor_SlotForm'])->name('admin.doctor.slot');

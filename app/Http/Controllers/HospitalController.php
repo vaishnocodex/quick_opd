@@ -432,6 +432,6 @@ class HospitalController extends Controller
       $decrypted='';
         return view('hospital.schedule.add_schedule', compact('data', 'decrypted', 'doctor_data', 'last_slot', 'future_dates'));
     }
-
+  
     //==>endcode
 }

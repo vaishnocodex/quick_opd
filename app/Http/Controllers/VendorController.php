@@ -85,9 +85,105 @@ class VendorController extends Controller
 
     }
 
+
+     function showFirmDetails()
+    {
+
+
+        $arr['firm']=DB::table('firmdetails')->get()[0];
+        return view('admin.firmdetails',$arr);
+    }
+    function updateFirmDetails(Request $request)
+    {
+
+        if($request->logo)
+        {
+             
+            $firmImage = time() . rand(1000, 9999) . '.' . $request->logo->extension();
+            $request->logo->move(public_path('storage/firms'), $firmImage);
+            $arr['logo']=$firmImage;
+        }
+        //$arr['terms']=$request->terms;
+        $arr['name']=$request->name;
+        $arr['mobile']=$request->mobile;
+        // $arr['location']=$request->location;
+        $arr['address']=$request->address;
+        $arr['timing']=$request->timing;
+        $arr['whatsapp']=$request->whatsapp;
+        $arr['email']=$request->email;
+        $arr['facebook']=$request->facebook;
+        $arr['instagram']=$request->instagram;
+        $arr['youtube']=$request->youtube; 
+        $arr['pmethod']=$request->pmode;
+        //   $arr['about']=$request->about;
+        //$arr['delivery_area']=$request->delivery_area;
+       // $arr['discount_type']=$request->discount_type;
+        //$arr['ridertype']=$request->ridertype;
+        //$arr['amount']=$request->amount;
+        //$arr['longitude']=$request->longitude;
+        //$arr['latitude']=$request->latitude;
+       // $arr['points']=$request->points;
+      
+        // if($request->status=='on')
+        // $arr['status']=1;
+        // else
+        // $arr['status']=0;
+        $upd=DB::table('firmdetails')->update($arr);
+        if($upd)
+        session()->flash('msgVendor', 'Firm details updated successfully.');
+        else
+        session()->flash('errorVendor', 'Unable to update details.');
+        return redirect()->back();
+    }
+
     public function AdminHome()
     {
         return view('admin.home');
+    }
+
+        public function UpdateAdminDetail(Request $rest)
+    {
+
+       
+        $update_id= Auth::guard('admin')->user()->id;
+       
+          
+                $array['category_id'] = $rest->category_id ? implode(',', $rest->category_id) : '';
+
+                if($rest->password){
+                    $array['password'] = Hash::make($rest->password);
+                    $array['pass_hint'] =$rest->password;
+                }
+                 if($rest->email){
+                    $array['email'] =$rest->email;
+                }
+
+                 if($rest->mobile){
+                 $array['mobile_no'] =$rest->phone;
+                 }
+                $array['name'] =$rest->name;
+               
+               
+              
+                 $array['updated_at'] = Carbon::now();
+
+                 $ins = DB::table('users')->where('id', $update_id)->update($array);
+
+
+                if ($ins) {
+
+                    session()->flash('msgVendor', 'Profile detail Update Successfully.');
+
+                    return redirect()->route('admin.profile');  
+                } else {
+
+                session()->flash('errorVendor', 'Unable to update try after some time .');
+
+                return redirect()->route('admin.profile');
+                }
+
+      
+
     }
 
     //-----------------Radiology CRUD Operation Start
@@ -263,7 +359,112 @@ class VendorController extends Controller
         }
 
     }
+
+
+    public function HospitalLedgerReport(Request $request){
+
+    $cdate = date_create()->format('Y-m-d'); 
+    if(!$request->filter){
+        
+       $filter= null;
+       $fdate= $cdate;
+       $tdate= $cdate;
+      
+       $arr['fdate']=$cdate;
+       $arr['tdate']='';
+       $arr['filter']=null;
+       
+        }else{
+
+            $filter= 2;
+            $fdate= $request->fdate;;
+            $tdate= $request->tdate;
+
+        }
+       
+        $hospital_ids=DB::table('users')->where('type',3)->pluck('id'); 
+
+        $results = DB::table('users')
+        ->leftJoin('transaction', 'transaction.hospital_id', '=', 'users.id')
+        ->select('users.id', 'users.name', 'users.email','users.mobile_no', // Add all columns here
+                DB::raw('SUM(transaction.debit) as total_debit'),
+                DB::raw('SUM(transaction.credit) as total_credit'))
+        ->whereIn('users.id', $hospital_ids)
+        ->where('transaction.status',1)
+        ->groupBy('users.id', 'users.name', 'users.email', 'users.mobile_no') // Add all columns here
+        ->get();
+      
+      
+       $arr['Total_debit']=DB::table('transaction')->whereIn('hospital_id',$hospital_ids)->where('status','1')->sum('debit'); 
+        $arr['Total_credit']=DB::table('transaction')->whereIn('hospital_id',$hospital_ids)->where('status','1')->sum('credit'); 
+        
+   // $arr['hospital_data'] = DB::table('users')->where('type', '3')->get();
+   
+    $arr['data']=$results;
+
+     $arr['fdate']=$fdate;
+     $arr['tdate']=$tdate;
+     $arr['filter']=$filter;
+    
+    
+     $arr['page_heading'] = "Hospital Balance Sheet";
+     //$arr['data'] = $data;
+
+     return view('admin.hospital_balance_sheet')->with($arr);
+    
+   } 
     //-----------------Hospital CRUD Operation Start
+
+      //-----------------Hospital CRUD Operation Start
+
+    public function ShowLocation(Request $rest){
+       
+        $decrypted = Crypt::decrypt($rest->id);
+        $data = DB::table('users as a')
+        ->select(['a.*', 'b.name as state_name', 'c.name as city_name'])
+        ->leftJoin('state as b', 'a.state', '=', 'b.id')
+        ->leftJoin('city as c', 'a.city', '=', 'c.id')
+        ->where('a.type', '3')
+        ->where('a.user_id', '0')->where('a.status', 1)
+        ->where('a.id', $decrypted)
+        ->orderBy('a.id', 'DESC')
+        ->first();
+  
+        $arr['hospital'] = $data;
+        $arr['hospital_id'] = $rest->id;
+       // $staff = DB::table('users')->where('id','2')->get();
+        //dd($staff);
+        return view('admin.hospital_map_add')->with($arr);
+    }
+
+ public function Update_Hospital_location(Request $request)
+{
+   
+       // $hospital_id = Crypt::decrypt($request->hospital_id);
+   
+    $updated = DB::table('users')
+        ->where('id', $request->hospital_id)
+        ->update([
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+            'updated_at' => Carbon::now(), // <-- Add this line
+        ]);
+
+    if ($updated) {
+        session()->flash('msgVendor', 'Location Updated Successfully.');
+    } else {
+        session()->flash('errorVendor', 'Unable to update, try again later.');
+    }
+           $type_check=DB::table('users')->whereIn('id',$request->hospital_id)->first(); 
+
+   if($type_check->hospital_type=='hospital'){
+      return redirect()->route('admin.hospital');
+   }else{
+     return redirect()->route('admin.hospital');
+
+   }
+  
+}
     public function ShowHospital(Request $rest){
         if($rest->id){
             $arr["staff_id"]=$rest->id;
@@ -932,7 +1133,7 @@ class VendorController extends Controller
   {
 
 
-      $arr['slider']=DB::table('slider')->get();
+      $arr['slider']=DB::table('slider')->orderby('id','DESC')->get();
 
       return view('admin.slider',$arr);
   }
@@ -950,6 +1151,7 @@ class VendorController extends Controller
    }
         $arr['type']=$request->type_slider;
         $arr['title']=$request->heading;
+        $arr['url']=$request->web_link;
         $ins=DB::table('slider')->insert($arr);
       if($ins){
       session()->flash('msgVendor', 'Slider added successfully.');

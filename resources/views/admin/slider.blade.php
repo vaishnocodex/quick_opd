@@ -31,11 +31,13 @@
                                
                             </div>
                         </div>
-                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 d-none">
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                             <div class="form-group">
                                 <label for="name">Type</label>
                                 <select onchange="setbanner_Categories(this.value)" required class="form-control form-control-lg" id="type_slider" name="type_slider">
-                                      <option value="home">Home</option>
+                                      <option value="home">For Website Home</option>    
+                                      <option value="app">For app</option>
+                                    
                                 </select>
                                
                             </div>
@@ -44,6 +46,12 @@
                             <div class="form-group">
                                 <label for="name">Heading</label>
                                  <input type="text" class="form-control" name="heading" id="heading" placeholder="Enter Heading IF" />
+                           </div>
+                        </div>
+                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="name">URL</label>
+                                 <input type="text" class="form-control" name="web_link" id="web_link" placeholder="Enter URL IF" />
                            </div>
                         </div>
                         
@@ -70,8 +78,10 @@
                                                 <th>Sr.</th>
                                                  <th>Action</th>
                                                 <th>Image</th>
-                                                {{-- <th>Type</th> --}}
+                                                <th>Type</th>
+                                               
                                                 <th>Heading IF</th>
+                                                 <th>URL</th>
                                                
                                              </tr>
                                         </thead>
@@ -86,8 +96,10 @@
                                               <td> <a onclick="deleteConfirm('{{ route('admin.delete.slider', ['id'=>Crypt::encrypt($item->id)]) }}')" > <span class="icon-delete" style="font-size: 20px;color:#ff0000"></span></a>
                                               </td>
                                               <td> <img src="{{ asset('storage/slider/').'/'.$item->image }}" width="100px;height:100px;" alt=""></td>
-                                               {{-- <td>{{ $item->type }}</td> --}}
+                                              
+                                               <td>{{ $item->type }}</td>
                                                <td>@if($item->title){{ $item->title }} @endif</td>
+                                               <td> {{ $item->url }}</td>
                                               
                                             </tr>
                                             @endforeach

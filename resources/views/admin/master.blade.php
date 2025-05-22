@@ -195,11 +195,27 @@
                              <div class="sidebar-submenu">
                                 <ul>
                                     <li>
-                                        <a href="#" class="{{ Route::currentRouteName()=="admin.doctor"?"current-page":"" }}">Balance Sheet</a>
+                                        <a href="{{route('admin.hospital.balance-sheet')}}" class="{{ Route::currentRouteName()=="admin.hospital.balance-sheet"?"current-page":"" }}">Balance Sheet</a>
                                     </li>
                                 </ul>
                             </div>
                         </li>   
+                          <li class="sidebar-dropdown{{ Route::currentRouteName()=="javascript:void(0)"?"active":"" }}">
+                            <a href="javascript:void(0)">
+                                <i class="icon-users"></i>
+                                <span class="menu-text">Setting </span>
+                            </a>
+                             <div class="sidebar-submenu">
+                                <ul>
+                                    <li>
+                                        <a href="{{route('admin.profile')}}" class="{{ Route::currentRouteName()=="admin.profile'"?"current-page":"" }}">Profile</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{route('admin.firm-detail')}}" class="{{ Route::currentRouteName()=="admin.firm-detail'"?"current-page":"" }}">Firm Detail</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li> 
                     </ul>
                 </div>
                 <!-- sidebar menu end -->

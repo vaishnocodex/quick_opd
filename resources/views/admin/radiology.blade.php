@@ -27,7 +27,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label for="name">Radiology Name <span style="color:red">*</span></label>
-                                    <input type="text" class="form-control" name="name" id="name" value="{{ old('name') }}" placeholder="Enter Hospital Name" required>
+                                    <input type="text" class="form-control" name="name" id="name" value="{{ old('name') }}" placeholder="Enter Radiology Name" required>
                                    
                                 </div>
                             </div>
@@ -113,14 +113,7 @@
                             </div>
                     
                             <!-- Map -->
-                            <div class="col-xl-8 col-lg-8 col-md-8 col-sm-6 col-12">
-                                <div class="form-group">
-                                    <label for="location">Select Radiology Location <span style="color:red">*</span></label>
-                                    <input type="hidden" id="latitude" name="latitude" value="{{ old('latitude') }}" placeholder="Latitude" readonly>
-                                    <input type="hidden" id="longitude" name="longitude" value="{{ old('longitude') }}" placeholder="Longitude" readonly>
-                                    <div id="map"></div>
-                                </div>
-                            </div>
+                          
                     
                             <!-- Submit Button -->
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
@@ -152,7 +145,7 @@
                                                 <tr>
                                                   
                                                     <td ><span>{{ ++$i }})</span>&nbsp;&nbsp; <a href="{{ route('admin.radiology', ['id'=>Crypt::encrypt($item->id)]) }}" ><span class="icon-border_color" style="font-size: 20px;color:#178e94"></span> </a>
-                                                        
+                                                           <a href="{{ route('admin.hospital-map-location', ['id'=>Crypt::encrypt($item->id)]) }}" class="btn btn-primary">Update Map Location </a>
                                                       
                                                     </td>
                                                     <td>Radiology Name : <b> {{ $item->name }} </b> <br>
