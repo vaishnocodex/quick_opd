@@ -16,8 +16,6 @@ use App\Models\Order;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 
-
-
 class AppointmentController extends Controller
 {
 
@@ -173,4 +171,47 @@ class AppointmentController extends Controller
         'patient' => $user
     ]);
 }
+
+function DoctorAppointment(Request $request){
+
+        $doctor_id = Auth::user()->id;
+        $date = request('date');
+        $orders = DB::table('orders as a')
+            // ->where('a.hospital_id', Auth::user()->id)
+            ->when($doctor_id, function ($query, $doctor_id) {
+                $query->where('a.doctor_id', $doctor_id);
+            })
+             ->when($date, fn($q) => $q->whereDate('a.booking_date', $date))
+            ->select([
+                'a.*',
+                'b.name as patient_name',
+                'b.mobile_no as patient_mobile',
+                'b.address as patient_address',
+                'c.name as hospital_name',
+                'c.mobile_no as hospital_mobile',
+                'c.address as hospital_address',
+                'd.name as doctor_name',
+                'd.mobile_no as doctor_mobile',
+                'd.address as doctor_address',
+            ])
+            ->leftJoin('users as b', function ($join) {
+                $join->on('a.user_id', '=', 'b.id')->where('b.type', 0);
+            })
+            ->leftJoin('users as c', function ($join) {
+                $join->on('a.hospital_id', '=', 'c.id')->where('c.type', 3);
+            })
+            ->leftJoin('users as d', function ($join) {
+                $join->on('a.doctor_id', '=', 'd.id')->where('d.type', 4);
+            })
+            ->orderByDesc('a.id')
+            ->get();
+
+
+        $doctors = DB::table('users')->where('type', '4')->where('user_id', Auth::user()->id)->get();
+        $patient = DB::table('users')->where('type', '0')->get();
+        return view('doctor.doctorAppointment', compact('orders', 'doctors', 'doctor_id', 'patient'));
+
+}
+
+
 }

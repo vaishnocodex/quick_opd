@@ -39,12 +39,15 @@ Route::get('/clear-cache', function () {
 
 Route::get('admin/', function () {
     return view('auth.login');
-});
+})->name('admin.login');
+
+Route::get('doctor/login', function () {
+    return view('auth.login_doctor');
+})->name('doctor.login');
 
 Route::get('hospital/login', function () {
     return view('auth.hospital');
 })->name('hospital.login');
-
 
 Route::get('/thank-you', function () {
   return view('website.thank-you');
@@ -127,15 +130,6 @@ Route::middleware(['auth', 'CustomerMiddleware:user'])->group(function () {
 
 });
 
-//=========================================================//Doctor routes files
-Route::middleware(['auth', 'user-access:doctor'])->group(function () {
-    Route::get('/doctor/home', [DoctorController::class, 'doctorHome'])->name('doctor.home');
-    // Route::get('/doctor/profile', [WebUserController::class, 'DoctorProfile'])->name('doctor.profile');
-    // Route::post('/doctor/update-profile', [WebUserController::class, 'UpdateDoctorProfile'])->name('doctor.update-profile');
-    // Route::post('/doctor/update-password', [WebUserController::class, 'UpdateDoctorPassword'])->name('doctor.update-password');
-    // Route::get('/doctor/appointment', [WebUserController::class, 'DoctorAppointment'])->name('doctor.appointment');
-
-});
 
   //=========================================================//Admin routes
   Route::middleware(['user-access:admin,admin'])->group(function () {
@@ -199,10 +193,26 @@ Route::middleware(['auth', 'user-access:doctor'])->group(function () {
 });
 
 
+
+Route::get('/doctor/home', [DoctorController::class, 'doctorHome'])->name('doctor.home');
+Route::get('/doctor-schedule/{doctor_id?}', [DoctorController::class, 'DoctorScheduleList'])->name('doctor-schedule');
+Route::post('/doctor-slots/generate', [DoctorSlotController::class, 'hospital_generateSlots'])->name('doctor.slots.generate');
+Route::get('/doctor/appointment', [AppointmentController::class, 'DoctorAppointment'])->name('doctor.appointment');
+
+
+//=========================================================//Doctor routes files
+Route::middleware(['auth', 'user-access:doctor'])->group(function () {
+    // Route::get('/doctor/profile', [WebUserController::class, 'DoctorProfile'])->name('doctor.profile');
+    // Route::post('/doctor/update-profile', [WebUserController::class, 'UpdateDoctorProfile'])->name('doctor.update-profile');
+    // Route::post('/doctor/update-password', [WebUserController::class, 'UpdateDoctorPassword'])->name('doctor.update-password');
+    // Route::get('/doctor/appointment', [WebUserController::class, 'DoctorAppointment'])->name('doctor.appointment');
+
+});
+
+
 Route::post('/login/hospital',[HospitalController::class,'Login_Hospital'])->name("login.hospital");
 
 Route::middleware(['user-access:hospital,hospital'])->group(function () {
-
 Route::get('/hospital/home', [HospitalController::class, 'Hospital_Home'])->name('hospital.home');
 Route::get('/hospital/new/doctor/{id?}', [HospitalController::class, 'NewDoctor'])->name('hospital.new.doctor');
 Route::post('/hospital/doctor/add', [HospitalController::class, 'AddDoctor'])->name('hospital.doctor.add');
@@ -212,19 +222,11 @@ Route::post('/hospital/doctor/update', [HospitalController::class, 'UpdateDoctor
 Route::get('/hospital/doctor-schedule/{doctor_id?}', [HospitalController::class, 'DoctorScheduleList'])->name('hospital.doctor-schedule');
 Route::post('/hospital-doctor-slots/generate', [DoctorSlotController::class, 'hospital_generateSlots'])->name('hospital-doctor-slots.generate');
 Route::get('/hospital/appointment/list/', [HospitalController::class, 'orders'])->name('hospital.appointment.list');
-
-//=====radiology services
-
-
 Route::get('/hospital/appointment/', [HospitalController::class, 'appointment'])->name('hospital.appointment');
 Route::post('/appointment/update-status', [HospitalController::class, 'updateStatus'])->name('appointment.updateStatus');
-
-
 Route::get('/get-doctor-data/{id?}', [AppointmentController::class, 'doctor_data'])->name('get.doctor.data');
 Route::Post('hospital/appointment-create', [AppointmentController::class, 'create'])->name('hospital.appointment.create');
 Route::Post('hospital/patient-store', [AppointmentController::class, 'patient_store'])->name('patient.store');
-
-
 
 //=====radiology services
 Route::get('/radiology/new-service/{id?}', [HospitalController::class, 'NewRService'])->name('radiology.new-service');
@@ -232,7 +234,6 @@ Route::post('/radiology/service/add', [HospitalController::class, 'AddRadiology_
 Route::get('/radiology/service/{id?}', [HospitalController::class, 'Show_Radiology'])->name('radiology.service');
 
 //radiology schedule add
-
 Route::get('/radiology/service-schedule/{doctor_id?}', [HospitalController::class, 'Service_ScheduleList'])->name('radiology.service-schedule');
 Route::post('/radiology-service-slots/generate', [DoctorSlotController::class, 'RadiologySchedule'])->name('radiology-service-slots.generate');
 
