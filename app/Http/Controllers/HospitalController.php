@@ -37,30 +37,36 @@ class HospitalController extends Controller
         if (!$check_user) {
             return redirect()->back()->with('error', 'Email-Address And Password Are Wrong.');
         }
-      
-        if (Auth::guard('hospital')->attempt(['email' => $input['email'], 'password' => $input['password']])) {
-                return redirect()->route('hospital.home');
-            } else {
-                return redirect()->back()->with('error', 'Invalid password.');
-            }
 
-       
-    }
-       public function Hospital_Home()
-    {
-        return view('hospital.home');
+        if (auth()->attempt(array('email' => $input['email'], 'password' => $input['password']))) {
+
+            if (auth()->user()->type == 'hospital') {
+                return view('hospital.home');
+                // return redirect()->route('hospital.home');
+            } else if (auth()->user()->type == 'manager') {
+                return redirect()->route('manager.home');
+            } else {
+                return redirect()->route('home');
+            }
+        } else {
+            return redirect()->route('login')
+                ->with('error', 'Invalid Password.');
+        }
     }
     public function doctorHome()
     {
         return view('doctor.home');
     }
 
+
+
     function orders(Request $request)
     {
-        $doctor_id = request('doctor')??  "";
+
+        $doctor_id = request('doctor') ??  "";
         $date = request('date');
         $orders = DB::table('orders as a')
-            ->where('a.hospital_id', Auth::guard('hospital')->user()->id)
+            ->where('a.hospital_id', Auth::user()->id)
             ->when($doctor_id, function ($query, $doctor_id) {
                 $query->where('a.doctor_id', $doctor_id);
             })
@@ -89,9 +95,88 @@ class HospitalController extends Controller
             ->orderByDesc('a.id')
             ->get();
 
-        $doctors = DB::table('users')->where('type','4')->where('user_id',Auth::guard('hospital')->user()->id)->get();
+        $doctors = DB::table('users')->where('type', '4')->where('user_id', Auth::user()->id)->get();
+        $patient = DB::table('users')->where('type', '0')->get();
+        return view('hospital.order.index', compact('orders', 'doctors', 'doctor_id', 'patient'));
+    }
 
-        return view('hospital.order.index', compact('orders','doctors','doctor_id'));
+
+    function appointment(Request $request)
+    {
+        $doctor_id = request('doctor') ??  "";
+        $type = $request->type;
+        $type_val = $request->type;
+
+        if ($type == "Pending") {
+            $type = "0";
+        } elseif ($type == "Approved") {
+            $type = "1";
+        } elseif ($type == "Cancelled") {
+            $type = "3";
+        } elseif($type == "Completed"){
+             $type = "4";
+        }
+
+        $date = request('date');
+        $orders = DB::table('orders as a')
+            ->where('a.hospital_id', Auth::user()->id)
+            ->where('a.status', $type)
+            ->where('a.payment_type', 'offline')
+            ->when($doctor_id, function ($query, $doctor_id) {
+                $query->where('a.doctor_id', $doctor_id);
+            })
+            ->when($date, function ($q) use ($date) {
+                $q->whereDate('a.booking_date', $date);
+            }, function ($q) {
+                $q->whereMonth('a.booking_date', Carbon::now()->month)
+                    ->whereYear('a.booking_date', Carbon::now()->year);
+            })
+
+            ->select([
+                'a.*',
+                'b.name as patient_name',
+                'b.mobile_no as patient_mobile',
+                'b.address as patient_address',
+                'c.name as hospital_name',
+                'c.mobile_no as hospital_mobile',
+                'c.address as hospital_address',
+                'd.name as doctor_name',
+                'd.mobile_no as doctor_mobile',
+                'd.address as doctor_address',
+            ])
+            ->leftJoin('users as b', function ($join) {
+                $join->on('a.user_id', '=', 'b.id')->where('b.type', 0);
+            })
+            ->leftJoin('users as c', function ($join) {
+                $join->on('a.hospital_id', '=', 'c.id')->where('c.type', 3);
+            })
+            ->leftJoin('users as d', function ($join) {
+                $join->on('a.doctor_id', '=', 'd.id')->where('d.type', 4);
+            })
+            ->orderByDesc('a.id')
+            ->get();
+
+        $doctors = DB::table('users')->where('type', '4')->where('user_id', Auth::user()->id)->get();
+        $patient = DB::table('users')->where('type', '0')->get();
+        return view('hospital.AppointmentType', compact('orders', 'doctors', 'doctor_id', 'patient', 'type_val'));
+    }
+
+    function updateStatus(Request $request)
+    {
+        $status = null;
+        if ($request->type === 'approve') {
+            $status = 1;
+        } elseif ($request->type === 'cancel') {
+            $status = 3;
+        } elseif( $request->type== "Complete"){
+             $status = 4;
+        }
+        if ($status !== null) {
+            DB::table('orders')
+                ->where('id', $request->id)
+                ->update(['status' => $status]);
+        }
+        return back()->with('success', 'Order status updated.');
     }
 
     public function NewDoctor(Request $rest)
@@ -163,7 +248,7 @@ class HospitalController extends Controller
                 $rest->image->move(public_path('storage/doctor'), $firmImage);
                 $array['image'] = $firmImage;
             }
-            $array['user_id'] = Auth::guard('hospital')->user()->id;    
+            $array['user_id'] = Auth::user()->id;
             $array['role_id'] = '4';
             $array['type'] = '4';
             $array['category_id'] = $rest->category_id ? implode(',', $rest->category_id) : '';
@@ -184,6 +269,7 @@ class HospitalController extends Controller
             $array['pincode'] = $rest->pincode;
             $array['address'] = $rest->address;
             $array['status'] = 1;
+            $array['price']  = $rest->price;
             $array['created_at'] = Carbon::now();
             $ins = DB::table('users')->insert($array);
 
@@ -219,7 +305,7 @@ class HospitalController extends Controller
             ->leftJoin('city as c', 'a.city', '=', 'c.id')
             ->leftJoin('users as h', 'h.id', '=', 'a.user_id')
             ->where('a.type', '4')
-            ->where('a.user_id', Auth::guard('hospital')->user()->id)->where('a.status', 1)
+            ->where('a.user_id', Auth::user()->id)->where('a.status', 1)
             ->orderBy('a.id', 'DESC')
             ->get();
         $arr['state_data'] = DB::table('state')->where('fcountryid', 101)->get();
@@ -276,6 +362,7 @@ class HospitalController extends Controller
             $array['experience'] = $rest->experience;
             $array['description'] = $rest->description;
             $array['status'] = 1;
+            $array['price']  = $rest->price;
             $array['updated_at'] = Carbon::now();
 
             $ins = DB::table('users')->where('id', $update_id)->update($array);
@@ -309,6 +396,7 @@ class HospitalController extends Controller
 
         return view('hospital.schedule.add_doctor_slot', compact('data', 'decrypted', 'doctor_data', 'last_slot', 'future_dates'));
     }
+
 
 
     //======================================radiology service 

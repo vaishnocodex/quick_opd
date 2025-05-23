@@ -118,7 +118,7 @@
 
                 <!-- sidebar menu start -->
                  {{-- ============================Hospital Routes================================== --}}
-                 @if(Auth::guard('hospital')->user()->hospital_type !='hospital')
+                 @if(Auth::guard('hospital')->user()->hospital_type =='hospital')
 
 
                  <div class="sidebar-menu">
@@ -258,7 +258,7 @@
                     </a>
                 </div>
                 <div>
-                    <h4>{{Auth::guard('hospital')->user()->hospital_type}}  </h4>
+                    <h4>{{Auth::guard('hospital')->user()->hospital_type ?? ""}}  </h4>
                 </div>
                 <div class="header-items">
                     <!-- Custom search start -->
