@@ -183,7 +183,7 @@ class AppointmentController extends Controller
             $order_id = $this->generateUniqueOrderId();
             $orderData = [
                 'user_id'         => $request->patient,
-                'hospital_id'     => Auth::user()->user_id,
+                'hospital_id'     => Auth::guard('doctor')->user()->user_id,
                 'order_id'        => $order_id,
                 'doctor_id'       => $request->doctor_id,
                 'type'            => 'doctor',
@@ -260,7 +260,7 @@ class AppointmentController extends Controller
             $type = "4";
         }
 
-        $doctor_id = Auth::user()->id;
+        $doctor_id = Auth::guard('doctor')->user()->id;
         $date = request('date');
         $orders = DB::table('orders as a')
             ->where('a.payment_status', 'accepted')
@@ -294,9 +294,9 @@ class AppointmentController extends Controller
             ->get();
 
 
-        $doctors = DB::table('users')->where('type', '4')->where('id', Auth::user()->id)->get();
+        $doctors = DB::table('users')->where('type', '4')->where('id',Auth::guard('doctor')->user()->id)->get();
         $patient = DB::table('users')->where('type', '0')->get();
-        $doctorstransfer = DB::table('users')->where('type', '4')->where('user_id', Auth::user()->user_id)->get();
+        $doctorstransfer = DB::table('users')->where('type', '4')->where('user_id',Auth::guard('doctor')->user()->user_id)->get();
         return view('doctor.doctorAppointment', compact('orders', 'doctors', 'doctor_id', 'patient', 'type_val','doctorstransfer'));
     }
 }

@@ -37,14 +37,14 @@ class HospitalController extends Controller
         if (!$check_user) {
             return redirect()->back()->with('error', 'Email-Address And Password Are Wrong.');
         }
-      
+
         if (Auth::guard('hospital')->attempt(['email' => $input['email'], 'password' => $input['password']])) {
                 return redirect()->route('hospital.home');
             } else {
                 return redirect()->back()->with('error', 'Invalid password.');
             }
 
-       
+
     }
        public function Hospital_Home()
     {
@@ -63,7 +63,7 @@ class HospitalController extends Controller
         $doctor_id = request('doctor') ??  "";
         $date = request('date');
         $orders = DB::table('orders as a')
-            ->where('a.hospital_id', Auth::user()->id)
+            ->where('a.hospital_id', Auth::guard('hospital')->user()->id)
             ->when($doctor_id, function ($query, $doctor_id) {
                 $query->where('a.doctor_id', $doctor_id);
             })
@@ -92,7 +92,7 @@ class HospitalController extends Controller
             ->orderByDesc('a.id')
             ->get();
 
-        $doctors = DB::table('users')->where('type', '4')->where('user_id', Auth::user()->id)->get();
+        $doctors = DB::table('users')->where('type', '4')->where('user_id', Auth::guard('hospital')->user()->id)->get();
         $patient = DB::table('users')->where('type', '0')->get();
         return view('hospital.order.index', compact('orders', 'doctors', 'doctor_id', 'patient'));
     }
@@ -116,7 +116,7 @@ class HospitalController extends Controller
 
         $date = request('date');
         $orders = DB::table('orders as a')
-            ->where('a.hospital_id', Auth::user()->id)
+            ->where('a.hospital_id', Auth::guard('hospital')->user()->id)
             ->where('a.status', $type)
             ->where('a.payment_type', 'offline')
             ->when($doctor_id, function ($query, $doctor_id) {
@@ -153,7 +153,7 @@ class HospitalController extends Controller
             ->orderByDesc('a.id')
             ->get();
 
-        $doctors = DB::table('users')->where('type', '4')->where('user_id', Auth::user()->id)->get();
+        $doctors = DB::table('users')->where('type', '4')->where('user_id', Auth::guard('hospital')->user()->id)->get();
         $patient = DB::table('users')->where('type', '0')->get();
         return view('hospital.AppointmentType', compact('orders', 'doctors', 'doctor_id', 'patient', 'type_val'));
     }
@@ -245,7 +245,7 @@ class HospitalController extends Controller
                 $rest->image->move(public_path('storage/doctor'), $firmImage);
                 $array['image'] = $firmImage;
             }
-            $array['user_id'] = Auth::user()->id;
+            $array['user_id'] = Auth::guard('hospital')->user()->id;
             $array['role_id'] = '4';
             $array['type'] = '4';
             $array['category_id'] = $rest->category_id ? implode(',', $rest->category_id) : '';
@@ -302,7 +302,7 @@ class HospitalController extends Controller
             ->leftJoin('city as c', 'a.city', '=', 'c.id')
             ->leftJoin('users as h', 'h.id', '=', 'a.user_id')
             ->where('a.type', '4')
-            ->where('a.user_id', Auth::user()->id)->where('a.status', 1)
+            ->where('a.user_id', Auth::guard('hospital')->user()->id)->where('a.status', 1)
             ->orderBy('a.id', 'DESC')
             ->get();
         $arr['state_data'] = DB::table('state')->where('fcountryid', 101)->get();
@@ -396,7 +396,7 @@ class HospitalController extends Controller
 
 
 
-    //======================================radiology service 
+    //======================================radiology service
 
       public  function Show_Radiology(Request $rest)
     {
@@ -430,7 +430,7 @@ class HospitalController extends Controller
             $decrypted = Crypt::decrypt($rest->id);
             $user = DB::table('users')->where('id', $decrypted)->where('role_id', '5')->first();
             $arr['data'] = $user;
-           
+
             $arr['category_data'] = DB::table('category')->where('type', 'category')->get();
             $arr['symptom_data'] = DB::table('category')->where('type', 'symptom')->get();
             return view('hospital.doctor.edit_doctor')->with($arr);
@@ -450,7 +450,7 @@ class HospitalController extends Controller
         $arr['state_data'] = DB::table('state')->where('fcountryid', 101)->get();
         $arr['hospital_data'] = DB::table('users')->where('type', 2)->get();
         $arr['category_data'] = DB::table('category')->where('type', 'radiology')->get();
-    
+
 
         $arr['All_staff'] = $data;
 
@@ -471,7 +471,7 @@ class HospitalController extends Controller
                 $rest->image->move(public_path('storage/doctor'), $firmImage);
                 $array['image'] = $firmImage;
             }
-            $array['user_id'] = Auth::guard('hospital')->user()->id;    
+            $array['user_id'] = Auth::guard('hospital')->user()->id;
             $array['role_id'] = '5';
             $array['type'] = '5';
             $array['password'] =  rand(1000000, 9999999);
@@ -480,7 +480,7 @@ class HospitalController extends Controller
 
             $array['name'] = $rest->name;
             $array['price'] = $rest->price;
-        
+
             $array['description'] = $rest->description;
             $array['status'] = 1;
             $array['created_at'] = Carbon::now();
@@ -490,7 +490,7 @@ class HospitalController extends Controller
             if ($ins) {
 
                 session()->flash('msgVendor', 'service Added Successfully.');
-           
+
                return redirect()->back();
             } else {
 
@@ -498,14 +498,14 @@ class HospitalController extends Controller
 
                 return redirect()->back();
             }
-        
+
     }
 
 //=============schedule add of service
 
         public function Service_ScheduleList(Request $request)
     {
-        $radiology_id= Auth::guard('hospital')->user()->id;  
+        $radiology_id= Auth::guard('hospital')->user()->id;
         $data = DB::table("doctor_slots")->where('doctor_id', $radiology_id)->orderBy('date', 'desc')->get();
         $last_slot = DB::table("doctor_slots")->where('doctor_id', $radiology_id)->orderBy('date', 'desc')->first();
         $future_dates = DB::table("doctor_slots")
@@ -517,6 +517,6 @@ class HospitalController extends Controller
       $decrypted='';
         return view('hospital.schedule.add_schedule', compact('data', 'decrypted', 'doctor_data', 'last_slot', 'future_dates'));
     }
-  
+
     //==>endcode
 }

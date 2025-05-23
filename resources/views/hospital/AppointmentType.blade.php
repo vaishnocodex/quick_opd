@@ -84,6 +84,15 @@ $staff=backHelper::get_staff($staff_id);
 
                                                     <td>
 
+                                                          <form action="{{ route('appointment.updateStatus') }}"
+                                                            method="POST" style="display:inline;"
+                                                            onsubmit="return confirm('Are you sure you want to approve this appointment?');">
+                                                            @csrf
+                                                            <input type="hidden" name="id" value="{{ $val->id }}">
+                                                            <input type="hidden" name="type" value="approve">
+                                                            <button type="submit"
+                                                                class="btn btn-sm btn-success">Approve</button>
+                                                        </form>
                                                         <!-- Approve Button -->
                                                         @if($type_val == "Pending")
                                                         <form action="{{ route('appointment.updateStatus') }}"
