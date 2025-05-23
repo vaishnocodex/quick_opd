@@ -283,10 +283,10 @@
                                             <a href="#" target="_self">  Blogs</a>
                                         </li>
                                     <li>
-                                        <a href="#" target="_self">  FAQ</a>
+                                        <a href="{{route('faq')}}" target="_self">  FAQ</a>
                                     </li>
                                     <li>
-                                        <a href="#" target="_self">
+                                        <a href="{{route('contact.us')}}" target="_self">
                                             Contact
                                         </a>
                                     </li>
@@ -329,8 +329,8 @@
             </div>
             <div class="mobile-header-content-area">
                 <div class="mobile-search search-style-3 mobile-header-border">
-                    <form action="https://ecommerce12.testsoftwares.site/products" class="form--quick-search"
-                        data-ajax-url="https://ecommerce12.testsoftwares.site/ajax/search-products" method="get">
+                    <form action="#" class="form--quick-search"
+                        data-ajax-url="# method="get">
                         <input type="text" name="q" class="input-search-product"
                             placeholder="Search for items..." value="" autocomplete="off">
                         <button type="submit"><i class="fi-rs-search"></i></button>
@@ -341,9 +341,6 @@
                     <!-- mobile menu start -->
                     <nav>
                         <ul class="mobile-menu">
-                         
-                        
-                           
                             <li>
                                 <a href="{{route('welcome')}}" target="_self">Home </a>
                                
@@ -355,7 +352,7 @@
                                 <a href="{{route('all.hospital')}}" target="_self">All Hospital </a></li>
                       
                             <li class=" ">
-                                <a href="#" target="_self">
+                                <a href="{{route('faq')}}" target="_self">
                                     FAQ
                                 </a>
                             </li>
@@ -375,7 +372,7 @@
                    
 
                     <div class="single-mobile-header-info">
-                        <a href="compare.html"><i class="fi-rs-refresh"></i> Compare</a>
+                        <a href="#"><i class="fi-rs-refresh"></i> Compare</a>
                     </div>
                     <div class="single-mobile-header-info">
                         <a href="{{route('login.user')}}"><i class="fi-rs-user"></i> Log In / Sign Up</a>
@@ -519,7 +516,7 @@
                          <ul class="footer-list">
                             <li><a href="{{route('all.doctor')}}" title="Book a Doctor"><span class="menu-title">Book a Doctor</span></a></li>
                             <li><a href="#" title="Radiology Services"><span class="menu-title">Radiology Services</span></a></li>
-                            <li><a href="health-checkups.html" title="Health Checkups"><span class="menu-title">Health Checkups</span></a></li>
+                            <li><a href="{{route('all.hospital')}}" title="Health Checkups"><span class="menu-title">Hospitals</span></a></li>
                             <li><a href="{{route('welcome')}}" title="Home Visit"><span class="menu-title">Home Visit</span></a></li>
                         </ul>
 
@@ -530,7 +527,7 @@
                         <h4 class="widget-title">Support</h4>
                         <ul class="footer-list mb-sm-5 mb-md-0">
                             <ul class="footer-list wow fadeIn animated mb-sm-5 mb-md-0">
-                             <li><a href="faq.html" title="FAQ"><span class="menu-title">FAQ</span></a></li>
+                             <li><a href="{{route('faq')}}" title="FAQ"><span class="menu-title">FAQ</span></a></li>
                                 <li class="">
                                     <a href="cookie-policy.html" title="Cookie Policy">
                                         <span class="menu-title">Cookie Policy</span>
@@ -555,7 +552,7 @@
                                     </a>
                                 </li>
                                 <li class="">
-                                    <a href="#" title="Privacy Policy">
+                                    <a href="{{route('privacy-policy')}}" title="Privacy Policy">
 
                                         <span class="menu-title">Privacy Policy</span>
                                     </a>

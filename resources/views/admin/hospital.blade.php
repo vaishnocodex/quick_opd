@@ -151,7 +151,9 @@
                                                 @php $i=0; @endphp @foreach ($All_staff as $item)
                                                 <tr>
                                                   
-                                                    <td ><span>{{ ++$i }})</span>&nbsp;&nbsp; <a href="{{ route('admin.hospital', ['id'=>Crypt::encrypt($item->id)]) }}" ><span class="icon-border_color" style="font-size: 20px;color:#178e94"></span> </a>
+                                                    <td ><span>{{ ++$i }})</span>&nbsp;&nbsp; 
+                                                        <a href="{{ route('admin.hospital', ['id'=>Crypt::encrypt($item->id)]) }}" ><span class="icon-border_color" style="font-size: 20px;color:#178e94"></span> </a>
+                                                        <a href="{{ route('admin.hospital-map-location', ['id'=>Crypt::encrypt($item->id)]) }}" class="btn btn-primary">Add Map Location </a>
                                                         
                                                       
                                                     </td>
