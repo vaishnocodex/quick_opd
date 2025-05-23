@@ -29,6 +29,7 @@ $staff=backHelper::get_staff($staff_id);
                                 <div class="t-header" style="text-align: center; font-size: 18px;">All Appointment</div>
                                 <form method="GET" action="{{ url()->current() }}" id="filterForm">
                                     <div class="row mb-3">
+                                        <input type="hidden" name="type" value="{{ $type_val }}">
 
                                         {{-- <div class="col-md-4">
                                             <label for="doctorFilter">Filter by Doctor:</label>
@@ -49,24 +50,30 @@ $staff=backHelper::get_staff($staff_id);
                                             <input type="date" name="date" id="dateFilter" class="form-control"
                                                 value="{{ request('date') }}">
                                         </div>
-
-
                                         <div class="col-md-4 d-flex align-items-end p-0">
                                             <button type="submit" class="btn btn-primary m-0 rounded-0">Filter</button>
                                         </div>
+                                    </div>
 
-                                        {{-- <div class="col-md-4 d-flex align-items-end p-0">
+                                    <div class="row mb-3">
+
+                                        <div class="col-md-2 d-flex align-items-end p-0">
                                             <button type="button" class="btn btn-primary m-3" onclick="Add_slot()">
                                                 <i class="icon-add"></i> &nbsp;Add Doctor Slot
                                             </button>
                                         </div>
 
-                                        <div class="col-md-4 d-flex align-items-end p-0">
+                                        <div class="col-md-2 d-flex align-items-end p-0">
                                             <button type="button" class="btn btn-primary m-3" onclick="Add_Patient()">
                                                 <i class="icon-add"></i> &nbsp;Add Patient
                                             </button>
-                                        </div> --}}
-
+                                        </div>
+                                        <div class="col-md-3 d-flex align-items-end p-0">
+                                            <button type="button" class="btn btn-primary m-3"
+                                                onclick="Transfer_Appointment()">
+                                                <i class="icon-transfer"></i> &nbsp;Transfer Appointment
+                                            </button>
+                                        </div>
                                     </div>
                                 </form>
 
@@ -90,7 +97,7 @@ $staff=backHelper::get_staff($staff_id);
                                             <tbody>
                                                 @foreach ($orders as $val)
                                                 <tr>
-                                                    <td>  <a href="#" class="btn btn-sm btn-primary" onclick="edit_appointment(
+                                                    <td> <a href="#" class="btn btn-sm btn-primary" onclick="edit_appointment(
         '{{ $val->id }}',
         '{{ $val->user_id }}',
         '{{ $val->hospital_id }}',
@@ -335,6 +342,60 @@ $staff=backHelper::get_staff($staff_id);
     </div>
 </div>
 
+
+
+<div class="modal fade" id="transferappointment" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <form id="transfer_appointment">
+            <!-- Corrected ID spelling -->
+            @csrf
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Transfer Appointment</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row gutters">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Patient">Select Patient:</label>
+                                <select name="doctor" id="doctor_id" class="form-control" required>
+                                    <option value="">-- Select Doctor --</option>
+                                    @foreach($doctorstransfer as $doctor)
+                                    <option value="{{ $doctor->id }}">{{ $doctor->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                       <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Patient">Select Appointment:</label>
+                                <select name="Appointment" id="Appointment_id" class="form-control" required>
+                                    <option value="">-- Select  --</option>
+                                    @foreach ($orders as $val)
+                                    <option value="{{ $val->id }}">{{ $val->order_id }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Transfer</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
 <div class="modal fade" id="PatientModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <form id="PatientForm">
@@ -409,6 +470,9 @@ $staff=backHelper::get_staff($staff_id);
         $('#PatientForm')[0].reset();
         $('#PatientModal').modal('show');
     }
+    function Transfer_Appointment(){
+        $('#transferappointment').modal('show');
+    }
 
       $('#doctor_id').on('change', function() {
         let doctorId = $(this).val();
@@ -441,7 +505,7 @@ $staff=backHelper::get_staff($staff_id);
             e.preventDefault();
             let formData = new FormData(this);
             $.ajax({
-                url: '{{ route("hospital.appointment.create") }}',
+                url: '{{ route("doctor.appointment.create") }}',
                 type: 'POST',
                 data: formData,
                 processData: false,
@@ -466,6 +530,8 @@ $staff=backHelper::get_staff($staff_id);
         });
     });
 
+
+
 $(document).ready(function () {
     $('#PatientForm').on('submit', function (e) {
         e.preventDefault();
@@ -480,6 +546,7 @@ $(document).ready(function () {
                 $('#PatientForm')[0].reset();
                 $('#PatientModal').modal('hide');
                 alert(response.message);
+                location.reload();
                 toastr.success(response.message);
             },
             error: function (xhr) {
@@ -496,6 +563,37 @@ $(document).ready(function () {
     });
 });
 
+
+
+$(document).ready(function () {
+    $('#transfer_appointment').on('submit', function (e) {
+        e.preventDefault();
+        let formData = new FormData(this);
+        $.ajax({
+            url: '{{ route("transfer_appointment.store") }}',
+            method: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+
+                alert(response.message);
+                location.reload();
+                toastr.success(response.message);
+            },
+            error: function (xhr) {
+                if (xhr.status === 422) {
+                    let errors = xhr.responseJSON.errors;
+                    $.each(errors, function (key, value) {
+                        toastr.error(value[0]);
+                    });
+                } else {
+                    toastr.error("Something went wrong.");
+                }
+            }
+        });
+    });
+});
 
 
 function edit_appointment(

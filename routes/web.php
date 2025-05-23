@@ -229,10 +229,18 @@ Route::middleware(['auth', 'CustomerMiddleware:user'])->group(function () {
 
 
 Route::get('/doctor/home', [DoctorController::class, 'doctorHome'])->name('doctor.home');
+Route::get('/doctor/profile', [DoctorController::class, 'doctor_profile'])->name('doctor.profile');
+
 Route::get('/doctor-schedule/{doctor_id?}', [DoctorController::class, 'DoctorScheduleList'])->name('doctor-schedule');
 Route::post('/doctor-slots/generate', [DoctorSlotController::class, 'hospital_generateSlots'])->name('doctor.slots.generate');
 Route::get('/doctor/appointment', [AppointmentController::class, 'DoctorAppointment'])->name('doctor.appointment');
+Route::Post('doctor/appointment-create', [AppointmentController::class, 'doctor_appointment_create'])->name('doctor.appointment.create');
+Route::Post('doctor/transfer-appointment-create', [AppointmentController::class, 'transfer_appointment'])->name('transfer_appointment.store');
+Route::post('/doctor/update', [DoctorController::class, 'UpdateDoctor'])->name('doctor.update');
 
+// open Route
+Route::Post('hospital/patient-store', [AppointmentController::class, 'patient_store'])->name('patient.store');
+// Open route
 
 //=========================================================//Doctor routes files
 Route::middleware(['auth', 'user-access:doctor'])->group(function () {
@@ -243,6 +251,7 @@ Route::middleware(['auth', 'user-access:doctor'])->group(function () {
 
 });
 
+Route::get('/get-doctor-data/{id?}', [AppointmentController::class, 'doctor_data'])->name('get.doctor.data');
 
 Route::post('/login/hospital',[HospitalController::class,'Login_Hospital'])->name("login.hospital");
 
@@ -258,9 +267,7 @@ Route::post('/hospital-doctor-slots/generate', [DoctorSlotController::class, 'ho
 Route::get('/hospital/appointment/list/', [HospitalController::class, 'orders'])->name('hospital.appointment.list');
 Route::get('/hospital/appointment/', [HospitalController::class, 'appointment'])->name('hospital.appointment');
 Route::post('/appointment/update-status', [HospitalController::class, 'updateStatus'])->name('appointment.updateStatus');
-Route::get('/get-doctor-data/{id?}', [AppointmentController::class, 'doctor_data'])->name('get.doctor.data');
 Route::Post('hospital/appointment-create', [AppointmentController::class, 'create'])->name('hospital.appointment.create');
-Route::Post('hospital/patient-store', [AppointmentController::class, 'patient_store'])->name('patient.store');
 
 //=====radiology services
 Route::get('/radiology/new-service/{id?}', [HospitalController::class, 'NewRService'])->name('radiology.new-service');
