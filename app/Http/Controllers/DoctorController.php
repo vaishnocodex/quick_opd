@@ -39,8 +39,29 @@ class DoctorController extends Controller
 
         return view('doctor.profile')->with($arr);
     }
-
     public function Login_Doctor(Request $request)
+    {
+        $input = $request->all();
+
+        $this->validate($request, [
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+       $check_user = User::where('email', $input['email'])->where('type', '4')->first();
+        if (!$check_user) {
+            return redirect()->back()->with('error', 'Email-Address And Password Are Wrong.');
+        }
+      
+        if (Auth::guard('doctor')->attempt(['email' => $input['email'], 'password' => $input['password']])) {
+                return redirect()->route('doctor.home');
+            } else {
+                return redirect()->back()->with('error', 'Invalid password.');
+            }
+
+       
+    }
+    public function Login_Doctor_old(Request $request)
     {
         $input = $request->all();
 
