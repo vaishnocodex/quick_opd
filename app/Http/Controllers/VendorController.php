@@ -469,7 +469,7 @@ class VendorController extends Controller
         if($rest->id){
             $arr["staff_id"]=$rest->id;
             $decrypted = Crypt::decrypt($rest->id);
-            $user= DB::table('users')->where('id',$decrypted)->where('role_id','3')->first();
+            $user= DB::table('users')->where('id',$decrypted)->first();
             $arr['data'] =$user;
             $arr['state_data'] = DB::table('state')->where('fcountryid', 101)->get();
             $arr['city_data'] = DB::table('city')->where('fstateid', $user->state)->get();
@@ -485,7 +485,7 @@ class VendorController extends Controller
         ->select(['a.*', 'b.name as state_name', 'c.name as city_name'])
         ->leftJoin('state as b', 'a.state', '=', 'b.id')
         ->leftJoin('city as c', 'a.city', '=', 'c.id')
-        ->where('a.type', '3')
+        ->where('a.type', '3')->where('a.hospital_type','hospital')
         ->where('a.user_id', '0')->where('a.status', 1)
         ->orderBy('a.id', 'DESC')
         ->get();

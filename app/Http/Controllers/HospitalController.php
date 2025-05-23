@@ -37,21 +37,18 @@ class HospitalController extends Controller
         if (!$check_user) {
             return redirect()->back()->with('error', 'Email-Address And Password Are Wrong.');
         }
-
-        if (auth()->attempt(array('email' => $input['email'], 'password' => $input['password']))) {
-
-            if (auth()->user()->type == 'hospital') {
-                return view('hospital.home');
-                // return redirect()->route('hospital.home');
-            } else if (auth()->user()->type == 'manager') {
-                return redirect()->route('manager.home');
+      
+        if (Auth::guard('hospital')->attempt(['email' => $input['email'], 'password' => $input['password']])) {
+                return redirect()->route('hospital.home');
             } else {
-                return redirect()->route('home');
+                return redirect()->back()->with('error', 'Invalid password.');
             }
-        } else {
-            return redirect()->route('login')
-                ->with('error', 'Invalid Password.');
-        }
+
+       
+    }
+       public function Hospital_Home()
+    {
+        return view('hospital.home');
     }
     public function doctorHome()
     {
