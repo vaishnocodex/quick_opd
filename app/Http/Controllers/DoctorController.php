@@ -27,8 +27,8 @@ class DoctorController extends Controller
     public  function doctor_profile()
     {
 
-        $arr["staff_id"] = Crypt::encrypt(Auth::user()->id);
-        $decrypted =  Auth::user()->id;
+        $arr["staff_id"] = Crypt::encrypt(Auth::guard('doctor')->user()->id);
+        $decrypted =  Auth::guard('doctor')->user()->id;
         $user = DB::table('users')->where('id', $decrypted)->where('role_id', '4')->first();
         $arr['data'] = $user;
         $arr['hospital_data'] = DB::table('users')->where('type', 3)->get();
@@ -52,14 +52,14 @@ class DoctorController extends Controller
         if (!$check_user) {
             return redirect()->back()->with('error', 'Email-Address And Password Are Wrong.');
         }
-      
+
         if (Auth::guard('doctor')->attempt(['email' => $input['email'], 'password' => $input['password']])) {
                 return redirect()->route('doctor.home');
             } else {
                 return redirect()->back()->with('error', 'Invalid password.');
             }
 
-       
+
     }
     public function Login_Doctor_old(Request $request)
     {
@@ -97,8 +97,8 @@ class DoctorController extends Controller
     public function DoctorScheduleList(Request $request)
     {
 
-        $decrypted = Auth::user()->id;
-        $data = DB::table("doctor_slots")->where('doctor_id', Auth::user()->id)->orderBy('date', 'desc')->get();
+        $decrypted = Auth::guard('doctor')->user()->id;
+        $data = DB::table("doctor_slots")->where('doctor_id', Auth::guard('doctor')->user()->id)->orderBy('date', 'desc')->get();
         $last_slot = DB::table("doctor_slots")->where('doctor_id', $decrypted)->orderBy('date', 'desc')->first();
         $future_dates = DB::table("doctor_slots")
             ->where('doctor_id', $decrypted)
