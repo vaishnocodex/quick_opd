@@ -127,8 +127,6 @@
 
                         </li>
 
-
-
                         <li class="sidebar-dropdown{{ Route::currentRouteName()==" javascript:void(0)"?"active":"" }}">
                             <a href="javascript:void(0)">
                                 <i class="icon-users"></i>
@@ -184,7 +182,7 @@
 
                                 </ul>
                             </div>
-                        </li>
+                          </li>
 
                     </ul>
                 </div>

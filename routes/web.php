@@ -150,7 +150,7 @@ Route::middleware(['auth', 'CustomerMiddleware:user'])->group(function () {
     Route::get('admin/profile', function () {
     return view('admin.profile');
      })->name('admin.profile');
-  
+
 
      //firm  details
       Route::get('admin/firm-detail',[vendorController::class,'showFirmDetails'])->name('admin.firm-detail');
@@ -190,12 +190,12 @@ Route::middleware(['auth', 'CustomerMiddleware:user'])->group(function () {
     //Route::get('/admin/doctor-schedules/{doctor_id?}', [VendorController::class, 'getDoctorSchedule'])->name('admin.doctor.schedules');
     Route::post('/admin/doctor-schedule-add', [VendorController::class, 'Add_DoctorSchedule'])->name('admin.doctor.schedule-add');
 
-   
+
 
     //location update by id
     Route::get('/admin/hospital-map-location/{id?}', [VendorController::class, 'ShowLocation'])->name('admin.hospital-map-location');
     Route::post('/admin/update-hospital-map-location', [VendorController::class, 'Update_Hospital_location'])->name('admin.update-hospital-map-location');
-    
+
     //=======>Admin doctor Slot admin.doctor.slot
 
     Route::get('/admin-doctor-slots', [DoctorSlotController::class, 'AdminDoctor_SlotForm'])->name('admin.doctor.slot');
@@ -238,8 +238,11 @@ Route::Post('doctor/appointment-create', [AppointmentController::class, 'doctor_
 Route::Post('doctor/transfer-appointment-create', [AppointmentController::class, 'transfer_appointment'])->name('transfer_appointment.store');
 Route::post('/doctor/update', [DoctorController::class, 'UpdateDoctor'])->name('doctor.update');
 
+
 // open Route
 Route::Post('hospital/patient-store', [AppointmentController::class, 'patient_store'])->name('patient.store');
+Route::post('/appointment/update-status', [HospitalController::class, 'updateStatus'])->name('appointment.updateStatus');
+
 // Open route
 
 //=========================================================//Doctor routes files
@@ -252,9 +255,7 @@ Route::middleware(['auth', 'user-access:doctor'])->group(function () {
 });
 
 Route::get('/get-doctor-data/{id?}', [AppointmentController::class, 'doctor_data'])->name('get.doctor.data');
-
 Route::post('/login/hospital',[HospitalController::class,'Login_Hospital'])->name("login.hospital");
-
 Route::middleware(['user-access:hospital,hospital'])->group(function () {
 Route::get('/hospital/home', [HospitalController::class, 'Hospital_Home'])->name('hospital.home');
 Route::get('/hospital/new/doctor/{id?}', [HospitalController::class, 'NewDoctor'])->name('hospital.new.doctor');
@@ -266,8 +267,11 @@ Route::get('/hospital/doctor-schedule/{doctor_id?}', [HospitalController::class,
 Route::post('/hospital-doctor-slots/generate', [DoctorSlotController::class, 'hospital_generateSlots'])->name('hospital-doctor-slots.generate');
 Route::get('/hospital/appointment/list/', [HospitalController::class, 'orders'])->name('hospital.appointment.list');
 Route::get('/hospital/appointment/', [HospitalController::class, 'appointment'])->name('hospital.appointment');
-Route::post('/appointment/update-status', [HospitalController::class, 'updateStatus'])->name('appointment.updateStatus');
 Route::Post('hospital/appointment-create', [AppointmentController::class, 'create'])->name('hospital.appointment.create');
+
+Route::get('/profile/hospital/{id?}', [VendorController::class, 'ProfileHospital'])->name('profile.hospital');
+Route::post('/doctor/profile/update', [HospitalController::class, 'UpdateHospital'])->name('profile.doctor.update');
+
 
 //=====radiology services
 Route::get('/radiology/new-service/{id?}', [HospitalController::class, 'NewRService'])->name('radiology.new-service');

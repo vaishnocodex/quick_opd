@@ -14,13 +14,13 @@
 						<!-- Breadcrumb end -->
 
 						<!-- App actions start -->
-						<div class="app-actions">
+						{{-- <div class="app-actions">
 							<button type="button" class="btn">Today</button>
 							<button type="button" class="btn">Yesterday</button>
 							<button type="button" class="btn">7 days</button>
 							<button type="button" class="btn">15 days</button>
 							<button type="button" class="btn active">30 days</button>
-						</div>
+						</div> --}}
 						<!-- App actions end -->
 
 					</div>
@@ -39,10 +39,10 @@
 											<h5 class="user-name">{{ $data->name }}</h5>
 											<h6 class="user-email">{{ $data->email }}</h6>
 										</div>
-										<div class="about">
+										{{-- <div class="about">
 											<h5>About</h5>
 											<p>{{ $data->description }}</p>
-										</div>
+										</div> --}}
 									</div>
 								</div>
 							</div>
@@ -194,14 +194,14 @@
                     </div>
 
                     {{-- Map --}}
-                    <div class="col-md-8">
+                    {{-- <div class="col-md-8">
                         <div class="form-group">
                             <label>Select Hospital Location <span class="text-danger">*</span></label>
                             <input type="hidden" id="latitude" name="latitude" value="{{ $data->latitude }}">
                             <input type="hidden" id="longitude" name="longitude" value="{{ $data->longitude }}">
                             <div id="map" style="height: 250px;"></div>
                         </div>
-                    </div>
+                    </div> --}}
 
                     {{-- Buttons --}}
                     <div class="col-12 text-right mt-3">
