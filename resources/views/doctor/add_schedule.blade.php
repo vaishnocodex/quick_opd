@@ -112,7 +112,7 @@
 
                         <div class="row gutters">
                             <input type="hidden" id="id_value" name="id">
-                            <input type="hidden" name="doctor_id" value="{{Auth::user()->id}} ">
+                            <input type="hidden" name="doctor_id" value="{{Auth::guard('doctor')->user()->id}} ">
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Date:</label>

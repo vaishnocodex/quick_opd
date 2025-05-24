@@ -57,7 +57,7 @@ $staff=backHelper::get_staff($staff_id);
 
                                         <div class="col-md-4 d-flex align-items-end p-0">
                                             <button type="button" class="btn btn-primary m-3" onclick="Add_slot()">
-                                                <i class="icon-add"></i> &nbsp;Add Doctor Slot
+                                                <i class="icon-add"></i> &nbsp;Add Appointment
                                             </button>
                                         </div>
 

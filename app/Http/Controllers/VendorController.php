@@ -98,7 +98,7 @@ class VendorController extends Controller
 
         if($request->logo)
         {
-             
+
             $firmImage = time() . rand(1000, 9999) . '.' . $request->logo->extension();
             $request->logo->move(public_path('storage/firms'), $firmImage);
             $arr['logo']=$firmImage;
@@ -113,7 +113,7 @@ class VendorController extends Controller
         $arr['email']=$request->email;
         $arr['facebook']=$request->facebook;
         $arr['instagram']=$request->instagram;
-        $arr['youtube']=$request->youtube; 
+        $arr['youtube']=$request->youtube;
         $arr['pmethod']=$request->pmode;
         //   $arr['about']=$request->about;
         //$arr['delivery_area']=$request->delivery_area;
@@ -123,7 +123,7 @@ class VendorController extends Controller
         //$arr['longitude']=$request->longitude;
         //$arr['latitude']=$request->latitude;
        // $arr['points']=$request->points;
-      
+
         // if($request->status=='on')
         // $arr['status']=1;
         // else
@@ -144,10 +144,10 @@ class VendorController extends Controller
         public function UpdateAdminDetail(Request $rest)
     {
 
-       
+
         $update_id= Auth::guard('admin')->user()->id;
-       
-          
+
+
                 $array['category_id'] = $rest->category_id ? implode(',', $rest->category_id) : '';
 
                 if($rest->password){
@@ -162,9 +162,9 @@ class VendorController extends Controller
                  $array['mobile_no'] =$rest->phone;
                  }
                 $array['name'] =$rest->name;
-               
-               
-              
+
+
+
                  $array['updated_at'] = Carbon::now();
 
                  $ins = DB::table('users')->where('id', $update_id)->update($array);
@@ -174,7 +174,7 @@ class VendorController extends Controller
 
                     session()->flash('msgVendor', 'Profile detail Update Successfully.');
 
-                    return redirect()->route('admin.profile');  
+                    return redirect()->route('admin.profile');
                 } else {
 
                 session()->flash('errorVendor', 'Unable to update try after some time .');
@@ -182,7 +182,7 @@ class VendorController extends Controller
                 return redirect()->route('admin.profile');
                 }
 
-      
+
 
     }
 
@@ -363,17 +363,17 @@ class VendorController extends Controller
 
     public function HospitalLedgerReport(Request $request){
 
-    $cdate = date_create()->format('Y-m-d'); 
+    $cdate = date_create()->format('Y-m-d');
     if(!$request->filter){
-        
+
        $filter= null;
        $fdate= $cdate;
        $tdate= $cdate;
-      
+
        $arr['fdate']=$cdate;
        $arr['tdate']='';
        $arr['filter']=null;
-       
+
         }else{
 
             $filter= 2;
@@ -381,8 +381,8 @@ class VendorController extends Controller
             $tdate= $request->tdate;
 
         }
-       
-        $hospital_ids=DB::table('users')->where('type',3)->pluck('id'); 
+
+        $hospital_ids=DB::table('users')->where('type',3)->pluck('id');
 
         $results = DB::table('users')
         ->leftJoin('transaction', 'transaction.hospital_id', '=', 'users.id')
@@ -393,32 +393,32 @@ class VendorController extends Controller
         ->where('transaction.status',1)
         ->groupBy('users.id', 'users.name', 'users.email', 'users.mobile_no') // Add all columns here
         ->get();
-      
-      
-       $arr['Total_debit']=DB::table('transaction')->whereIn('hospital_id',$hospital_ids)->where('status','1')->sum('debit'); 
-        $arr['Total_credit']=DB::table('transaction')->whereIn('hospital_id',$hospital_ids)->where('status','1')->sum('credit'); 
-        
+
+
+       $arr['Total_debit']=DB::table('transaction')->whereIn('hospital_id',$hospital_ids)->where('status','1')->sum('debit');
+        $arr['Total_credit']=DB::table('transaction')->whereIn('hospital_id',$hospital_ids)->where('status','1')->sum('credit');
+
    // $arr['hospital_data'] = DB::table('users')->where('type', '3')->get();
-   
+
     $arr['data']=$results;
 
      $arr['fdate']=$fdate;
      $arr['tdate']=$tdate;
      $arr['filter']=$filter;
-    
-    
+
+
      $arr['page_heading'] = "Hospital Balance Sheet";
      //$arr['data'] = $data;
 
      return view('admin.hospital_balance_sheet')->with($arr);
-    
-   } 
+
+   }
     //-----------------Hospital CRUD Operation Start
 
       //-----------------Hospital CRUD Operation Start
 
     public function ShowLocation(Request $rest){
-       
+
         $decrypted = Crypt::decrypt($rest->id);
         $data = DB::table('users as a')
         ->select(['a.*', 'b.name as state_name', 'c.name as city_name'])
@@ -429,7 +429,7 @@ class VendorController extends Controller
         ->where('a.id', $decrypted)
         ->orderBy('a.id', 'DESC')
         ->first();
-  
+
         $arr['hospital'] = $data;
         $arr['hospital_id'] = $rest->id;
        // $staff = DB::table('users')->where('id','2')->get();
@@ -439,9 +439,9 @@ class VendorController extends Controller
 
  public function Update_Hospital_location(Request $request)
 {
-   
+
        // $hospital_id = Crypt::decrypt($request->hospital_id);
-   
+
     $updated = DB::table('users')
         ->where('id', $request->hospital_id)
         ->update([
@@ -455,7 +455,7 @@ class VendorController extends Controller
     } else {
         session()->flash('errorVendor', 'Unable to update, try again later.');
     }
-           $type_check=DB::table('users')->whereIn('id',$request->hospital_id)->first(); 
+           $type_check=DB::table('users')->whereIn('id',$request->hospital_id)->first();
 
    if($type_check->hospital_type=='hospital'){
       return redirect()->route('admin.hospital');
@@ -463,8 +463,26 @@ class VendorController extends Controller
      return redirect()->route('admin.hospital');
 
    }
-  
+
 }
+
+
+    public function ProfileHospital(Request $rest){
+        if($rest->id){
+            $arr["staff_id"]=$rest->id;
+            $decrypted = Crypt::decrypt($rest->id);
+            $user= DB::table('users')->where('id',$decrypted)->first();
+            $arr['data'] =$user;
+            $arr['state_data'] = DB::table('state')->where('fcountryid', 101)->get();
+            $arr['city_data'] = DB::table('city')->where('fstateid', $user->state)->get();
+            $arr['category_data'] = DB::table('category')->where('type','category')->get();
+            $arr['symptom_data'] = DB::table('category')->where('type','symptom')->get();
+            return view('hospital.profile')->with($arr);
+        }
+    }
+
+
+
     public function ShowHospital(Request $rest){
         if($rest->id){
             $arr["staff_id"]=$rest->id;
@@ -840,6 +858,8 @@ class VendorController extends Controller
 
 
     }
+
+
     public function UpdateDoctor(Request $rest)
     {
 
