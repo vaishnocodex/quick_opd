@@ -858,6 +858,8 @@ class VendorController extends Controller
 
 
     }
+
+
     public function UpdateDoctor(Request $rest)
     {
 
