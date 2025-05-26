@@ -18,24 +18,32 @@ use Illuminate\Support\Facades\Hash;
 
 class AppointmentController extends Controller
 {
-
-    public function doctor_data($id)
+    public function doctor_data(Request $request, $id)
     {
-        $slots = DoctorSlot::where('doctor_id', $id)
-            ->whereDate('date', '>=', now())
-            ->pluck('date')
-            ->unique()
-            ->values();
         $data = User::find($id);
 
-        if ($slots || $data) {
+        if (!$data) {
+            return response()->json(['message' => 'Doctor not found'], 404);
+        }
+
+        // If type is empty, return both slots and data
+        if (empty($request->types)) {
+            $slots = DoctorSlot::where('doctor_id', $id)
+                ->whereDate('date', '>=', now())
+                ->pluck('date')
+                ->unique()
+                ->values();
+
             return response()->json([
                 'slots' => $slots,
                 'data' => $data
             ]);
         }
 
-        return response()->json(['price' => 0], 404);
+        // If type is not empty, return only data
+        return response()->json([
+            'data' => $data
+        ]);
     }
 
     function generateUniqueOrderId()
@@ -48,38 +56,77 @@ class AppointmentController extends Controller
         return $orderId;
     }
 
-    /* function create(Request $request)
+
+    public function radiology_create(Request $request)
     {
 
-        $order_id = $this->generateUniqueOrderId();
-        $orderData = [
-            'user_id'         => $request->patient,
-            'hospital_id'     => Auth::user()->id,
-            'order_id'        => $order_id,
-            'doctor_id'       => $request->doctor_id,
-            'type'            => 'doctor',
-            'booking_date'    => $request->booking_date,
-            'total_amount'    => $request->total_amount,
-            'discount'        => $request->discount,
-            'status'          => '0',
-            'payment_type'    => $request->payment_type,
-            'payment_status'  => $request->payment_status,
-            'appointment_for' => 'self',
-            'pa_name'         => $request->pa_name,
-            'father_name'     => $request->father_name,
-            'gender'          => $request->gender,
-            'age'             => $request->age,
-            'contact_no'      => $request->contact_no,
-            'email'           => $request->email,
-        ];
+        $request->validate([
+            'doctor_id' => 'required|integer',
+            'booking_date' => 'required|date',
+            'total_amount' => 'required|numeric',
+            'contact_no' => 'required|string|max:15',
+        ]);
 
-        $order = Order::create($orderData);
-        return response()->json(['success' => true, 'message' => 'Appointment Create successfully!']);
-    }*/
+        if ($request->has('id') && !empty($request->id)) {
+            $order = Order::find($request->id);
+
+            if (!$order) {
+                return response()->json(['success' => false, 'message' => 'Appointment not found.'], 404);
+            }
+
+            $order->update([
+                'user_id'         => $request->patient,
+                'hospital_id'     => Auth::guard('hospital')->user()->id,
+                'doctor_id'       => $request->doctor_id,
+                'type'            => 'radiology',
+                'booking_date'    => $request->booking_date,
+                'total_amount'    => $request->total_amount,
+                'discount'        => $request->discount,
+                'status'          => '0',
+                'payment_type'    => $request->payment_type,
+                'payment_status'  => $request->payment_status,
+                'appointment_for' => 'self',
+                'pa_name'         => $request->pa_name,
+                'father_name'     => $request->father_name,
+                'gender'          => $request->gender,
+                'age'             => $request->age,
+                'contact_no'      => $request->contact_no,
+                'email'           => $request->email,
+            ]);
+            return response()->json(['success' => true, 'message' => 'Appointment updated successfully!']);
+        } else {
+            // No ID → Create new appointment
+            $order_id = $this->generateUniqueOrderId();
+            $orderData = [
+                'user_id'         => $request->patient,
+                'hospital_id'     => Auth::guard('hospital')->user()->id,
+                'order_id'        => $order_id,
+                'doctor_id'       => $request->doctor_id,
+                'type'            => 'radiology',
+                'booking_date'    => $request->booking_date,
+                'total_amount'    => $request->total_amount,
+                'discount'        => $request->discount,
+                'status'          => '0',
+                'payment_type'    => $request->payment_type,
+                'payment_status'  => $request->payment_status,
+                'appointment_for' => 'self',
+                'pa_name'         => $request->pa_name,
+                'father_name'     => $request->father_name,
+                'gender'          => $request->gender,
+                'age'             => $request->age,
+                'contact_no'      => $request->contact_no,
+                'email'           => $request->email,
+            ];
+            Order::create($orderData);
+            return response()->json(['success' => true, 'message' => 'Appointment created successfully!']);
+        }
+    }
+
 
 
     public function create(Request $request)
     {
+
         $request->validate([
             'doctor_id' => 'required|integer',
             'booking_date' => 'required|date',
@@ -206,16 +253,16 @@ class AppointmentController extends Controller
         }
     }
 
-    function transfer_appointment(Request $request){
+    function transfer_appointment(Request $request)
+    {
 
         $appointment = Order::find($request->Appointment);
-        $appointment->doctor_id =$request->doctor;
+        $appointment->doctor_id = $request->doctor;
         $appointment->update();
 
         return response()->json([
             'message' => 'Appointment Transfer successfully.',
         ]);
-
     }
 
 
@@ -294,9 +341,9 @@ class AppointmentController extends Controller
             ->get();
 
 
-        $doctors = DB::table('users')->where('type', '4')->where('id',Auth::guard('doctor')->user()->id)->get();
+        $doctors = DB::table('users')->where('type', '4')->where('id', Auth::guard('doctor')->user()->id)->get();
         $patient = DB::table('users')->where('type', '0')->get();
-        $doctorstransfer = DB::table('users')->where('type', '4')->where('user_id',Auth::guard('doctor')->user()->user_id)->get();
-        return view('doctor.doctorAppointment', compact('orders', 'doctors', 'doctor_id', 'patient', 'type_val','doctorstransfer'));
+        $doctorstransfer = DB::table('users')->where('type', '4')->where('user_id', Auth::guard('doctor')->user()->user_id)->get();
+        return view('doctor.doctorAppointment', compact('orders', 'doctors', 'doctor_id', 'patient', 'type_val', 'doctorstransfer'));
     }
 }

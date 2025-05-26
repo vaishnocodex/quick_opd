@@ -7,8 +7,8 @@
                             </a>
 
                         </li>
-                       
-                      
+
+
                         <li class="sidebar-dropdown{{ Route::currentRouteName()==" javascript:void(0)"?"active":"" }}">
                             <a href="javascript:void(0)">
                                 <i class="icon-users"></i>
@@ -56,22 +56,32 @@
                                 style="{{ Route::currentRouteName() == 'admin.doctor' ? 'display: block;' : '' }}">
                                 <ul>
                                     <li>
-                                        <a href="{{ route('hospital.appointment.list') }}" class="{{ Route::currentRouteName() == 'hospital.appointment.list' ? 'current-page' : '' }}">
+                                        <a href="{{ route('radiology.appointment.list', ['type' => 'Pending']) }}"
+                                            class="{{ Route::currentRouteName() == 'radiology.appointment.list' ? 'current-page' : '' }}">
                                             Pending Appointment
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('hospital.appointment.list') }}" class="{{ Route::currentRouteName() == 'hospital.appointment.list' ? 'current-page' : '' }}">
-                                            Approved 
+                                        <a href="{{ route('radiology.appointment.list', ['type' => 'Approved']) }}"
+                                            class="{{ Route::currentRouteName() == 'radiology.appointment.list' ? 'current-page' : '' }}">
+                                            Approved
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('hospital.appointment.list') }}" class="{{ Route::currentRouteName() == 'hospital.appointment.list' ? 'current-page' : '' }}">
-                                            Cancelled 
+                                        <a href="{{ route('radiology.appointment.list', ['type' => 'Cancelled']) }}"
+                                            class="{{ Route::currentRouteName() == 'radiology.appointment.list' ? 'current-page' : '' }}">
+                                            Cancelled
                                         </a>
                                     </li>
 
-                                        
+                                      <li>
+                                        <a href="{{ route('radiology.appointment.list', ['type' => 'Completed']) }}"
+                                            class="{{ Route::currentRouteName() == 'radiology.appointment.list' ? 'current-page' : '' }}">
+                                            Completed
+                                        </a>
+                                    </li>
+
+
                                 </ul>
                             </div>
                         </li>

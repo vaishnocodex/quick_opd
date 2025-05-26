@@ -2,14 +2,14 @@
 @section('content')
 
 @if(!empty($staff_id))
-    @php
-     $staff=backHelper::get_staff($staff_id);
-      @endphp
-    @endif
-    <!-- Bootstrap Select CSS -->
+@php
+$staff=backHelper::get_staff($staff_id);
+@endphp
+@endif
+<!-- Bootstrap Select CSS -->
 
-    <div class="main-container">
-      <div class="page-header">
+<div class="main-container">
+    <div class="page-header">
         <!-- Breadcrumb start -->
         <ol class="breadcrumb">
             <li class="breadcrumb-item">All Service </li>
@@ -28,7 +28,8 @@
 
                                 <div class="table-responsive">
                                     <div id="copy-print-csv_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
-                                        <table id="copy-print-csv" class="table custom-table dataTable no-footer" role="grid" aria-describedby="copy-print-csv_info">
+                                        <table id="copy-print-csv" class="table custom-table dataTable no-footer"
+                                            role="grid" aria-describedby="copy-print-csv_info">
                                             <thead>
                                                 <tr role="row">
                                                     <th>Action</th>
@@ -43,14 +44,34 @@
                                                 @php $i=0; @endphp @foreach ($All_staff as $item)
                                                 <tr>
 
-                                                    <td > <a href="{{ route('hospital.edit.doctor', ['id'=>Crypt::encrypt($item->id)]) }}" ><span class="icon-border_color" style="font-size: 20px;color:#178e94"></span> </a>
+                                                    <td> <a
+                                                            href="{{ route('radiology.new-service', ['id'=>Crypt::encrypt($item->id)]) }}"><span
+                                                                class="icon-border_color"
+                                                                style="font-size: 20px;color:#178e94"></span> </a>
+                                                        <form
+                                                            action="{{ route('radiology.delete-service', ['id' => Crypt::encrypt($item->id)]) }}"
+                                                            method="POST"
+                                                            onsubmit="return confirm('Are you sure you want to delete this service?');"
+                                                            style="display:inline;">
+                                                            @csrf
+
+                                                            <button type="submit"
+                                                                style="background: none; border: none;">
+                                                                <span class="icon-trash"
+                                                                    style="font-size: 20px; color: red;"></span>
+                                                            </button>
+                                                        </form>
+
                                                     </td>
-                                                    <td> @if($item->image) <img src="{{ asset('storage/doctor/').'/'.$item->image}}" style="height: 70px;width:70px;"> @endif</td>
+                                                    <td> @if($item->image) <img
+                                                            src="{{ asset('storage/doctor/').'/'.$item->image}}"
+                                                            style="height: 70px;width:70px;"> @endif</td>
                                                     <td>{{ $item->name }} </td>
                                                     <td>{{ $item->price }} </td>
                                                     <td>{{ backHelper::get_radiology_name($item->category_id) }} </td>
-                                                
-                                                    <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y') }} </td>
+
+                                                    <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y') }}
+                                                    </td>
                                                 </tr>
 
                                                 @endforeach
@@ -60,7 +81,7 @@
                                 </div>
                             </div>
                         </div>
-                        </div>
+                    </div>
 
                 </div>
             </div>
