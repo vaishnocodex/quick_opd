@@ -11,7 +11,6 @@ use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\HospitalController;
-
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppointmentController;
@@ -26,14 +25,11 @@ Route::get('user/logout', function (Request $request) {
 })->name('user.logout');
 
 
-
 Route::get('/clear-cache', function () {
   // Clear route cache
   Artisan::call('route:clear');
-
   // Cache routes
   Artisan::call('route:cache');
-
 //   return view('test');
 });
 
@@ -117,8 +113,6 @@ Route::get('radiology/service-list/{id?}',[WebController::class,'Radiology_Servi
 Route::get('radiology/detail/{id?}',[WebController::class,'SingleRadiologyDetail'])->name('radiology.detail');
 
 // web.php
-
-
 Route::post('/check-availability', [WebController::class, 'checkAvailability'])->name('check.availability');
 Route::post('/service-check-availability', [WebController::class, 'check_ServiceAvailability'])->name('service-check.availability');
 
@@ -277,12 +271,25 @@ Route::post('/doctor/profile/update', [HospitalController::class, 'UpdateHospita
 Route::get('/radiology/new-service/{id?}', [HospitalController::class, 'NewRService'])->name('radiology.new-service');
 Route::post('/radiology/service/add', [HospitalController::class, 'AddRadiology_Service'])->name('radiology.service.add');
 Route::get('/radiology/service/{id?}', [HospitalController::class, 'Show_Radiology'])->name('radiology.service');
+Route::Post('/radiology/delete-service/{id?}', [HospitalController::class, 'delete_service'])->name('radiology.delete-service');
+Route::Post('radiology/appointment-create', [AppointmentController::class, 'radiology_create'])->name('radiology.appointment.create');
 
 //radiology schedule add
 Route::get('/radiology/service-schedule/{doctor_id?}', [HospitalController::class, 'Service_ScheduleList'])->name('radiology.service-schedule');
 Route::post('/radiology-service-slots/generate', [DoctorSlotController::class, 'RadiologySchedule'])->name('radiology-service-slots.generate');
+Route::get('/radiology/appointment/list/', [HospitalController::class, 'radiology_appointment'])->name('radiology.appointment.list');
+
+Route::get('/upload/report/{id?}', [HospitalController::class, 'upload_report'])->name('upload.report');
+Route::Post('/upload/report/store', [HospitalController::class, 'upload_report_store'])->name('upload.report.store');
+Route::get('/upload/report/edit/{id?}', [HospitalController::class, 'upload_report_edit'])->name('upload.report.edit');
+Route::Post('/upload/report/delete/{id?}', [HospitalController::class, 'upload_report_delete'])->name('upload.report.delete');
+
+
+
+
 
 });
+
 
 /*------------------------------------------
 --------------------------------------------

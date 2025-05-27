@@ -2,10 +2,11 @@
 @section('content')
 
 <!-- Bootstrap Select CSS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.14/css/bootstrap-select.min.css">
+<link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.14/css/bootstrap-select.min.css">
 
-    <div class="main-container">
-      <div class="page-header">
+<div class="main-container">
+    <div class="page-header">
         <!-- Breadcrumb start -->
         <ol class="breadcrumb">
             <li class="breadcrumb-item">Add Service</li>
@@ -17,39 +18,53 @@
             <div class="card">
                 <div class="card-body">
                     @include('admin.message')
-                     @if(!empty($staff_id))@endif
+                    @if(!empty($staff_id))@endif
 
-                     <form method="POST" action="{{ route('radiology.service.add') }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('radiology.service.add') }}" enctype="multipart/form-data">
                         @csrf
                         <div class="row gutters">
+
+                        <input name="id" type="hidden" value="{{ $data->id ?? "" }}" />
 
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label for="name">Service Name <span style="color:red">*</span></label>
-                                    <input type="text" class="form-control" name="name" id="name" value="{{ old('name') }}" placeholder="Enter Service Name" required />
+                                    <input type="text" class="form-control" name="name" id="name"
+                                        value="{{ $data->name ?? old('name') }}" placeholder="Enter Service Name"
+                                        required />
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label for="name">Service Price <span style="color:red">*</span></label>
-                                    <input type="text" class="form-control idm" name="price" id="price" value="{{ old('name') }}" placeholder="Enter price Name" required />
+                                    <input type="text" class="form-control idm" name="price" id="price"
+                                        value="{{ $data->price ?? old('price') }}" placeholder="Enter price Name"
+                                        required />
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label for="image">Image <span style="color: red">*</span></label>
-                                    <input type="file" class="form-control" name="image" id="image" placeholder="Upload Image" required />
+                                    <input type="file" class="form-control" name="image" id="image"
+                                        placeholder="Upload Image" />
+                                    @if(!empty($data->image))
+                                    <img src="{{ asset('storage/doctor/' . $data->image) }}"
+                                        style="height:70px;width:70px;" alt="Doctor Image">
+                                    @endif
                                 </div>
                             </div>
 
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                 <div class="form-group">
                                     <label for="category">Category <span style="color:red">*</span></label>
-                                    <select class="selectpicker11 form-control" name="category_id[]" multiple data-live-search="true">
+                                    <select class="selectpicker11 form-control" name="category_id[]" multiple
+                                        data-live-search="true">
                                         @foreach ($category_data as $item)
-                                            <option value="{{ $item->id }}" {{ (collect(old('category_id'))->contains($item->id)) ? 'selected' : '' }}>
-                                                {{ $item->name }}
-                                            </option>
+                                        <option value="{{ $item->id }}" {{ (!empty($data->category_id) &&
+                                            old('category_id', $data->category_id) == $item->id) ? 'selected' : '' }}>
+                                            {{ $item->name }}
+                                        </option>
+
                                         @endforeach
                                     </select>
                                 </div>
@@ -58,7 +73,8 @@
                             <div class="col-xl-8 col-lg-8 col-md-8 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label for="description">Description</label>
-                                    <textarea class="form-control" name="description" id="description" placeholder="Enter Description">{{ old('description') }}</textarea>
+                                    <textarea class="form-control" name="description" id="description"
+                                        placeholder="Enter Description">{{ $data->description ?? old('description') }}</textarea>
                                 </div>
                             </div>
 
@@ -76,10 +92,7 @@
     </div>
 </div>
 <script>
-
-
-
-function getCity($classid) {
+    function getCity($classid) {
    $.ajax({
     url     : '{{ route('getStateCity') }}',
     method  : 'post',

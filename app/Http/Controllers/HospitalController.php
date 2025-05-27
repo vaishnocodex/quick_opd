@@ -20,6 +20,9 @@ use function Ramsey\Uuid\v1;
 use webhelper;
 use backHelper;
 use Log;
+use App\Models\DoctorSlot;
+use Illuminate\Support\Facades\File;
+
 
 class HospitalController extends Controller
 {
@@ -39,14 +42,12 @@ class HospitalController extends Controller
         }
 
         if (Auth::guard('hospital')->attempt(['email' => $input['email'], 'password' => $input['password']])) {
-                return redirect()->route('hospital.home');
-            } else {
-                return redirect()->back()->with('error', 'Invalid password.');
-            }
-
-
+            return redirect()->route('hospital.home');
+        } else {
+            return redirect()->back()->with('error', 'Invalid password.');
+        }
     }
-       public function Hospital_Home()
+    public function Hospital_Home()
     {
         return view('hospital.home');
     }
@@ -59,7 +60,6 @@ class HospitalController extends Controller
 
     function orders(Request $request)
     {
-
         $doctor_id = request('doctor') ??  "";
         $date = request('date');
         $orders = DB::table('orders as a')
@@ -97,6 +97,149 @@ class HospitalController extends Controller
         return view('hospital.order.index', compact('orders', 'doctors', 'doctor_id', 'patient'));
     }
 
+    function radiology_appointment(Request $request)
+    {
+        $doctor_id = request('doctor') ??  "";
+        $type = $request->type;
+        $type_val = $request->type;
+
+        if ($type == "Pending") {
+            $type = "0";
+        } elseif ($type == "Approved") {
+            $type = "1";
+        } elseif ($type == "Cancelled") {
+            $type = "3";
+        } elseif ($type == "Completed") {
+            $type = "4";
+        }
+
+        $date = request('date');
+        $orders = DB::table('orders as a')
+            ->where('a.hospital_id', Auth::guard('hospital')->user()->id)
+            ->when($doctor_id, function ($query, $doctor_id) {
+                $query->where('a.doctor_id', $doctor_id);
+            })
+            ->when($date, fn($q) => $q->whereDate('a.booking_date', $date))
+
+            ->when($type, fn($q) => $q->where('a.payment_type', $type))
+            ->select([
+                'a.*',
+                'b.name as patient_name',
+                'b.mobile_no as patient_mobile',
+                'b.address as patient_address',
+                'c.name as hospital_name',
+                'c.mobile_no as hospital_mobile',
+                'c.address as hospital_address',
+                'd.name as doctor_name',
+                'd.mobile_no as doctor_mobile',
+                'd.address as doctor_address',
+            ])
+            ->leftJoin('users as b', function ($join) {
+                $join->on('a.user_id', '=', 'b.id')->where('b.type', 0);
+            })
+            ->leftJoin('users as c', function ($join) {
+                $join->on('a.hospital_id', '=', 'c.id')->where('c.type', 3);
+            })
+            ->leftJoin('users as d', function ($join) {
+                $join->on('a.doctor_id', '=', 'd.id')->where('d.type', 5);
+            })
+            ->orderByDesc('a.id')
+            ->get();
+
+        $slots = DoctorSlot::where('doctor_id', Auth::guard('hospital')->user()->id)
+            ->whereDate('date', '>=', now())
+            ->pluck('date')
+            ->unique()
+            ->values();
+        $doctors = DB::table('users')->where('type', '5')->where('user_id', Auth::guard('hospital')->user()->id)->get();
+        $patient = DB::table('users')->where('type', '0')->get();
+        return view('hospital.radiology_appointment', compact('orders', 'doctors', 'doctor_id', 'patient', 'slots'));
+    }
+
+
+    function upload_report($id)
+    {
+        $id = Crypt::decrypt($id);
+        return view('hospital.reportupload', compact('id'));
+    }
+
+    function upload_report_edit($id)
+    {
+        $data = DB::table('report')->where('id', $id)->first();
+        $id= $data->user_id;
+        return view('hospital.reportupload', compact('id', 'data'));
+    }
+
+function upload_report_delete($id)
+{
+    $report = DB::table('report')->where('id', $id)->first();
+    $user = $report->user_id ?? null;
+
+    if ($report) {
+        $filePath = public_path('storage/reports/' . $report->report);
+        if (File::exists($filePath)) {
+            File::delete($filePath);
+        }
+        DB::table('report')->where('id', $id)->delete();
+        return redirect('upload/report/' . encrypt($user))->with('success', 'Report deleted successfully.');
+    }
+
+    return redirect()->back()->with('error', 'Report not found.');
+}
+
+
+
+public function upload_report_store(Request $request)
+{
+    // Validate input
+    $validated = $request->validate([
+        'id' => 'nullable|integer',
+        'user_id' => 'nullable|integer',
+        'doctor_id' => 'nullable|integer',
+        'hospital_id' => 'nullable|integer',
+        'report' => 'nullable|file|mimes:pdf,jpeg,jpg,png,doc,docx|max:5120',
+        'report_type' => 'nullable|string|max:200',
+        'remarks' => 'nullable|string|max:255',
+        'status' => 'nullable|in:0,1',
+    ]);
+
+    $path = null;
+    $extension = null;
+
+    if ($request->hasFile('report')) {
+        $firmImage = time() . rand(1000000, 9999999) . '.' . $request->report->extension();
+        $request->report->move(public_path('storage/reports'), $firmImage);
+        $path = $firmImage;
+        $extension = $request->file('report')->getClientOriginalExtension();
+    }
+
+    $data = [
+        'user_id' => $request->appointment ?? null,
+        'doctor_id' => $validated['doctor_id'] ?? null,
+        'hospital_id' => $validated['hospital_id'] ?? null,
+        'remarks' => $validated['remarks'] ?? null,
+        'status' => $request->status ?? 1,
+        'updated_at' => now(),
+    ];
+
+    if ($path) {
+        $data['report'] = $path;
+        $data['report_type'] = $extension;
+    }
+
+    if (!empty($request->id)) {
+        // Update
+        DB::table('report')->where('id', $request->id)->update($data);
+        return redirect()->back()->with('success', 'Report updated successfully.');
+    } else {
+        // Insert
+        $data['created_at'] = now();
+        DB::table('report')->insert($data);
+        return redirect()->back()->with('success', 'Report uploaded successfully.');
+    }
+}
+
+
 
     function appointment(Request $request)
     {
@@ -110,8 +253,8 @@ class HospitalController extends Controller
             $type = "1";
         } elseif ($type == "Cancelled") {
             $type = "3";
-        } elseif($type == "Completed"){
-             $type = "4";
+        } elseif ($type == "Completed") {
+            $type = "4";
         }
 
 
@@ -166,8 +309,8 @@ class HospitalController extends Controller
             $status = 1;
         } elseif ($request->type === 'cancel') {
             $status = 3;
-        } elseif( $request->type== "Complete"){
-             $status = 4;
+        } elseif ($request->type == "Complete") {
+            $status = 4;
         }
         if ($status !== null) {
             DB::table('orders')
@@ -399,7 +542,7 @@ class HospitalController extends Controller
 
     //======================================radiology service
 
-      public  function Show_Radiology(Request $rest)
+    public  function Show_Radiology(Request $rest)
     {
         if ($rest->id) {
             $arr["staff_id"] = $rest->id;
@@ -416,15 +559,20 @@ class HospitalController extends Controller
             ->leftJoin('city as c', 'a.city', '=', 'c.id')
             ->leftJoin('users as h', 'h.id', '=', 'a.user_id')
             ->where('a.type', '5')
+            ->where('a.soft_delete', '0')
             ->where('a.user_id', Auth::guard('hospital')->user()->id)->where('a.status', 1)
             ->orderBy('a.id', 'DESC')
             ->get();
+        // dd($data);
         $arr['state_data'] = DB::table('state')->where('fcountryid', 101)->get();
         $arr['hospital_data'] = DB::table('users')->where('type', 2)->get();
         $arr['All_staff'] = $data;
+
         return view('hospital.doctor.all_service')->with($arr);
     }
-        public function NewRService(Request $rest)
+
+
+    public function NewRService(Request $rest)
     {
         if ($rest->id) {
             $arr["staff_id"] = $rest->id;
@@ -432,9 +580,11 @@ class HospitalController extends Controller
             $user = DB::table('users')->where('id', $decrypted)->where('role_id', '5')->first();
             $arr['data'] = $user;
 
-            $arr['category_data'] = DB::table('category')->where('type', 'category')->get();
+            $arr['category_data'] = DB::table('category')->where('type', 'radiology')->get();
             $arr['symptom_data'] = DB::table('category')->where('type', 'symptom')->get();
-            return view('hospital.doctor.edit_doctor')->with($arr);
+            // dd($arr);
+            return view('hospital.doctor.add_service')->with($arr);
+            // return view('hospital.doctor.edit_doctor')->with($arr);
         } else {
             $arr["staff_id"] = null;
         }
@@ -447,66 +597,123 @@ class HospitalController extends Controller
             //->where('a.user_id', '0')->where('a.status', 1)
             ->orderBy('a.id', 'DESC')
             ->get();
-
         $arr['state_data'] = DB::table('state')->where('fcountryid', 101)->get();
         $arr['hospital_data'] = DB::table('users')->where('type', 2)->get();
         $arr['category_data'] = DB::table('category')->where('type', 'radiology')->get();
-
-
         $arr['All_staff'] = $data;
-
         return view('hospital.doctor.add_service')->with($arr);
     }
-
-        public function AddRadiology_Service(Request $rest)
+    public function delete_service(Request $request, $id)
     {
+        try {
+            $decryptedId = Crypt::decrypt($id);
 
-        $this->validate($rest, [
-            // 'name' => 'required|string|unique:category,name',
-            'name' => 'required|string']);
+            $data = DB::table('users')->where('id', $decryptedId)->first();
 
-
-
-            if ($rest->image) {
-                $firmImage = time() . rand(1000000, 9999999) . '.' . $rest->image->extension();
-                $rest->image->move(public_path('storage/doctor'), $firmImage);
-                $array['image'] = $firmImage;
+            if (!$data) {
+                return redirect()->route('radiology.service')->with('errorVendor', 'Service not found.');
             }
+
+            DB::table('users')->where('id', $decryptedId)->update(['soft_delete' => 1]);
+
+            return redirect()->route('radiology.service')->with('msgVendor', 'Service deleted successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('radiology.service')->with('errorVendor', 'Invalid ID or error occurred.');
+        }
+    }
+
+
+    public function AddRadiology_Service(Request $rest)
+    {
+        $this->validate($rest, [
+            'name' => 'required|string'
+        ]);
+
+        $array = [];
+
+        // Common fields
+        $array['name'] = $rest->name;
+        $array['price'] = $rest->price;
+        $array['description'] = $rest->description;
+        $array['category_id'] = $rest->category_id ? implode(',', $rest->category_id) : '';
+        $array['symptom_id'] = $rest->symptom_id ? implode(',', $rest->symptom_id) : '';
+
+        if ($rest->hasFile('image')) {
+            $firmImage = time() . rand(1000000, 9999999) . '.' . $rest->image->extension();
+            $rest->image->move(public_path('storage/doctor'), $firmImage);
+            $array['image'] = $firmImage;
+        }
+
+        if (empty($rest->id)) {
+            // Create
             $array['user_id'] = Auth::guard('hospital')->user()->id;
             $array['role_id'] = '5';
             $array['type'] = '5';
-            $array['password'] =  rand(1000000, 9999999);
-            $array['category_id'] = $rest->category_id ? implode(',', $rest->category_id) : '';
-            $array['symptom_id'] = $rest->symptom_id ? implode(',', $rest->symptom_id) : '';
-
-            $array['name'] = $rest->name;
-            $array['price'] = $rest->price;
-
-            $array['description'] = $rest->description;
+            $array['password'] = rand(1000000, 9999999);
             $array['status'] = 1;
             $array['created_at'] = Carbon::now();
+
             $ins = DB::table('users')->insert($array);
 
-
             if ($ins) {
-
-                session()->flash('msgVendor', 'service Added Successfully.');
-
-               return redirect()->back();
+                session()->flash('msgVendor', 'Service Added Successfully.');
             } else {
-
-                session()->flash('errorVendor', 'Unable to add try after some time .');
-
-                return redirect()->back();
+                session()->flash('errorVendor', 'Unable to add. Try again later.');
             }
+        } else {
+            // Update
+            $array['updated_at'] = Carbon::now();
 
+            $update = DB::table('users')
+                ->where('id', $rest->id)
+                ->update($array);
+
+            if ($update) {
+                session()->flash('msgVendor', 'Service Updated Successfully.');
+            } else {
+                session()->flash('errorVendor', 'Unable to update. Try again later.');
+            }
+        }
+        return redirect()->route('radiology.service')->with('msgVendor', 'Service saved successfully.');
     }
 
-//=============schedule add of service
 
-        public function Service_ScheduleList(Request $request)
+    public function AddRadiology_Servicex(Request $rest)
     {
-        $radiology_id= Auth::guard('hospital')->user()->id;
+        // dd($rest->all());
+        $this->validate($rest, [
+            'name' => 'required|string'
+        ]);
+        if ($rest->image) {
+            $firmImage = time() . rand(1000000, 9999999) . '.' . $rest->image->extension();
+            $rest->image->move(public_path('storage/doctor'), $firmImage);
+            $array['image'] = $firmImage;
+        }
+        $array['user_id'] = Auth::guard('hospital')->user()->id;
+        $array['role_id'] = '5';
+        $array['type'] = '5';
+        $array['password'] =  rand(1000000, 9999999);
+        $array['category_id'] = $rest->category_id ? implode(',', $rest->category_id) : '';
+        $array['symptom_id'] = $rest->symptom_id ? implode(',', $rest->symptom_id) : '';
+        $array['name'] = $rest->name;
+        $array['price'] = $rest->price;
+        $array['description'] = $rest->description;
+        $array['status'] = 1;
+        $array['created_at'] = Carbon::now();
+        $ins = DB::table('users')->insert($array);
+        if ($ins) {
+            session()->flash('msgVendor', 'service Added Successfully.');
+            return redirect()->back();
+        } else {
+            session()->flash('errorVendor', 'Unable to add try after some time .');
+            return redirect()->back();
+        }
+    }
+
+
+    public function Service_ScheduleList(Request $request)
+    {
+        $radiology_id = Auth::guard('hospital')->user()->id;
         $data = DB::table("doctor_slots")->where('doctor_id', $radiology_id)->orderBy('date', 'desc')->get();
         $last_slot = DB::table("doctor_slots")->where('doctor_id', $radiology_id)->orderBy('date', 'desc')->first();
         $future_dates = DB::table("doctor_slots")
@@ -515,11 +722,11 @@ class HospitalController extends Controller
             ->pluck('date')
             ->toArray();
         $doctor_data = DB::table("users")->where('id', $radiology_id)->first();
-      $decrypted='';
+        $decrypted = '';
         return view('hospital.schedule.add_schedule', compact('data', 'decrypted', 'doctor_data', 'last_slot', 'future_dates'));
     }
 
-      public function UpdateHospital(Request $rest)
+    public function UpdateHospital(Request $rest)
     {
 
         $this->validate($rest, [
@@ -532,61 +739,56 @@ class HospitalController extends Controller
 
         ]);
 
-        $update_id=$rest->update_id;
-        $checkemail = DB::table('users')->where('id','!=', $update_id)->where('email', $rest->email)->where('type','4')->count();
-       if ($checkemail > 0) {
+        $update_id = $rest->update_id;
+        $checkemail = DB::table('users')->where('id', '!=', $update_id)->where('email', $rest->email)->where('type', '4')->count();
+        if ($checkemail > 0) {
             session()->flash('msgVendor', 'Email Address already exist.');
             return redirect()->back();
         }
 
-        $chkm = DB::table('users')->where('id','!=', $update_id)->where('mobile_no', $rest->mobile)->where('type','4')->count();
-       if ($chkm > 0) {
+        $chkm = DB::table('users')->where('id', '!=', $update_id)->where('mobile_no', $rest->mobile)->where('type', '4')->count();
+        if ($chkm > 0) {
             session()->flash('msgVendor', 'This Mobile No. already exist.');
             return redirect()->back();
-        }else{
+        } else {
 
             if ($rest->image) {
                 $firmImage = time() . rand(1000000, 9999999) . '.' . $rest->image->extension();
                 $rest->image->move(public_path('storage/doctor'), $firmImage);
                 $array['image'] = $firmImage;
-
-           }
+            }
             $array['user_id'] = $rest->hospital;
             $array['category_id'] = $rest->category_id ? implode(',', $rest->category_id) : '';
             $array['symptom_id'] = $rest->symptom_id ? implode(',', $rest->symptom_id) : '';
-            $array['name'] =$rest->name;
-                $array['mobile_no'] =$rest->mobile;
-                $array['password'] = Hash::make($rest->password);
-                $array['pass_hint'] =$rest->password;
-                $array['email'] =$rest->email;
-                $array['state'] =$rest->state;
-                $array['city'] =$rest->city;
-                $array['pincode'] =$rest->pincode;
-                $array['address'] =$rest->address;
-                $array['qualification'] =$rest->qualification;
-                $array['experience'] =$rest->experience;
-                $array['description'] =$rest->description;
-                $array['status'] =1;
-                $array['updated_at'] = Carbon::now();
+            $array['name'] = $rest->name;
+            $array['mobile_no'] = $rest->mobile;
+            $array['password'] = Hash::make($rest->password);
+            $array['pass_hint'] = $rest->password;
+            $array['email'] = $rest->email;
+            $array['state'] = $rest->state;
+            $array['city'] = $rest->city;
+            $array['pincode'] = $rest->pincode;
+            $array['address'] = $rest->address;
+            $array['qualification'] = $rest->qualification;
+            $array['experience'] = $rest->experience;
+            $array['description'] = $rest->description;
+            $array['status'] = 1;
+            $array['updated_at'] = Carbon::now();
 
-                    $ins = DB::table('users')->where('id', $update_id)->update($array);
+            $ins = DB::table('users')->where('id', $update_id)->update($array);
 
-                if ($ins) {
+            if ($ins) {
 
-                    session()->flash('msgVendor', 'doctor detail update Successfully.');
+                session()->flash('msgVendor', 'doctor detail update Successfully.');
 
-                    return redirect()->route('profile.hospital', ['id'=>Crypt::encrypt( Auth::guard('hospital')->user()->id)]);
-                } else {
+                return redirect()->route('profile.hospital', ['id' => Crypt::encrypt(Auth::guard('hospital')->user()->id)]);
+            } else {
 
                 session()->flash('errorVendor', 'Unable to update try after some time .');
 
-                return redirect()->route('profile.hospital', ['id'=>Crypt::encrypt( Auth::guard('hospital')->user()->id)]);
-                }
-
-
-
+                return redirect()->route('profile.hospital', ['id' => Crypt::encrypt(Auth::guard('hospital')->user()->id)]);
+            }
         }
-
     }
 
 
