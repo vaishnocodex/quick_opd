@@ -27,8 +27,9 @@ class WebUserController extends Controller
 
 
 
-    public function UserDashboard(Request $request)
+    public function UserDashboard(Request $request, $id = null)
     {
+
 
         $arr['hospital'] =  User::where('status', '1')->where('type', '2')->get();
         $arr['doctor'] =  User::where('status', '1')->where('type', '3')->get();
@@ -36,34 +37,56 @@ class WebUserController extends Controller
         $arr['symptom']  = Category::where('status', '1')->where('parent', '0')->where('type', 'symptom')->get();
         $arr['states'] = State::select('id', 'name')->where('fcountryid', 101)->get();
         $arr['slider'] = Slider::where('status', 1)->get();
+        $appointmentIds = DB::table('orders')
+            ->where('user_id', Auth::user()->id)
+            ->pluck('id');
+
+        $status="";
+        if (!empty(request()->query('id'))) {
+            $decryptedId = decrypt(request()->query('id'));
+
+            $arr['reports'] = DB::table('report')
+                ->whereIn('user_id', [$decryptedId])
+                ->orderBy('id', 'desc')
+                ->get();
+                   $status="active show";
+        } else {
+            $arr['reports'] = DB::table('report')
+                ->whereIn('user_id', $appointmentIds)
+                ->orderBy('id', 'desc')
+                ->get();
+
+        }
+
+        $arr['status'] = $status;
 
 
 
-       $arr['orders'] = DB::table('orders as a')
-       ->where('a.user_id', Auth::user()->id)
-       ->select([
-        'a.*',
-        'b.name as patient_name',
-        'b.mobile_no as patient_mobile',
-        'b.address as patient_address',
-        'c.name as hospital_name',
-        'c.mobile_no as hospital_mobile',
-        'c.address as hospital_address',
-        'd.name as doctor_name',
-        'd.mobile_no as doctor_mobile',
-        'd.address as doctor_address',
-    ])
-    ->leftJoin('users as b', function ($join) {
-        $join->on('a.user_id', '=', 'b.id')->where('b.type', 0);
-    })
-    ->leftJoin('users as c', function ($join) {
-        $join->on('a.hospital_id', '=', 'c.id')->where('c.type', 3);
-    })
-    ->leftJoin('users as d', function ($join) {
-        $join->on('a.doctor_id', '=', 'd.id')->where('d.type', 4);
-    })
-    ->orderByDesc('a.id')
-    ->get();
+        $arr['orders'] = DB::table('orders as a')
+            ->where('a.user_id', Auth::user()->id)
+            ->select([
+                'a.*',
+                'b.name as patient_name',
+                'b.mobile_no as patient_mobile',
+                'b.address as patient_address',
+                'c.name as hospital_name',
+                'c.mobile_no as hospital_mobile',
+                'c.address as hospital_address',
+                'd.name as doctor_name',
+                'd.mobile_no as doctor_mobile',
+                'd.address as doctor_address',
+            ])
+            ->leftJoin('users as b', function ($join) {
+                $join->on('a.user_id', '=', 'b.id')->where('b.type', 0);
+            })
+            ->leftJoin('users as c', function ($join) {
+                $join->on('a.hospital_id', '=', 'c.id')->where('c.type', 3);
+            })
+            ->leftJoin('users as d', function ($join) {
+                $join->on('a.doctor_id', '=', 'd.id')->where('d.type', 4);
+            })
+            ->orderByDesc('a.id')
+            ->get();
 
         return view('website.user.dashboard')->with($arr);
     }
@@ -94,6 +117,8 @@ class WebUserController extends Controller
 
     public function update_UserProfile(Request $request)
     {
+        // dd($request->all());
+
         // Ensure user is authenticated
         if (!Auth::check()) {
             return redirect()->back()->with('error', 'You must be logged in to update profile.');

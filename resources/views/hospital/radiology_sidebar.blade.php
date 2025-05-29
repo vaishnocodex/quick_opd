@@ -1,7 +1,7 @@
                <div class="sidebar-menu">
                     <ul>
                         <li class="{{ Route::currentRouteName()==" admin.home"?"active":"" }}">
-                            <a href="{{route('admin.home')}}">
+                            <a href="{{route('hospital.home')}}">
                                 <i class="icon-home2"></i>
                                 <span class="menu-text">Dashboard</span>
                             </a>
@@ -90,8 +90,24 @@
                                                 <i class="icon-home2"></i>
                                                 <span class="menu-text">Add Schedule</span>
                                             </a>
-
                                         </li>
+
+                                           <li class="sidebar-dropdown{{ Route::currentRouteName()==" javascript:void(0)"?"active":"" }}">
+                            <a href="javascript:void(0)">
+                                <i class="icon-users"></i>
+                                <span class="menu-text">Profile </span>
+                            </a>
+                            <div class="sidebar-submenu">
+                                <ul>
+                                    <li>
+                                        <a href="{{ route('profile.hospital', ['id'=>Crypt::encrypt( Auth::guard('hospital')->user()->id)]) }}"
+                                            class="{{ Route::currentRouteName()==" doctor.appointment"?"current-page":""
+                                            }}">Profile Update</a>
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </li>
 
                     </ul>
                 </div>

@@ -17,7 +17,7 @@
                         @include('website.user.sidebar')
                         <div class="col-md-9">
                             <div class="tab-content account dashboard-content pl-50">
-                                <div class="tab-pane fade active show" id="dashboard" role="tabpanel"
+                                <div class="tab-pane fade {{ $status ? '' : 'active show' }}" id="dashboard" role="tabpanel"
                                     aria-labelledby="dashboard-tab">
                                     <div class="card">
                                         <div class="card-header">
@@ -32,10 +32,11 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
                                     <div class="card">
                                         <div class="card-header">
-                                            <h3 class="mb-0">Your Orders</h3>
+                                            <h3 class="mb-0">Your Appointment</h3>
                                         </div>
                                         <div class="card-body">
                                             <div class="table">
@@ -88,7 +89,8 @@
 
 
                                                             <td>
-                                                                <a href="#" class="btn btn-sm btn-primary">View</a>
+                                                                <a href="{{ route('user.dashboard',['id'=>encrypt($val->id)]) }}"
+                                                                    class="btn btn-sm btn-primary">View</a>
                                                             </td>
                                                         </tr>
                                                         @endforeach
@@ -100,6 +102,75 @@
                                         </div>
                                     </div>
                                 </div>
+
+
+                                <div class="tab-pane fade {{$status}}" id="reports" role="tabpanel" aria-labelledby="reports-tab">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h3 class="mb-0">Your Reports</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>ID</th>
+                                                            <th>Report File</th>
+                                                            <th>Report Type</th>
+                                                            <th>Status</th>
+                                                            <th>Remarks</th>
+                                                            <th>Uploaded At</th>
+                                                            {{-- <th>Actions</th> --}}
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @forelse($reports as $report)
+                                                        <tr>
+                                                            <td>{{ $report->id }}</td>
+                                                            <td>
+                                                                @if($report->report)
+                                                                <a href="{{ asset('storage/reports/' . $report->report) }}"
+                                                                    target="_blank">View Report</a>
+                                                                @else
+                                                                N/A
+                                                                @endif
+                                                            </td>
+                                                            <td>{{ $report->report_type ?? 'N/A' }}</td>
+                                                            <td>
+                                                                @if ($report->status == 1)
+                                                                <span class="badge bg-success">Active</span>
+                                                                @else
+                                                                <span class="badge bg-secondary">Inactive</span>
+                                                                @endif
+                                                            </td>
+                                                            <td>{{ $report->remarks ?? '-' }}</td>
+                                                            <td>{{ $report->created_at }}</td>
+                                                            {{-- <td>
+                                                                <a href="{{ route('upload.report.edit', $report->id) }}"
+                                                                    class="btn btn-sm btn-primary">Edit</a>
+                                                                <form
+                                                                    action="{{ route('upload.report.delete', $report->id) }}"
+                                                                    method="POST" style="display:inline;">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <button class="btn btn-sm btn-danger"
+                                                                        onclick="return confirm('Are you sure?')">Delete</button>
+                                                                </form>
+                                                            </td>
+                                                        </tr> --}}
+                                                        @empty
+                                                        <tr>
+                                                            <td colspan="7" class="text-center">No reports found.</td>
+                                                        </tr>
+                                                        @endforelse
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
                                 <div class="tab-pane fade" id="track-orders" role="tabpanel"
                                     aria-labelledby="track-orders-tab">
                                     <div class="card">

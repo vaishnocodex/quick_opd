@@ -159,85 +159,98 @@ class HospitalController extends Controller
 
     function upload_report($id)
     {
+
         $id = Crypt::decrypt($id);
         return view('hospital.reportupload', compact('id'));
+    }
+
+    function doctor_upload_report($id)
+    {
+        $id = Crypt::decrypt($id);
+        return view('doctor.reportupload', compact('id'));
     }
 
     function upload_report_edit($id)
     {
         $data = DB::table('report')->where('id', $id)->first();
-        $id= $data->user_id;
+        $id = $data->user_id;
         return view('hospital.reportupload', compact('id', 'data'));
     }
 
-function upload_report_delete($id)
-{
-    $report = DB::table('report')->where('id', $id)->first();
-    $user = $report->user_id ?? null;
+    function upload_report_delete($id)
+    {
+        $report = DB::table('report')->where('id', $id)->first();
+        $user = $report->user_id ?? null;
 
-    if ($report) {
-        $filePath = public_path('storage/reports/' . $report->report);
-        if (File::exists($filePath)) {
-            File::delete($filePath);
+        if ($report) {
+            $filePath = public_path('storage/reports/' . $report->report);
+            if (File::exists($filePath)) {
+                File::delete($filePath);
+            }
+            DB::table('report')->where('id', $id)->delete();
+            return redirect('upload/report/' . encrypt($user))->with('success', 'Report deleted successfully.');
         }
-        DB::table('report')->where('id', $id)->delete();
-        return redirect('upload/report/' . encrypt($user))->with('success', 'Report deleted successfully.');
+
+        return redirect()->back()->with('error', 'Report not found.');
     }
 
-    return redirect()->back()->with('error', 'Report not found.');
-}
 
 
+    public function upload_report_store(Request $request)
+    {
 
-public function upload_report_store(Request $request)
-{
-    // Validate input
-    $validated = $request->validate([
-        'id' => 'nullable|integer',
-        'user_id' => 'nullable|integer',
-        'doctor_id' => 'nullable|integer',
-        'hospital_id' => 'nullable|integer',
-        'report' => 'nullable|file|mimes:pdf,jpeg,jpg,png,doc,docx|max:5120',
-        'report_type' => 'nullable|string|max:200',
-        'remarks' => 'nullable|string|max:255',
-        'status' => 'nullable|in:0,1',
-    ]);
+        // Validate input
+        $validated = $request->validate([
+            'id' => 'nullable|integer',
+            'user_id' => 'nullable|integer',
+            'doctor_id' => 'nullable|integer',
+            'hospital_id' => 'nullable|integer',
+            'report' => 'nullable|file|mimes:pdf,jpeg,jpg,png,doc,docx|max:5120',
+            'report_type' => 'nullable|string|max:200',
+            'remarks' => 'nullable|string|max:255',
+            'status' => 'nullable|in:0,1',
+        ]);
 
-    $path = null;
-    $extension = null;
+        $path = null;
+        $extension = null;
 
-    if ($request->hasFile('report')) {
-        $firmImage = time() . rand(1000000, 9999999) . '.' . $request->report->extension();
-        $request->report->move(public_path('storage/reports'), $firmImage);
-        $path = $firmImage;
-        $extension = $request->file('report')->getClientOriginalExtension();
+        if ($request->hasFile('report')) {
+            $firmImage = time() . rand(1000000, 9999999) . '.' . $request->report->extension();
+            $request->report->move(public_path('storage/reports'), $firmImage);
+            $path = $firmImage;
+            $extension = $request->file('report')->getClientOriginalExtension();
+        }
+
+        $data = [
+            'user_id' => $request->appointment ?? null,
+            'doctor_id' => $validated['doctor_id'] ?? null,
+            'hospital_id' => $validated['hospital_id'] ?? null,
+            'remarks' => $validated['remarks'] ?? null,
+            'status' => $request->status ?? 1,
+            'updated_at' => now(),
+        ];
+
+        if ($path) {
+            $data['report'] = $path;
+            $data['report_type'] = $extension;
+        }
+        if ($request->type == 'doctor') {
+            $url = route('upload.report.doctor', ['id' => encrypt($request->appointment)]);
+        } else {
+            $url = route('upload.report', ['id' => encrypt($request->appointment)]);
+        }
+
+        if (!empty($request->id)) {
+            // Update
+            DB::table('report')->where('id', $request->id)->update($data);
+            return redirect($url)->with('success', 'Report updated successfully.');
+        } else {
+            // Insert
+            $data['created_at'] = now();
+            DB::table('report')->insert($data);
+            return redirect($url)->with('success', 'Report uploaded successfully.');
+        }
     }
-
-    $data = [
-        'user_id' => $request->appointment ?? null,
-        'doctor_id' => $validated['doctor_id'] ?? null,
-        'hospital_id' => $validated['hospital_id'] ?? null,
-        'remarks' => $validated['remarks'] ?? null,
-        'status' => $request->status ?? 1,
-        'updated_at' => now(),
-    ];
-
-    if ($path) {
-        $data['report'] = $path;
-        $data['report_type'] = $extension;
-    }
-
-    if (!empty($request->id)) {
-        // Update
-        DB::table('report')->where('id', $request->id)->update($data);
-        return redirect()->back()->with('success', 'Report updated successfully.');
-    } else {
-        // Insert
-        $data['created_at'] = now();
-        DB::table('report')->insert($data);
-        return redirect()->back()->with('success', 'Report uploaded successfully.');
-    }
-}
 
 
 
@@ -419,7 +432,7 @@ public function upload_report_store(Request $request)
 
                 session()->flash('msgVendor', 'doctor Added Successfully.');
 
-                return redirect()->route('admin.doctor');
+                return redirect()->route('hospital.doctor');
             } else {
 
                 session()->flash('errorVendor', 'Unable to add try after some time .');

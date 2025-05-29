@@ -46,6 +46,91 @@ class AppointmentController extends Controller
         ]);
     }
 
+
+
+
+    function hospital_appointment()
+    {
+
+        $hospital = DB::table('users')->where('type', '3')->where('hospital_type', 'hospital')->get();
+        $hospital_val = request('hospital') ??  "";
+        $date = request('date');
+        $orders = DB::table('orders as a')
+            ->whereIn('a.hospital_id', $hospital->pluck('id'))
+            ->where('a.type', 'doctor')
+            ->when($hospital_val, function ($query, $hospital_val) {
+                $query->where('a.hospital_id', $hospital_val);
+            })
+            ->when($date, fn($q) => $q->whereDate('a.booking_date', $date))
+            ->select([
+                'a.*',
+                'b.name as patient_name',
+                'b.mobile_no as patient_mobile',
+                'b.address as patient_address',
+                'c.name as hospital_name',
+                'c.mobile_no as hospital_mobile',
+                'c.address as hospital_address',
+                'd.name as doctor_name',
+                'd.mobile_no as doctor_mobile',
+                'd.address as doctor_address',
+            ])
+            ->leftJoin('users as b', function ($join) {
+                $join->on('a.user_id', '=', 'b.id')->where('b.type', 0);
+            })
+            ->leftJoin('users as c', function ($join) {
+                $join->on('a.hospital_id', '=', 'c.id')->where('c.type', 3);
+            })
+            ->leftJoin('users as d', function ($join) {
+                $join->on('a.doctor_id', '=', 'd.id')->where('d.type', 4);
+            })
+            ->orderByDesc('a.id')
+            ->get();
+        $patient = DB::table('users')->where('type', '0')->get();
+        return view('admin.appointment', compact('orders', 'hospital', 'patient'));
+    }
+
+
+    function radiology_appointment()
+    {
+        $hospital = DB::table('users')->where('type', '3')->where('hospital_type', 'radiology')->get();
+
+        $hospital_val = request('doctor') ??  "";
+        $date = request('date');
+        $orders = DB::table('orders as a')
+            ->whereIn('a.hospital_id', $hospital->pluck('id'))
+            ->where('a.type', 'radiology')
+            ->when($hospital_val, function ($query, $hospital_val) {
+                $query->where('a.hospital_id', $hospital_val);
+            })
+            ->when($date, fn($q) => $q->whereDate('a.booking_date', $date))
+            ->select([
+                'a.*',
+                'b.name as patient_name',
+                'b.mobile_no as patient_mobile',
+                'b.address as patient_address',
+                'c.name as hospital_name',
+                'c.mobile_no as hospital_mobile',
+                'c.address as hospital_address',
+                'd.name as doctor_name',
+                'd.mobile_no as doctor_mobile',
+                'd.address as doctor_address',
+            ])
+            ->leftJoin('users as b', function ($join) {
+                $join->on('a.user_id', '=', 'b.id')->where('b.type', 0);
+            })
+            ->leftJoin('users as c', function ($join) {
+                $join->on('a.hospital_id', '=', 'c.id')->where('c.type', 3);
+            })
+            ->leftJoin('users as d', function ($join) {
+                $join->on('a.doctor_id', '=', 'd.id')->where('d.type', 4);
+            })
+            ->orderByDesc('a.id')
+            ->get();
+        $patient = DB::table('users')->where('type', '0')->get();
+        return view('admin.appointment', compact('orders', 'hospital', 'patient'));
+    }
+
+
     function generateUniqueOrderId()
     {
         do {
@@ -143,7 +228,7 @@ class AppointmentController extends Controller
 
             $order->update([
                 'user_id'         => $request->patient,
-                'hospital_id'     => Auth::user()->id,
+                'hospital_id'     => Auth::guard('hospital')->user()->id,
                 'doctor_id'       => $request->doctor_id,
                 'type'            => 'doctor',
                 'booking_date'    => $request->booking_date,
@@ -166,7 +251,7 @@ class AppointmentController extends Controller
             $order_id = $this->generateUniqueOrderId();
             $orderData = [
                 'user_id'         => $request->patient,
-                'hospital_id'     => Auth::user()->id,
+                'hospital_id'     => Auth::guard('hospital')->user()->id,
                 'order_id'        => $order_id,
                 'doctor_id'       => $request->doctor_id,
                 'type'            => 'doctor',

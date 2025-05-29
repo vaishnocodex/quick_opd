@@ -122,7 +122,7 @@
                 <div class="sidebar-menu">
                     <ul>
                         <li class="{{ Route::currentRouteName()==" admin.home"?"active":"" }}">
-                            <a href="{{route('admin.home')}}">
+                            <a href="{{route('hospital.home')}}">
                                 <i class="icon-home2"></i>
                                 <span class="menu-text">Dashboard</span>
                             </a>

@@ -164,6 +164,9 @@
                                 </div>
                             </div>
 
+                                                        @if(Auth::guard('hospital')->user()->hospital_type =='hospital')
+
+
                             {{-- Category --}}
                             <div class="col-12">
                                 <div class="form-group">
@@ -191,6 +194,8 @@
                                     </select>
                                 </div>
                             </div>
+
+                            @endif
 
                             {{-- Address --}}
                             <div class="col-md-8">
