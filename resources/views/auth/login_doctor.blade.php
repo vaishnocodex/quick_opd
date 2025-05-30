@@ -6,7 +6,7 @@ $firm=webhelper::getFirm();
 
 @endphp
 <div class="container">
-   
+
                     <form method="POST" action="{{ route('login.doctor') }}">
                         @csrf
                         <div class="row justify-content-md-center">
@@ -15,26 +15,26 @@ $firm=webhelper::getFirm();
                                     <div class="login-box">
                                         <div style="text-align: center" >
                                            {{--  <img alt="" src="{{ asset('backend') }}/img/logo5.png"  style="width: 70px;">  --}}
-                                           
+
                                             <img alt="" src="{{ asset('storage/firms/').'/'.$firm->logo}}"  style="width: 70px;">
                                             <h2><a href="javascript:void(0)" class="login-logo">{{ $firm->name }}</a></h2>
                                             </div>
-                                        @if(session('error'))  
+                                        @if(session('error'))
                                         <h5 class="alert alert-danger"> {{ session('error') }}</h5>
                                        @else
                                         <h5>Welcome back,<br />Please Login to your Account.</h5>
                                         @endif
                                         <div class="form-group">
                                            <input type="email" id="email" class="form-control" name="email" value="{{ old('email') }}" required  placeholder="Email Address" />
-                                          
+
                                         </div>
                                         <div class="form-group">
                                             <input type="password" id="password" class="form-control" name="password" required placeholder="Password" />
-                
+
                                         </div>
                                         <div class="actions mb-4">
                                             <div class="custom-control custom-checkbox">
-                
+
                                                 <input type="checkbox" class="form-control-input" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
                                                 <label class="form-control-label" for="remember">Remember me</label>
                                             </div>
@@ -52,6 +52,6 @@ $firm=webhelper::getFirm();
                             </div>
                         </div>
                     </form>
-       
+
 </div>
 @endsection

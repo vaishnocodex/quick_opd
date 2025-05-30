@@ -17,20 +17,20 @@ use App\Http\Controllers\AppointmentController;
 
 
 Route::get('user/logout', function (Request $request) {
-  Auth::logout();
+    Auth::logout();
 
-  $request->session()->invalidate();
-  $request->session()->regenerateToken();
-  return redirect('login/user/');
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+    return redirect('login/user/');
 })->name('user.logout');
 
 
 Route::get('/clear-cache', function () {
-  // Clear route cache
-  Artisan::call('route:clear');
-  // Cache routes
-  Artisan::call('route:cache');
-//   return view('test');
+    // Clear route cache
+    Artisan::call('route:clear');
+    // Cache routes
+    Artisan::call('route:cache');
+    //   return view('test');
 });
 
 Route::get('admin/', function () {
@@ -45,31 +45,31 @@ Route::get('hospital/login', function () {
     return view('auth.hospital');
 })->name('hospital.login');
 
-Route::get('privacy-policy', function(){
-   return view('website.privacy');
+Route::get('privacy-policy', function () {
+    return view('website.privacy');
 })->name('privacy-policy');
 
-Route::get('faq', function(){
-   return view('website.faq');
+Route::get('faq', function () {
+    return view('website.faq');
 })->name('faq');
 
-Route::get('terms-and-conditions', function(){
-   return view('website.terms');
+Route::get('terms-and-conditions', function () {
+    return view('website.terms');
 })->name('terms-and-conditions');
 
 Route::get('/thank-you', function () {
-  return view('website.thank-you');
+    return view('website.thank-you');
 })->name('thank-you');
 
-Route::get('home3/',[WebController::class,'Home_View3'])->name('home3');
+Route::get('home3/', [WebController::class, 'Home_View3'])->name('home3');
 Route::get('about-us/', function () {
-  return view('website.about');
+    return view('website.about');
 })->name("about.us");
 Route::get('contact-us/', function () {
-  return view('website.contact');
+    return view('website.contact');
 })->name("contact.us");
 Route::get('abt/', function () {
-  return view('website.home2');
+    return view('website.home2');
 });
 Route::post('/contact-submit', [AjaxController::class, 'submit'])->name('contact.submit');
 
@@ -78,39 +78,39 @@ Route::post('/contact-submit', [AjaxController::class, 'submit'])->name('contact
 Route::get('/payment/gateway', [PaymentController::class, 'gateway'])->name('payment.gateway');
 
 //-------------------------------------Custom Routes
-Route::post('/login/admin',[VendorController::class,'loginAdmin'])->name("login.admin");
-Route::post('/login/doctor',[DoctorController::class,'Login_Doctor'])->name("login.doctor");
+Route::post('/login/admin', [VendorController::class, 'loginAdmin'])->name("login.admin");
+Route::post('/login/doctor', [DoctorController::class, 'Login_Doctor'])->name("login.doctor");
 
 
-Route::post('/getStateCity',[AjaxController::class,'getStateCity'])->name("getStateCity");
-Route::post('/logout',[AjaxController::class,'Logout'])->name("logout");
-Route::post('/hospital/logout',[AjaxController::class,'logoutHospital'])->name("hospital.logout");
-Route::post('/login/',[AjaxController::class,'login'])->name("login");
+Route::post('/getStateCity', [AjaxController::class, 'getStateCity'])->name("getStateCity");
+Route::post('/logout', [AjaxController::class, 'Logout'])->name("logout");
+Route::post('/hospital/logout', [AjaxController::class, 'logoutHospital'])->name("hospital.logout");
+Route::post('/login/', [AjaxController::class, 'login'])->name("login");
 
 
 //==================================>Website Routes
-Route::get('login/user/',[WebController::class,'User_Login'])->name('login.user');
-Route::get('register/user/',[WebController::class,'User_Register'])->name('register.user');
+Route::get('login/user/', [WebController::class, 'User_Login'])->name('login.user');
+Route::get('register/user/', [WebController::class, 'User_Register'])->name('register.user');
 
 //user login register route
-Route::post('user-register/submit/',[WebController::class,'User_RegisterSubmit'])->name('user-register.submit');
-Route::post('user/do-login/',[WebController::class,'login_User_Submit'])->name('user.do-login');
+Route::post('user-register/submit/', [WebController::class, 'User_RegisterSubmit'])->name('user-register.submit');
+Route::post('user/do-login/', [WebController::class, 'login_User_Submit'])->name('user.do-login');
 
-Route::get('/',[WebController::class,'Home_View'])->name('welcome');
-Route::get('specialist/all-doctor/{id?}',[WebController::class,'All_Specialist_Doctor'])->name('specialist.all-doctor');
-Route::get('problem/all-doctor/{id?}',[WebController::class,'All_Specialist_Doctor'])->name('problem.all-doctor');
-Route::get('hospital/all-doctor/{id?}',[WebController::class,'AllHospital_Doctor'])->name('hospital.all-doctor');
-Route::get('doctor/detail/{id?}',[WebController::class,'SingleDoctorDetail'])->name('doctor.detail');
+Route::get('/', [WebController::class, 'Home_View'])->name('welcome');
+Route::get('specialist/all-doctor/{id?}', [WebController::class, 'All_Specialist_Doctor'])->name('specialist.all-doctor');
+Route::get('problem/all-doctor/{id?}', [WebController::class, 'All_Specialist_Doctor'])->name('problem.all-doctor');
+Route::get('hospital/all-doctor/{id?}', [WebController::class, 'AllHospital_Doctor'])->name('hospital.all-doctor');
+Route::get('doctor/detail/{id?}', [WebController::class, 'SingleDoctorDetail'])->name('doctor.detail');
 
 
-Route::get('all-hospital/',[WebController::class,'All_Hospital'])->name('all.hospital');
-Route::get('all-doctor/',[WebController::class,'All_Doctor'])->name('all.doctor');
+Route::get('all-hospital/', [WebController::class, 'All_Hospital'])->name('all.hospital');
+Route::get('all-doctor/', [WebController::class, 'All_Doctor'])->name('all.doctor');
 
 //===radiology website routes
-Route::get('radiology/subcategory/{id?}',[WebController::class,'Radiology_Subcategory'])->name('radiology.subcategory');
-Route::get('radiology/list/{id?}',[WebController::class,'All_Radiology'])->name('radiology.list');
-Route::get('radiology/service-list/{id?}',[WebController::class,'Radiology_ServiceList'])->name('radiology.service-list');
-Route::get('radiology/detail/{id?}',[WebController::class,'SingleRadiologyDetail'])->name('radiology.detail');
+Route::get('radiology/subcategory/{id?}', [WebController::class, 'Radiology_Subcategory'])->name('radiology.subcategory');
+Route::get('radiology/list/{id?}', [WebController::class, 'All_Radiology'])->name('radiology.list');
+Route::get('radiology/service-list/{id?}', [WebController::class, 'Radiology_ServiceList'])->name('radiology.service-list');
+Route::get('radiology/detail/{id?}', [WebController::class, 'SingleRadiologyDetail'])->name('radiology.detail');
 
 // web.php
 Route::post('/check-availability', [WebController::class, 'checkAvailability'])->name('check.availability');
@@ -120,44 +120,42 @@ Route::post('/service-check-availability', [WebController::class, 'check_Service
 //=========================================================//user logged routes
 Route::middleware(['auth', 'CustomerMiddleware:user'])->group(function () {
 
-  Route::post('/radiology-booking/submit', [WebController::class, 'Radiology_AddToCart'])->name('radiology-booking.submit');
-  Route::post('/booking/submit', [WebController::class, 'addToCart'])->name('booking.submit');
-  Route::post('/radiology-booking-payment-submit', [WebController::class, 'RadiologyPayment_SubmitPage'])->name('radiology-booking-payment-submit');
-  Route::post('/booking-payment-submit', [WebController::class, 'Payment_SubmitPage'])->name('booking-payment-submit');
-  Route::get('booking/checkout/{id?}',[WebController::class,'CheckoutPage'])->name('booking.checkout');
-
-
+    Route::post('/radiology-booking/submit', [WebController::class, 'Radiology_AddToCart'])->name('radiology-booking.submit');
+    Route::post('/booking/submit', [WebController::class, 'addToCart'])->name('booking.submit');
+    Route::post('/radiology-booking-payment-submit', [WebController::class, 'RadiologyPayment_SubmitPage'])->name('radiology-booking-payment-submit');
+    Route::post('/booking-payment-submit', [WebController::class, 'Payment_SubmitPage'])->name('booking-payment-submit');
+    Route::get('booking/checkout/{id?}', [WebController::class, 'CheckoutPage'])->name('booking.checkout');
 
     Route::get('home/', [HomeController::class, 'index'])->name('home');
-
-    Route::get('user/dashboard/',[WebUserController::class,'UserDashboard'])->name('user.dashboard');
-    Route::post('user/update-password/',[WebUserController::class,'User_Update_Password'])->name('user.update-password');
-    Route::post('user/updateProfile/',[WebUserController::class,'update_UserProfile'])->name('user.updateProfile');
-
+    Route::get('user/dashboard/{id?}', [WebUserController::class, 'UserDashboard'])->name('user.dashboard');
+    Route::post('user/update-password/', [WebUserController::class, 'User_Update_Password'])->name('user.update-password');
+    Route::post('user/updateProfile/', [WebUserController::class, 'update_UserProfile'])->name('user.updateProfile');
 });
 
 
-  //=========================================================//Admin routes
-  Route::middleware(['user-access:admin,admin'])->group(function () {
+//=========================================================//Admin routes
+Route::middleware(['user-access:admin,admin'])->group(function () {
 
+    Route::get('admin/hospital/appointment', [AppointmentController::class, 'hospital_appointment'])->name('admin.hospital.appointment');
+    Route::get('admin/radiology/appointment', [AppointmentController::class, 'radiology_appointment'])->name('admin.radiology.appointment');
+    Route::get('admin/patient', [VendorController::class, 'patient'])->name('admin.patient');
+    Route::get('admin/patient-profile/{id?}', [VendorController::class, 'patient_profile'])->name('admin.patient.profile');
 
     Route::get('admin/profile', function () {
-    return view('admin.profile');
-     })->name('admin.profile');
+        return view('admin.profile');
+    })->name('admin.profile');
 
 
-     //firm  details
-      Route::get('admin/firm-detail',[vendorController::class,'showFirmDetails'])->name('admin.firm-detail');
-      Route::post('admin/firmdetails',[vendorController::class,'updateFirmDetails'])->name('admin.firmdetails.update');
+    //firm  details
+    Route::get('admin/firm-detail', [vendorController::class, 'showFirmDetails'])->name('admin.firm-detail');
+    Route::post('admin/firmdetails', [vendorController::class, 'updateFirmDetails'])->name('admin.firmdetails.update');
     //balance sheet
     Route::get('admin/hospital/balance-sheet', [VendorController::class, 'HospitalLedgerReport'])->name('admin.hospital.balance-sheet');
     Route::post('/admin/hospital/balance-sheet-filter', [VendorController::class, 'HospitalLedgerReport'])->name('admin.hospital.balance-sheet-filter');
 
     //admin detail update
     Route::post('admin/profile-update', [VendorController::class, 'UpdateAdminDetail'])->name('admin.profile-update');
-
     Route::get('/admin/home', [VendorController::class, 'AdminHome'])->name('admin.home');
-
     Route::get('/doctor-slots/fetch', [DoctorSlotController::class, 'fetchSlots']);
 
     //======Radiology add
@@ -165,8 +163,8 @@ Route::middleware(['auth', 'CustomerMiddleware:user'])->group(function () {
     Route::post('/admin/radiology/add', [VendorController::class, 'AddRadiology'])->name('admin.radiology.add');
     Route::post('/admin/radiology/update', [VendorController::class, 'UpdateHospital'])->name('admin.radiology.update');
 
-   //==Store CRUD Operation
-   //Route::get('/admin/default/store/{id?}', [VendorController::class, 'SetDefaultStore'])->name('admin.default.store');
+    //==Store CRUD Operation
+    //Route::get('/admin/default/store/{id?}', [VendorController::class, 'SetDefaultStore'])->name('admin.default.store');
     Route::get('/admin/hospital/{id?}', [VendorController::class, 'ShowHospital'])->name('admin.hospital');
     Route::post('/admin/hospital/add', [VendorController::class, 'AddHospital'])->name('admin.hospital.add');
     Route::post('/admin/hospital/update', [VendorController::class, 'UpdateHospital'])->name('admin.hospital.update');
@@ -202,22 +200,20 @@ Route::middleware(['auth', 'CustomerMiddleware:user'])->group(function () {
     Route::get('/doctor-slots', [DoctorSlotController::class, 'index'])->name('doctor-slots.index');
 
 
-      //Slider
-      Route::get('admin/slider/{id?}',[VendorController::class,'showSlider'])->name('admin.slider');
-      Route::post('admin/add/slider',[VendorController::class,'AddSlider'])->name('admin.add.slider');
-      Route::get('/admin/delete/slider/{id?}',[VendorController::class,'DeleteSlider'])->name('admin.delete.slider');
+    //Slider
+    Route::get('admin/slider/{id?}', [VendorController::class, 'showSlider'])->name('admin.slider');
+    Route::post('admin/add/slider', [VendorController::class, 'AddSlider'])->name('admin.add.slider');
+    Route::get('/admin/delete/slider/{id?}', [VendorController::class, 'DeleteSlider'])->name('admin.delete.slider');
     /*category*/
-      Route::get('/admin/symptom/{id?}',[VendorController::class,'showSymptom'])->name('admin.symptom');
-      Route::get('/admin/radiology-category/{id?}',[VendorController::class,'showRadiologyCat'])->name('admin.radiology-category');
+    Route::get('/admin/symptom/{id?}', [VendorController::class, 'showSymptom'])->name('admin.symptom');
+    Route::get('/admin/radiology-category/{id?}', [VendorController::class, 'showRadiologyCat'])->name('admin.radiology-category');
 
-      Route::get('/admin/category/{id?}',[VendorController::class,'showCategory'])->name('admin.category');
-      Route::post('/admin/category/add',[VendorController::class,'insertCategory'])->name('admin.category.add');
-      Route::post('/admin/category/edit/',[VendorController::class,'editCategoryFinal'])->name('admin.category.edit');
-      Route::get('/admin/category/delete/{id}',[VendorController::class,'deleteCategory'])->name('admin.category.delete');
-      Route::get('/admin/category/status/{id}',[VendorController::class,'categoryChangeStatus'])->name('admin.category.status');
-      Route::get('/admin/all/category/{keyword?}',[VendorController::class,'categorySearch'])->name('admin.category.all');
-
-
+    Route::get('/admin/category/{id?}', [VendorController::class, 'showCategory'])->name('admin.category');
+    Route::post('/admin/category/add', [VendorController::class, 'insertCategory'])->name('admin.category.add');
+    Route::post('/admin/category/edit/', [VendorController::class, 'editCategoryFinal'])->name('admin.category.edit');
+    Route::get('/admin/category/delete/{id}', [VendorController::class, 'deleteCategory'])->name('admin.category.delete');
+    Route::get('/admin/category/status/{id}', [VendorController::class, 'categoryChangeStatus'])->name('admin.category.status');
+    Route::get('/admin/all/category/{keyword?}', [VendorController::class, 'categorySearch'])->name('admin.category.all');
 });
 
 
@@ -241,6 +237,7 @@ Route::post('/appointment/update-status', [HospitalController::class, 'updateSta
 
 //=========================================================//Doctor routes files
 Route::middleware(['auth', 'user-access:doctor'])->group(function () {
+
     // Route::get('/doctor/profile', [WebUserController::class, 'DoctorProfile'])->name('doctor.profile');
     // Route::post('/doctor/update-profile', [WebUserController::class, 'UpdateDoctorProfile'])->name('doctor.update-profile');
     // Route::post('/doctor/update-password', [WebUserController::class, 'UpdateDoctorPassword'])->name('doctor.update-password');
@@ -248,46 +245,44 @@ Route::middleware(['auth', 'user-access:doctor'])->group(function () {
 
 });
 
+Route::get('/doctor/upload/report/{id?}', [HospitalController::class, 'doctor_upload_report'])->name('upload.report.doctor');
+Route::Post('/doctor/upload/report/store', [HospitalController::class, 'upload_report_store'])->name('doctor.upload.report.store');
+
+
 Route::get('/get-doctor-data/{id?}', [AppointmentController::class, 'doctor_data'])->name('get.doctor.data');
-Route::post('/login/hospital',[HospitalController::class,'Login_Hospital'])->name("login.hospital");
+Route::post('/login/hospital', [HospitalController::class, 'Login_Hospital'])->name("login.hospital");
 Route::middleware(['user-access:hospital,hospital'])->group(function () {
-Route::get('/hospital/home', [HospitalController::class, 'Hospital_Home'])->name('hospital.home');
-Route::get('/hospital/new/doctor/{id?}', [HospitalController::class, 'NewDoctor'])->name('hospital.new.doctor');
-Route::post('/hospital/doctor/add', [HospitalController::class, 'AddDoctor'])->name('hospital.doctor.add');
-Route::get('/hospital/doctor/{id?}', [HospitalController::class, 'ShowDoctor'])->name('hospital.doctor');
-Route::get('/hospital/edit/doctor/{id?}', [HospitalController::class, 'NewDoctor'])->name('hospital.edit.doctor');
-Route::post('/hospital/doctor/update', [HospitalController::class, 'UpdateDoctor'])->name('hospital.doctor.update');
-Route::get('/hospital/doctor-schedule/{doctor_id?}', [HospitalController::class, 'DoctorScheduleList'])->name('hospital.doctor-schedule');
-Route::post('/hospital-doctor-slots/generate', [DoctorSlotController::class, 'hospital_generateSlots'])->name('hospital-doctor-slots.generate');
-Route::get('/hospital/appointment/list/', [HospitalController::class, 'orders'])->name('hospital.appointment.list');
-Route::get('/hospital/appointment/', [HospitalController::class, 'appointment'])->name('hospital.appointment');
-Route::Post('hospital/appointment-create', [AppointmentController::class, 'create'])->name('hospital.appointment.create');
-
-Route::get('/profile/hospital/{id?}', [VendorController::class, 'ProfileHospital'])->name('profile.hospital');
-Route::post('/doctor/profile/update', [HospitalController::class, 'UpdateHospital'])->name('profile.doctor.update');
-
-
-//=====radiology services
-Route::get('/radiology/new-service/{id?}', [HospitalController::class, 'NewRService'])->name('radiology.new-service');
-Route::post('/radiology/service/add', [HospitalController::class, 'AddRadiology_Service'])->name('radiology.service.add');
-Route::get('/radiology/service/{id?}', [HospitalController::class, 'Show_Radiology'])->name('radiology.service');
-Route::Post('/radiology/delete-service/{id?}', [HospitalController::class, 'delete_service'])->name('radiology.delete-service');
-Route::Post('radiology/appointment-create', [AppointmentController::class, 'radiology_create'])->name('radiology.appointment.create');
-
-//radiology schedule add
-Route::get('/radiology/service-schedule/{doctor_id?}', [HospitalController::class, 'Service_ScheduleList'])->name('radiology.service-schedule');
-Route::post('/radiology-service-slots/generate', [DoctorSlotController::class, 'RadiologySchedule'])->name('radiology-service-slots.generate');
-Route::get('/radiology/appointment/list/', [HospitalController::class, 'radiology_appointment'])->name('radiology.appointment.list');
-
-Route::get('/upload/report/{id?}', [HospitalController::class, 'upload_report'])->name('upload.report');
-Route::Post('/upload/report/store', [HospitalController::class, 'upload_report_store'])->name('upload.report.store');
-Route::get('/upload/report/edit/{id?}', [HospitalController::class, 'upload_report_edit'])->name('upload.report.edit');
-Route::Post('/upload/report/delete/{id?}', [HospitalController::class, 'upload_report_delete'])->name('upload.report.delete');
+    Route::get('/hospital/home', [HospitalController::class, 'Hospital_Home'])->name('hospital.home');
+    Route::get('/hospital/new/doctor/{id?}', [HospitalController::class, 'NewDoctor'])->name('hospital.new.doctor');
+    Route::post('/hospital/doctor/add', [HospitalController::class, 'AddDoctor'])->name('hospital.doctor.add');
+    Route::get('/hospital/doctor/{id?}', [HospitalController::class, 'ShowDoctor'])->name('hospital.doctor');
+    Route::get('/hospital/edit/doctor/{id?}', [HospitalController::class, 'NewDoctor'])->name('hospital.edit.doctor');
+    Route::post('/hospital/doctor/update', [HospitalController::class, 'UpdateDoctor'])->name('hospital.doctor.update');
+    Route::get('/hospital/doctor-schedule/{doctor_id?}', [HospitalController::class, 'DoctorScheduleList'])->name('hospital.doctor-schedule');
+    Route::post('/hospital-doctor-slots/generate', [DoctorSlotController::class, 'hospital_generateSlots'])->name('hospital-doctor-slots.generate');
+    Route::get('/hospital/appointment/list/', [HospitalController::class, 'orders'])->name('hospital.appointment.list');
+    Route::get('/hospital/appointment/', [HospitalController::class, 'appointment'])->name('hospital.appointment');
+    Route::Post('hospital/appointment-create', [AppointmentController::class, 'create'])->name('hospital.appointment.create');
+    Route::get('/profile/hospital/{id?}', [VendorController::class, 'ProfileHospital'])->name('profile.hospital');
+    Route::post('/doctor/profile/update', [HospitalController::class, 'UpdateHospital'])->name('profile.doctor.update');
 
 
+    //=====radiology services
+    Route::get('/radiology/new-service/{id?}', [HospitalController::class, 'NewRService'])->name('radiology.new-service');
+    Route::post('/radiology/service/add', [HospitalController::class, 'AddRadiology_Service'])->name('radiology.service.add');
+    Route::get('/radiology/service/{id?}', [HospitalController::class, 'Show_Radiology'])->name('radiology.service');
+    Route::Post('/radiology/delete-service/{id?}', [HospitalController::class, 'delete_service'])->name('radiology.delete-service');
+    Route::Post('radiology/appointment-create', [AppointmentController::class, 'radiology_create'])->name('radiology.appointment.create');
 
+    //radiology schedule add
+    Route::get('/radiology/service-schedule/{doctor_id?}', [HospitalController::class, 'Service_ScheduleList'])->name('radiology.service-schedule');
+    Route::post('/radiology-service-slots/generate', [DoctorSlotController::class, 'RadiologySchedule'])->name('radiology-service-slots.generate');
+    Route::get('/radiology/appointment/list/', [HospitalController::class, 'radiology_appointment'])->name('radiology.appointment.list');
 
-
+    Route::get('/radiology/upload/report/{id?}', [HospitalController::class, 'upload_report'])->name('upload.report');
+    Route::Post('/radiology/upload/report/store', [HospitalController::class, 'upload_report_store'])->name('upload.report.store');
+    Route::get('/radiology/upload/report/edit/{id?}', [HospitalController::class, 'upload_report_edit'])->name('upload.report.edit');
+    Route::Post('/radiology/upload/report/delete/{id?}', [HospitalController::class, 'upload_report_delete'])->name('upload.report.delete');
 });
 
 
@@ -299,4 +294,3 @@ All Admin Routes List
 Route::middleware(['auth', 'user-access:manager'])->group(function () {
     Route::get('/manager/home', [HomeController::class, 'managerHome'])->name('manager.home');
 });
-
